@@ -1,5 +1,6 @@
 package com.mewcom.backend.rest.web.controller;
 
+import com.google.firebase.auth.FirebaseAuthException;
 import com.mewcom.backend.model.constant.ApiPath;
 import com.mewcom.backend.model.entity.User;
 import com.mewcom.backend.rest.web.model.response.UserResponse;
@@ -13,8 +14,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.concurrent.ExecutionException;
-
 @Api(value = "User", description = "User Service API")
 @RestController
 @RequestMapping(value = ApiPath.BASE_PATH_USER)
@@ -25,7 +24,7 @@ public class UserController extends BaseController {
 
   @GetMapping(value = ApiPath.USER_FIND_BY_ID)
   public RestSingleResponse<UserResponse> findById(@PathVariable("id") String id)
-      throws ExecutionException, InterruptedException {
+      throws FirebaseAuthException {
     return toSingleResponse(toUserResponse(userService.findById(id)));
   }
 

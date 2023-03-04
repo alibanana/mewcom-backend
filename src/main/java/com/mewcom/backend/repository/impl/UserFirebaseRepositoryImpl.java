@@ -1,24 +1,23 @@
 package com.mewcom.backend.repository.impl;
 
-import com.google.cloud.firestore.DocumentSnapshot;
-import com.google.cloud.firestore.Firestore;
-import com.google.firebase.cloud.FirestoreClient;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.UserRecord;
 import com.mewcom.backend.model.entity.User;
 import com.mewcom.backend.repository.UserFirebaseRepository;
-
-import java.util.concurrent.ExecutionException;
 
 public class UserFirebaseRepositoryImpl implements UserFirebaseRepository {
 
   @Override
-  public User findByIdFirebase(String id) throws ExecutionException, InterruptedException {
-    DocumentSnapshot document = getDocumentSnapshot("users_test", id);
-    return document.toObject(User.class);
+  public User findByIdFirebase(String id) throws FirebaseAuthException {
+    UserRecord userRecord = FirebaseAuth.getInstance().getUser(id);
+    System.out.println("Successfully fetched user data: " + userRecord.getEmail());
+    return toUser(userRecord);
   }
 
-  private DocumentSnapshot getDocumentSnapshot(String collectionName, String id)
-      throws ExecutionException, InterruptedException {
-    Firestore database = FirestoreClient.getFirestore();
-    return database.collection("users_test").document(id).get().get();
+  private User toUser(UserRecord userRecord) {
+    return User.builder()
+        .email(userRecord.getEmail())
+        .build();
   }
 }
