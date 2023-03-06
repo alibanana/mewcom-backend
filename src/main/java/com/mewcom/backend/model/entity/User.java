@@ -26,17 +26,22 @@ public class User extends BaseMongoEntity {
   private String username;
   private String email;
   private String password;
+  private String phoneNumber;
 
   private String roleId;
+  private String firebaseUid;
 
   public User(String id, Date createdAt, Date updatedAt, String firstname, String lastname,
-      String username, String email, String password, String roleId) {
+      String username, String email, String password, String phoneNumber, String roleId,
+      String firebaseUid) {
     super(id, createdAt, updatedAt);
     this.firstname = firstname;
     this.lastname = lastname;
     this.username = username;
     this.email = email;
     this.password = password;
+    this.phoneNumber = phoneNumber;
     this.roleId = roleId;
+    this.firebaseUid = firebaseUid;
   }
 }
