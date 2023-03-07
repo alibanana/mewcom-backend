@@ -1,4 +1,4 @@
-package com.mewcom.backend.rest.web.helper;
+package com.mewcom.backend.rest.web.util;
 
 import com.mewcom.backend.model.constant.ErrorCode;
 import com.mewcom.backend.model.entity.Role;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
-public class RoleHelper {
+public class RoleUtil {
 
   @Autowired
   private RoleRepository roleRepository;

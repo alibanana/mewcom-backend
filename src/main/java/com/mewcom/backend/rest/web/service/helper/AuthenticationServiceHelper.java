@@ -5,8 +5,8 @@ import com.mewcom.backend.model.entity.User;
 import com.mewcom.backend.model.exception.BaseException;
 import com.mewcom.backend.repository.RoleRepository;
 import com.mewcom.backend.repository.UserRepository;
-import com.mewcom.backend.rest.web.helper.RoleHelper;
-import com.mewcom.backend.rest.web.helper.UserHelper;
+import com.mewcom.backend.rest.web.util.RoleUtil;
+import com.mewcom.backend.rest.web.util.UserUtil;
 import com.mewcom.backend.rest.web.model.request.RegisterRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,10 +22,10 @@ public class AuthenticationServiceHelper {
   private RoleRepository roleRepository;
 
   @Autowired
-  private UserHelper userHelper;
+  private UserUtil userUtil;
 
   @Autowired
-  private RoleHelper roleHelper;
+  private RoleUtil roleUtil;
 
   @Autowired
   private PasswordEncoder encoder;
@@ -41,10 +41,10 @@ public class AuthenticationServiceHelper {
     } else if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
       throw new BaseException(ErrorCode.PHONE_NUMBER_ALREADY_EXISTS);
     }
-    userHelper.validateEmail(request.getEmail());
-    userHelper.validatePasswordValid(request.getPassword());
-    userHelper.validatePhoneNumber(request.getPhoneNumber());
-    roleHelper.validateRoleType(request.getRoleType());
+    userUtil.validateEmail(request.getEmail());
+    userUtil.validatePasswordValid(request.getPassword());
+    userUtil.validatePhoneNumber(request.getPhoneNumber());
+    roleUtil.validateRoleType(request.getRoleType());
   }
 
   public User buildUser(RegisterRequest request, String firebaseUid) {

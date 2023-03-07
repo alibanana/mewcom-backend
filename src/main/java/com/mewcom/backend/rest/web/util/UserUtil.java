@@ -1,4 +1,4 @@
-package com.mewcom.backend.rest.web.helper;
+package com.mewcom.backend.rest.web.util;
 
 
 import com.mewcom.backend.model.constant.ErrorCode;
@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import java.util.regex.Pattern;
 
 @Component
-public class UserHelper {
+public class UserUtil {
 
   private final int PASSWORD_MIN_LENGTH = 8;
   private final int PASSWORD_MAX_LENGTH = 16;
