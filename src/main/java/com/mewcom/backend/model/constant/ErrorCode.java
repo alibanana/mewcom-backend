@@ -29,7 +29,10 @@ public enum ErrorCode {
   EMAIL_ALREADY_EXISTS("ERR-PA42203", 422,
       "The requested email already exists"),
   PHONE_NUMBER_ALREADY_EXISTS("ERR-PA42204", 422,
-      "The requested phone number already exists");
+      "The requested phone number already exists"),
+
+  UNSPECIFIED_ERROR("ERR-PA50001", 500,
+      "Unspecified error that is not handled by generid handler");
 
   private final String errorCode;
   private final int httpStatus;
