@@ -30,19 +30,23 @@ public class UserDetailsCustomDto implements UserDetails {
 
   private Collection<? extends GrantedAuthority> authorities;
 
-  @Override public boolean isAccountNonExpired() {
-    return false;
+  @Override
+  public boolean isAccountNonExpired() {
+    return true;
   }
 
-  @Override public boolean isAccountNonLocked() {
-    return false;
+  @Override
+  public boolean isAccountNonLocked() {
+    return true;
   }
 
-  @Override public boolean isCredentialsNonExpired() {
-    return false;
+  @Override
+  public boolean isCredentialsNonExpired() {
+    return true;
   }
 
-  @Override public boolean isEnabled() {
-    return false;
+  @Override
+  public boolean isEnabled() {
+    return true;
   }
 }

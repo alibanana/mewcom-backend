@@ -1,4 +1,4 @@
-package com.mewcom.backend.rest.web.model.request;
+package com.mewcom.backend.outbound.model.request;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -6,21 +6,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Data
 @Builder
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LoginRequest implements Serializable {
+public class GoogleIdentityToolkitSignInRequest implements Serializable {
 
-  private static final long serialVersionUID = 1473471277448428468L;
+  private static final long serialVersionUID = 2218375830974828095L;
 
-  @NotBlank
   private String email;
-
-  @NotBlank
   private String password;
+  private boolean returnSecureToken;
 }

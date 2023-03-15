@@ -22,6 +22,11 @@ public enum ErrorCode {
   ROLE_TYPE_INVALID("ERR-PA40007", 400,
       "The requested role type does not exists"),
 
+  USER_EMAIL_NOT_FOUND("ERR-PA40101", 401,
+      "The requested email does not exists"),
+  USER_PASSWORD_INVALID("ERR-PA40102", 401,
+      "The requested password is invalid"),
+
   NAME_ALREADY_EXISTS("ERR-PA42201", 422,
       "The requested user's firstname and lastname has already been taken"),
   USERNAME_ALREADY_EXISTS("ERR-PA42202", 422,

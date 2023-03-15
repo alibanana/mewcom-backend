@@ -23,16 +23,4 @@ public class SysparamProperties {
 
   @Value("${sysparam.qrcode.default-height}")
   private Integer qrCodeDefaultHeight;
-
-  @Value("${sysparam.midtrans.client-key}")
-  private String midtransClientKey;
-
-  @Value("${sysparam.midtrans.server-key}")
-  private String midtransServerKey;
-
-  @Value("${sysparam.midtrans.is-production}")
-  private Boolean midtransIsProduction;
-
-  @Value("${sysparam.client.link.payment-status}")
-  private String clientPaymentStatusLink;
 }

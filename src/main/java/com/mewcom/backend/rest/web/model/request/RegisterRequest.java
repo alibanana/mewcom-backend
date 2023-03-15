@@ -10,9 +10,9 @@ import javax.validation.constraints.NotBlank;
 import java.io.Serializable;
 
 @Data
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class RegisterRequest implements Serializable {
 
