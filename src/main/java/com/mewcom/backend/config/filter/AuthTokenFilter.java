@@ -1,12 +1,9 @@
 package com.mewcom.backend.config.filter;
 
-import com.mewcom.backend.rest.web.util.JwtUtil;
+import com.mewcom.backend.rest.web.service.helper.AuthenticationServiceHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -21,10 +18,7 @@ import java.io.IOException;
 public class AuthTokenFilter extends OncePerRequestFilter {
 
   @Autowired
-  private JwtUtil jwtUtil;
-
-  @Autowired
-  private UserDetailsService userDetailsService;
+  private AuthenticationServiceHelper authenticationServiceHelper;
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
@@ -35,14 +29,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
       if (token != null && token.startsWith("Bearer ") &&
           SecurityContextHolder.getContext().getAuthentication() == null) {
         token = token.substring(7);
-        String username = jwtUtil.getUsernameFromJwtToken(token);
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        if (jwtUtil.validateToken(token)) {
-          UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =
-              new UsernamePasswordAuthenticationToken(userDetails, null,
-                  userDetails.getAuthorities());
-          SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
-        }
+        authenticationServiceHelper.verifyIdTokenAndSetAuthentication(token);
       }
     } catch (Exception e) {
       log.error("Cannot set user authentication: {}", e.getMessage());

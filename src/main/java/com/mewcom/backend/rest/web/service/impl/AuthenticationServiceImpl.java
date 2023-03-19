@@ -4,7 +4,6 @@ import com.google.cloud.Tuple;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import com.mewcom.backend.model.auth.UserAuthDto;
-import com.mewcom.backend.model.entity.User;
 import com.mewcom.backend.repository.UserRepository;
 import com.mewcom.backend.rest.web.model.request.LoginRequest;
 import com.mewcom.backend.rest.web.model.request.RegisterRequest;
