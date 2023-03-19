@@ -9,6 +9,6 @@ public interface UserFirebaseRepository {
 
   UserRecord findByEmailFirebase(String email) throws FirebaseAuthException;
 
-  UserRecord createUserFirebase(String email, String password, String phoneNumber,
-      String displayName) throws FirebaseAuthException;
+  UserRecord createUserFirebase(String email, String password, String displayName)
+      throws FirebaseAuthException;
 }

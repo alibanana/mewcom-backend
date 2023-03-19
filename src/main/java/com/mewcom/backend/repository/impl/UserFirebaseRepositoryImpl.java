@@ -19,13 +19,12 @@ public class UserFirebaseRepositoryImpl implements UserFirebaseRepository {
   }
 
   @Override
-  public UserRecord createUserFirebase(String email, String password, String phoneNumber,
-      String displayName) throws FirebaseAuthException {
+  public UserRecord createUserFirebase(String email, String password, String displayName)
+      throws FirebaseAuthException {
     CreateRequest request = new CreateRequest()
         .setEmail(email)
         .setEmailVerified(false)
         .setPassword(password)
-        .setPhoneNumber(phoneNumber)
         .setDisplayName(displayName)
         .setDisabled(false);
     return FirebaseAuth.getInstance().createUser(request);

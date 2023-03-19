@@ -7,11 +7,9 @@ public interface UserRepository extends MongoRepository<User, String>, UserFireb
 
   User findByUsername(String username);
 
-  Boolean existsByFirstnameAndLastname(String firstname, String lastname);
+  Boolean existsByName(String name);
 
   Boolean existsByUsername(String username);
 
   Boolean existsByEmail(String email);
-
-  Boolean existsByPhoneNumber(String phoneNumber);
 }

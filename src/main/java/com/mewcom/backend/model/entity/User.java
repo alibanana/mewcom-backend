@@ -21,23 +21,19 @@ public class User extends BaseMongoEntity {
 
   private static final long serialVersionUID = -2685939548017477204L;
 
-  private String firstname;
-  private String lastname;
+  private String name;
   private String username;
   private String email;
-  private String phoneNumber;
 
   private String roleId;
   private String firebaseUid;
 
-  public User(String id, Date createdAt, Date updatedAt, String firstname, String lastname,
-      String username, String email, String phoneNumber, String roleId, String firebaseUid) {
+  public User(String id, Date createdAt, Date updatedAt, String name, String username, String email,
+      String roleId, String firebaseUid) {
     super(id, createdAt, updatedAt);
-    this.firstname = firstname;
-    this.lastname = lastname;
+    this.name = name;
     this.username = username;
     this.email = email;
-    this.phoneNumber = phoneNumber;
     this.roleId = roleId;
     this.firebaseUid = firebaseUid;
   }

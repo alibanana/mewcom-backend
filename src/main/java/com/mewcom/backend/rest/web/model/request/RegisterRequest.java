@@ -19,10 +19,7 @@ public class RegisterRequest implements Serializable {
   private static final long serialVersionUID = -7109310752786262616L;
 
   @NotBlank
-  private String firstname;
-
-  @NotBlank
-  private String lastname;
+  private String name;
 
   @NotBlank
   private String username;
@@ -32,9 +29,6 @@ public class RegisterRequest implements Serializable {
 
   @NotBlank
   private String password;
-
-  @NotBlank
-  private String phoneNumber;
 
   @NotBlank
   private String roleType;

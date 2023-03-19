@@ -29,12 +29,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   }
 
   @Override
-  public User register(RegisterRequest request) throws FirebaseAuthException {
+  public void register(RegisterRequest request) throws FirebaseAuthException {
     helper.validateRegisterRequest(request);
-    String displayName = request.getFirstname() + " " + request.getLastname();
     UserRecord userRecord =
         userRepository.createUserFirebase(request.getEmail(), request.getPassword(),
-            request.getPhoneNumber(), displayName);
-    return userRepository.save(helper.buildUser(request, userRecord.getUid()));
+            request.getName());
+    userRepository.save(helper.buildUser(request, userRecord.getUid()));
   }
 }

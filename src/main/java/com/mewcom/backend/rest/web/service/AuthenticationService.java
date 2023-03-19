@@ -11,5 +11,5 @@ public interface AuthenticationService {
 
   Tuple<String, UserAuthDto> login(LoginRequest request) throws FirebaseAuthException;
 
-  User register(RegisterRequest request) throws FirebaseAuthException;
+  void register(RegisterRequest request) throws FirebaseAuthException;
 }

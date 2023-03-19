@@ -4,10 +4,10 @@ import com.google.cloud.Tuple;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.mewcom.backend.model.auth.UserAuthDto;
 import com.mewcom.backend.model.constant.ApiPath;
-import com.mewcom.backend.model.entity.User;
 import com.mewcom.backend.rest.web.model.request.LoginRequest;
 import com.mewcom.backend.rest.web.model.request.RegisterRequest;
 import com.mewcom.backend.rest.web.model.response.LoginResponse;
+import com.mewcom.backend.rest.web.model.response.rest.RestBaseResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestSingleResponse;
 import com.mewcom.backend.rest.web.service.AuthenticationService;
 import io.swagger.annotations.Api;
@@ -47,9 +47,9 @@ public class AuthenticationController extends BaseController {
   }
 
   @PostMapping(value = ApiPath.REGISTER)
-  public RestSingleResponse<User> register(@Valid @RequestBody RegisterRequest request)
+  public RestBaseResponse register(@Valid @RequestBody RegisterRequest request)
       throws FirebaseAuthException {
-    User user = authenticationService.register(request);
-    return toSingleResponse(user);
+    authenticationService.register(request);
+    return toBaseResponse();
   }
 }

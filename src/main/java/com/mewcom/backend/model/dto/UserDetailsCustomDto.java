@@ -19,8 +19,7 @@ public class UserDetailsCustomDto implements UserDetails {
   private static final long serialVersionUID = -629264436125182565L;
 
   private String id;
-  private String firstname;
-  private String lastname;
+  private String name;
   private String username;
   private String email;
   private String token;

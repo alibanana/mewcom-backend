@@ -66,29 +66,23 @@ public class AuthenticationServiceHelper {
   }
 
   public void validateRegisterRequest(RegisterRequest request) {
-    if (userRepository.existsByFirstnameAndLastname(request.getFirstname(),
-        request.getLastname())) {
+    if (userRepository.existsByName(request.getName())) {
       throw new BaseException(ErrorCode.NAME_ALREADY_EXISTS);
     } else if (userRepository.existsByUsername(request.getUsername())) {
       throw new BaseException(ErrorCode.USERNAME_ALREADY_EXISTS);
     } else if (userRepository.existsByEmail(request.getEmail())) {
       throw new BaseException(ErrorCode.EMAIL_ALREADY_EXISTS);
-    } else if (userRepository.existsByPhoneNumber(request.getPhoneNumber())) {
-      throw new BaseException(ErrorCode.PHONE_NUMBER_ALREADY_EXISTS);
     }
     userUtil.validateEmail(request.getEmail());
     userUtil.validatePasswordValid(request.getPassword());
-    userUtil.validatePhoneNumber(request.getPhoneNumber());
     roleUtil.validateRoleType(request.getRoleType());
   }
 
   public User buildUser(RegisterRequest request, String firebaseUid) {
     return User.builder()
-        .firstname(request.getFirstname())
-        .lastname(request.getLastname())
+        .name(request.getName())
         .username(request.getUsername())
         .email(request.getEmail())
-        .phoneNumber(request.getPhoneNumber())
         .roleId(roleRepository.findByTitle(request.getRoleType()).getId())
         .firebaseUid(firebaseUid)
         .build();
