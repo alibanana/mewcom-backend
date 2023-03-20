@@ -8,6 +8,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class RoleServiceImpl implements RoleService {
 
@@ -23,5 +25,10 @@ public class RoleServiceImpl implements RoleService {
     Role role = new Role();
     BeanUtils.copyProperties(request, role);
     return role;
+  }
+
+  @Override
+  public List<Role> findAll() {
+    return roleRepository.findAll();
   }
 }
