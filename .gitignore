@@ -33,5 +33,5 @@ build/
 .vscode/
 
 ### Others ###
-*.properties
-serviceAccountKey.json
+application-local.properties
+.mvn/
