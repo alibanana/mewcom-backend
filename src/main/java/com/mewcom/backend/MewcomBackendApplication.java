@@ -6,29 +6,30 @@ import com.google.firebase.FirebaseOptions;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.context.ConfigurableApplicationContext;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Objects;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class})
 public class MewcomBackendApplication {
 
   public static void main(String[] args) throws IOException {
-    ClassLoader classLoader = MewcomBackendApplication.class.getClassLoader();
+    ConfigurableApplicationContext applicationContext =
+        SpringApplication.run(MewcomBackendApplication.class, args);
 
-    File file = new File(
-        Objects.requireNonNull(classLoader.getResource("serviceAccountKey.json")).getFile());
-    FileInputStream serviceAccount = new FileInputStream(file.getAbsolutePath());
+    String serviceAccountKey =
+        applicationContext.getEnvironment().getProperty("service.account.key");
+    InputStream stream =
+        new ByteArrayInputStream(serviceAccountKey.getBytes(StandardCharsets.UTF_8));
 
     FirebaseOptions options = new FirebaseOptions.Builder()
-        .setCredentials(GoogleCredentials.fromStream(serviceAccount))
+        .setCredentials(GoogleCredentials.fromStream(stream))
         .build();
 
     FirebaseApp.initializeApp(options);
-
-    SpringApplication.run(MewcomBackendApplication.class, args);
   }
 
 }
