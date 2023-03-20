@@ -10,4 +10,6 @@ public interface RoleService {
   Role create(CreateRoleRequest request);
 
   List<Role> findAll();
+
+  Role findByTitle(String title);
 }

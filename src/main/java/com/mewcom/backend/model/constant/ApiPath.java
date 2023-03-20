@@ -6,6 +6,8 @@ public class ApiPath {
 
   public static final String BASE_PATH_ROLE = BASE_PATH_API + "/roles";
 
+  public static final String ROLE_FIND_BY_TITLE = "/findByTitle";
+
   public static final String BASE_PATH_USER = BASE_PATH_API + "/users";
 
   public static final String USER_FIND_BY_ID = "/{id}";
