@@ -21,6 +21,10 @@ public enum ErrorCode {
       "Phone number requested is invalid, please re-check"),
   ROLE_TYPE_INVALID("ERR-PA40007", 400,
       "The requested role type does not exists"),
+  ROLE_TITLE_IS_BLANK("ERR-PA40008", 400,
+      "Role title must not be blank"),
+  ROLE_TITLE_INVALID("ERR-PA40009", 400,
+      "The requested role title does not exists"),
 
   USER_EMAIL_NOT_FOUND("ERR-PA40101", 401,
       "The requested email does not exists"),

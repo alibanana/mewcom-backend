@@ -39,6 +39,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       "/swagger-ui"
   };
 
+  private static final String[] API_URLS = {
+      "/api/roles/**",
+      "/api/users/**",
+      "/api/auth/**"
+  };
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.cors().and().csrf().disable()
@@ -46,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
         .authorizeRequests()
         .antMatchers(SWAGGER_URLS).permitAll()
-        .antMatchers("/api/**").permitAll()
+        .antMatchers(API_URLS).permitAll()
         .anyRequest().authenticated();
 
     http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);

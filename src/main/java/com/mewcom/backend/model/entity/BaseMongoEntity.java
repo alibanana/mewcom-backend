@@ -1,10 +1,14 @@
 package com.mewcom.backend.model.entity;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 import javax.persistence.GeneratedValue;
@@ -29,9 +33,11 @@ public class BaseMongoEntity implements Serializable {
   @GenericGenerator(name = "system-uuid", strategy = "uuid2")
   private String id;
 
+  @CreatedDate
   @Field(value = BaseMongoEntity.CREATED_AT)
   private Date createdAt;
 
+  @LastModifiedDate
   @Field(value = BaseMongoEntity.UPDATED_AT)
   private Date updatedAt;
 }
