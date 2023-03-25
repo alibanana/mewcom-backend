@@ -11,4 +11,6 @@ public interface UserFirebaseRepository {
 
   UserRecord createUserFirebase(String email, String password, String displayName)
       throws FirebaseAuthException;
+
+  void setEmailVerifiedTrueFirebase(String email) throws FirebaseAuthException;
 }

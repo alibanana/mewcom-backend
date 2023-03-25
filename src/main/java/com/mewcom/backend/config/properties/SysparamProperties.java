@@ -12,6 +12,9 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(value = "sysparam")
 public class SysparamProperties {
 
+  @Value("${sysparam.email-verification.url}")
+  private String emailVerificationUrl;
+
   @Value("${sysparam.file.upload-dir}")
   private String fileStorageLocation;
 

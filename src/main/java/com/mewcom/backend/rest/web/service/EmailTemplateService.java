@@ -16,4 +16,7 @@ public interface EmailTemplateService {
 
   void sendTemplate(EmailTemplateSendRequest request) throws IOException, TemplateException,
       MessagingException;
+
+  void sendEmailVerification(String email, String name, String verificationCode)
+      throws TemplateException, MessagingException, IOException;
 }

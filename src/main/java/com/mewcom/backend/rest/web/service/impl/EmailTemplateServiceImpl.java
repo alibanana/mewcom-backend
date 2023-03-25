@@ -57,4 +57,10 @@ public class EmailTemplateServiceImpl implements EmailTemplateService {
       throw new BaseException(ErrorCode.EMAIL_TEMPLATE_KEY_VALUES_MISSING);
     }
   }
+
+  @Override
+  public void sendEmailVerification(String email, String name, String verificationCode)
+      throws TemplateException, MessagingException, IOException {
+    sendTemplate(emailTemplateUtil.buildEmailVerificationRequest(email, name, verificationCode));
+  }
 }
