@@ -21,4 +21,10 @@ public class ApiPath {
   public static final String LOGIN = "/login";
 
   public static final String REGISTER = "/register";
+
+  public static final String BASE_PATH_EMAIL_TEMPLATE = BASE_PATH_API + "/email-templates";
+
+  public static final String EMAIL_TEMPLATE_VIEW_BY_TEMPLATE_NAME = "/{templateName}/view";
+
+  public static final String EMAIL_TEMPLATE_SEND = "/send";
 }

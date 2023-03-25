@@ -25,11 +25,16 @@ public enum ErrorCode {
       "Role title must not be blank"),
   ROLE_TITLE_INVALID("ERR-PA40009", 400,
       "The requested role title does not exists"),
+  EMAIL_TEMPLATE_KEY_VALUES_MISSING("ERR-PA40010", 400,
+      "Some key & value pairs are missing for the requested email template"),
 
   USER_EMAIL_NOT_FOUND("ERR-PA40101", 401,
       "The requested email does not exists"),
   USER_PASSWORD_INVALID("ERR-PA40102", 401,
       "The requested password is invalid"),
+
+  EMAIL_TEMPLATE_NAME_NOT_FOUND("ERR-PA40401", 404,
+      "Email template with the requested template name doesn't exists"),
 
   NAME_ALREADY_EXISTS("ERR-PA42201", 422,
       "The requested user's firstname and lastname has already been taken"),
@@ -39,6 +44,8 @@ public enum ErrorCode {
       "The requested email already exists"),
   PHONE_NUMBER_ALREADY_EXISTS("ERR-PA42204", 422,
       "The requested phone number already exists"),
+  EMAIL_TEMPLATE_EXISTS("ERR-PA42205", 422,
+      "The requested template name already exists"),
 
   UNSPECIFIED_ERROR("ERR-PA50001", 500,
       "Unspecified error that is not handled by generid handler");
