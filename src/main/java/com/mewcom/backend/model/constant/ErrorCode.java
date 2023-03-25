@@ -32,6 +32,8 @@ public enum ErrorCode {
       "The requested email does not exists"),
   USER_PASSWORD_INVALID("ERR-PA40102", 401,
       "The requested password is invalid"),
+  USER_EMAIL_UNVERIFIED("ERR-PA40103", 401,
+      "The requested user has not been verified"),
 
   EMAIL_TEMPLATE_NAME_NOT_FOUND("ERR-PA40401", 404,
       "Email template with the requested template name doesn't exists"),

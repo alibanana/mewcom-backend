@@ -46,6 +46,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       "/api/email-templates/**"
   };
 
+  private static final String[] MVC_URLS = {
+    "/auth/**"
+  };
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.cors().and().csrf().disable()
@@ -54,6 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .antMatchers(SWAGGER_URLS).permitAll()
         .antMatchers(API_URLS).permitAll()
+        .antMatchers(MVC_URLS).permitAll()
         .anyRequest().authenticated();
 
     http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);

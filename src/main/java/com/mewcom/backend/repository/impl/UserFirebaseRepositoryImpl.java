@@ -29,4 +29,10 @@ public class UserFirebaseRepositoryImpl implements UserFirebaseRepository {
         .setDisabled(false);
     return FirebaseAuth.getInstance().createUser(request);
   }
+
+  @Override
+  public void setEmailVerifiedTrueFirebase(String email) throws FirebaseAuthException {
+    UserRecord userRecord = FirebaseAuth.getInstance().getUserByEmail(email);
+    FirebaseAuth.getInstance().updateUser(userRecord.updateRequest().setEmailVerified(true));
+  }
 }

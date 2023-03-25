@@ -11,6 +11,7 @@ import com.mewcom.backend.rest.web.model.response.LoginResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestBaseResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestSingleResponse;
 import com.mewcom.backend.rest.web.service.AuthenticationService;
+import freemarker.template.TemplateException;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +21,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.IOException;
 
 @Api(value = "Authentication", description = "Authentication Service API")
 @RestController
@@ -49,7 +52,7 @@ public class AuthenticationController extends BaseController {
 
   @PostMapping(value = ApiPath.REGISTER)
   public RestBaseResponse register(@Valid @RequestBody RegisterRequest request)
-      throws FirebaseAuthException {
+      throws FirebaseAuthException, TemplateException, MessagingException, IOException {
     authenticationService.register(request);
     return toBaseResponse();
   }

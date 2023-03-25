@@ -15,6 +15,7 @@ import com.mewcom.backend.rest.web.model.request.LoginRequest;
 import com.mewcom.backend.rest.web.util.RoleUtil;
 import com.mewcom.backend.rest.web.util.UserUtil;
 import com.mewcom.backend.rest.web.model.request.RegisterRequest;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -47,6 +48,7 @@ public class AuthenticationServiceHelper {
       throws FirebaseAuthException {
     FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
     UserAuthDto userAuthDto = toUserAuthDto(decodedToken);
+    validateUserAuthDto(userAuthDto);
     UsernamePasswordAuthenticationToken authentication =
         new UsernamePasswordAuthenticationToken(userAuthDto, new Credentials(decodedToken, idToken),
             null);
@@ -65,6 +67,12 @@ public class AuthenticationServiceHelper {
         .build();
   }
 
+  private void validateUserAuthDto(UserAuthDto userAuthDto) {
+    if (!userAuthDto.isEmailVerified()) {
+      throw new BaseException(ErrorCode.USER_EMAIL_UNVERIFIED);
+    }
+  }
+
   public void validateRegisterRequest(RegisterRequest request) {
     if (userRepository.existsByName(request.getName())) {
       throw new BaseException(ErrorCode.NAME_ALREADY_EXISTS);
@@ -78,11 +86,13 @@ public class AuthenticationServiceHelper {
     roleUtil.validateRoleType(request.getRoleType());
   }
 
-  public User buildUser(RegisterRequest request, String firebaseUid) {
+  public User buildUserForRegistration(RegisterRequest request, String firebaseUid) {
     return User.builder()
         .name(request.getName())
         .username(request.getUsername())
         .email(request.getEmail())
+        .isEmailVerified(false)
+        .verificationCode(RandomString.make(64))
         .roleId(roleRepository.findByTitle(request.getRoleType()).getId())
         .firebaseUid(firebaseUid)
         .build();
