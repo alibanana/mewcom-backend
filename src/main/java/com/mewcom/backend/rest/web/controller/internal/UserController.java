@@ -1,9 +1,10 @@
-package com.mewcom.backend.rest.web.controller;
+package com.mewcom.backend.rest.web.controller.internal;
 
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import com.mewcom.backend.model.constant.ApiPath;
 import com.mewcom.backend.model.entity.User;
+import com.mewcom.backend.rest.web.controller.BaseController;
 import com.mewcom.backend.rest.web.model.response.UserResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestSingleResponse;
 import com.mewcom.backend.rest.web.service.UserService;

@@ -1,7 +1,8 @@
-package com.mewcom.backend.rest.web.controller;
+package com.mewcom.backend.rest.web.controller.internal;
 
 import com.mewcom.backend.model.constant.ApiPath;
 import com.mewcom.backend.model.entity.Role;
+import com.mewcom.backend.rest.web.controller.BaseController;
 import com.mewcom.backend.rest.web.model.request.CreateRoleRequest;
 import com.mewcom.backend.rest.web.model.response.RoleResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestBaseResponse;

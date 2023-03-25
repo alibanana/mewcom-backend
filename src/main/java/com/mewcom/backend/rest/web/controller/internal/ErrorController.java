@@ -1,4 +1,4 @@
-package com.mewcom.backend.rest.web.controller;
+package com.mewcom.backend.rest.web.controller.internal;
 
 import com.mewcom.backend.model.constant.ErrorCode;
 import com.mewcom.backend.model.exception.BaseException;

@@ -1,9 +1,10 @@
-package com.mewcom.backend.rest.web.controller;
+package com.mewcom.backend.rest.web.controller.internal;
 
 import com.google.cloud.Tuple;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.mewcom.backend.model.auth.UserAuthDto;
 import com.mewcom.backend.model.constant.ApiPath;
+import com.mewcom.backend.rest.web.controller.BaseController;
 import com.mewcom.backend.rest.web.model.request.LoginRequest;
 import com.mewcom.backend.rest.web.model.request.RegisterRequest;
 import com.mewcom.backend.rest.web.model.response.LoginResponse;
