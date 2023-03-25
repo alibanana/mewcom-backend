@@ -41,6 +41,13 @@ public class EmailTemplateController extends BaseController {
     return toSingleResponse(toEmailTemplateResponse(emailTemplate));
   }
 
+  @GetMapping(value = ApiPath.EMAIL_TEMPLATE_FIND_BY_TEMPLATE_NAME)
+  public RestSingleResponse<EmailTemplateResponse> findByTemplateName(
+      @PathVariable("templateName") String templateName) {
+    EmailTemplate emailTemplate = emailTemplateService.findByTemplateName(templateName);
+    return toSingleResponse(toEmailTemplateResponse(emailTemplate));
+  }
+
   @GetMapping(value = ApiPath.EMAIL_TEMPLATE_VIEW_BY_TEMPLATE_NAME)
   public ResponseEntity<String> viewByTemplateName(
       @PathVariable("templateName") String templateName) {
