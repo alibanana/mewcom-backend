@@ -12,9 +12,9 @@ import com.mewcom.backend.outbound.GoogleIdentityToolkitOutbound;
 import com.mewcom.backend.repository.RoleRepository;
 import com.mewcom.backend.repository.UserRepository;
 import com.mewcom.backend.rest.web.model.request.LoginRequest;
+import com.mewcom.backend.rest.web.model.request.RegisterRequest;
 import com.mewcom.backend.rest.web.util.RoleUtil;
 import com.mewcom.backend.rest.web.util.UserUtil;
-import com.mewcom.backend.rest.web.model.request.RegisterRequest;
 import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -74,9 +74,7 @@ public class AuthenticationServiceHelper {
   }
 
   public void validateRegisterRequest(RegisterRequest request) {
-    if (userRepository.existsByName(request.getName())) {
-      throw new BaseException(ErrorCode.NAME_ALREADY_EXISTS);
-    } else if (userRepository.existsByUsername(request.getUsername())) {
+    if (userRepository.existsByUsername(request.getUsername())) {
       throw new BaseException(ErrorCode.USERNAME_ALREADY_EXISTS);
     } else if (userRepository.existsByEmail(request.getEmail())) {
       throw new BaseException(ErrorCode.EMAIL_ALREADY_EXISTS);
