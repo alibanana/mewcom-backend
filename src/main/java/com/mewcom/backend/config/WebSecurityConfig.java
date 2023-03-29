@@ -46,6 +46,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       "/api/email-templates/**"
   };
 
+  private static final String[] CLIENT_API_URLS = {
+      "/api/client/emails/**"
+  };
+
   private static final String[] MVC_URLS = {
     "/auth/**"
   };
@@ -58,6 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .authorizeRequests()
         .antMatchers(SWAGGER_URLS).permitAll()
         .antMatchers(API_URLS).permitAll()
+        .antMatchers(CLIENT_API_URLS).permitAll()
         .antMatchers(MVC_URLS).permitAll()
         .anyRequest().authenticated();
 
