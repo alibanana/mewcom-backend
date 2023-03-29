@@ -4,9 +4,7 @@ import com.google.cloud.Tuple;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.UserRecord;
 import com.mewcom.backend.model.auth.UserAuthDto;
-import com.mewcom.backend.model.constant.ErrorCode;
 import com.mewcom.backend.model.entity.User;
-import com.mewcom.backend.model.exception.BaseException;
 import com.mewcom.backend.repository.UserRepository;
 import com.mewcom.backend.rest.web.model.request.LoginRequest;
 import com.mewcom.backend.rest.web.model.request.RegisterRequest;
@@ -34,9 +32,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private EmailTemplateService emailTemplateService;
 
   @Override
-  public Tuple<String, UserAuthDto> login(LoginRequest request) throws FirebaseAuthException {
+  public Tuple<String, User> login(LoginRequest request) throws FirebaseAuthException {
     String idToken = helper.validateLoginRequestAndRetrieveToken(request);
-    return Tuple.of(idToken, helper.verifyIdTokenAndSetAuthentication(idToken));
+    UserAuthDto userAuthDto = helper.verifyIdTokenAndSetAuthentication(idToken);
+    return Tuple.of(idToken, userRepository.findByEmail(userAuthDto.getEmail()));
   }
 
   @Override
