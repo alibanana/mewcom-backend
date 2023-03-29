@@ -2,8 +2,8 @@ package com.mewcom.backend.rest.web.controller.internal;
 
 import com.google.cloud.Tuple;
 import com.google.firebase.auth.FirebaseAuthException;
-import com.mewcom.backend.model.auth.UserAuthDto;
 import com.mewcom.backend.model.constant.ApiPath;
+import com.mewcom.backend.model.entity.User;
 import com.mewcom.backend.rest.web.controller.BaseController;
 import com.mewcom.backend.rest.web.model.request.LoginRequest;
 import com.mewcom.backend.rest.web.model.request.RegisterRequest;
@@ -36,17 +36,18 @@ public class AuthenticationController extends BaseController {
   @PostMapping(value = ApiPath.LOGIN)
   public ResponseEntity<RestSingleResponse<LoginResponse>> login(
       @Valid @RequestBody LoginRequest request) throws FirebaseAuthException {
-    Tuple<String, UserAuthDto> tupleOfTokenAndUserAuthDto = authenticationService.login(request);
+    Tuple<String, User> tupleOfTokenAndUser = authenticationService.login(request);
     return ResponseEntity.ok()
-        .header(HttpHeaders.SET_COOKIE, tupleOfTokenAndUserAuthDto.x())
-        .body(toSingleResponse(toLoginResponse(tupleOfTokenAndUserAuthDto)));
+        .header(HttpHeaders.SET_COOKIE, tupleOfTokenAndUser.x())
+        .body(toSingleResponse(toLoginResponse(tupleOfTokenAndUser)));
   }
 
-  private LoginResponse toLoginResponse(Tuple<String, UserAuthDto> tupleOfTokenAndUserAuthDto) {
+  private LoginResponse toLoginResponse(Tuple<String, User> tupleOfTokenAndUser) {
     return LoginResponse.builder()
-        .name(tupleOfTokenAndUserAuthDto.y().getName())
-        .email(tupleOfTokenAndUserAuthDto.y().getEmail())
-        .token(tupleOfTokenAndUserAuthDto.x())
+        .name(tupleOfTokenAndUser.y().getName())
+        .username(tupleOfTokenAndUser.y().getUsername())
+        .email(tupleOfTokenAndUser.y().getEmail())
+        .token(tupleOfTokenAndUser.x())
         .build();
   }
 

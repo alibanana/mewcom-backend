@@ -34,9 +34,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   private EmailTemplateService emailTemplateService;
 
   @Override
-  public Tuple<String, UserAuthDto> login(LoginRequest request) throws FirebaseAuthException {
+  public Tuple<String, User> login(LoginRequest request) throws FirebaseAuthException {
     String idToken = helper.validateLoginRequestAndRetrieveToken(request);
-    return Tuple.of(idToken, helper.verifyIdTokenAndSetAuthentication(idToken));
+    UserAuthDto userAuthDto = helper.verifyIdTokenAndSetAuthentication(idToken);
+    return Tuple.of(idToken, userRepository.findByEmail(userAuthDto.getEmail()));
   }
 
   @Override
