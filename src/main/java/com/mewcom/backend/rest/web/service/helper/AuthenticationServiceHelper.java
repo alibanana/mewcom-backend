@@ -21,6 +21,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.Objects;
+
 @Component
 public class AuthenticationServiceHelper {
 
@@ -76,9 +78,8 @@ public class AuthenticationServiceHelper {
   public void validateRegisterRequest(RegisterRequest request) {
     if (userRepository.existsByUsername(request.getUsername())) {
       throw new BaseException(ErrorCode.USERNAME_ALREADY_EXISTS);
-    } else if (userRepository.existsByEmail(request.getEmail())) {
-      throw new BaseException(ErrorCode.EMAIL_ALREADY_EXISTS);
     }
+    userUtil.validateEmailDoesNotExists(request.getEmail());
     userUtil.validateEmail(request.getEmail());
     userUtil.validatePasswordValid(request.getPassword());
     roleUtil.validateRoleType(request.getRoleType());
@@ -94,5 +95,11 @@ public class AuthenticationServiceHelper {
         .roleId(roleRepository.findByTitle(request.getRoleType()).getId())
         .firebaseUid(firebaseUid)
         .build();
+  }
+
+  public boolean isUserValidForVerification(User user, String verificationCode) {
+    return !Objects.isNull(user) && !user.isEmailVerified()
+        && !Objects.isNull(user.getVerificationCode())
+        && user.getVerificationCode().equals(verificationCode);
   }
 }

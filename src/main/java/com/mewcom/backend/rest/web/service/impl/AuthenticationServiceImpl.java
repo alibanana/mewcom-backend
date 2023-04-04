@@ -12,6 +12,7 @@ import com.mewcom.backend.rest.web.service.AuthenticationService;
 import com.mewcom.backend.rest.web.service.EmailTemplateService;
 import com.mewcom.backend.rest.web.service.helper.AuthenticationServiceHelper;
 import freemarker.template.TemplateException;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,11 +54,51 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   @Override
   public boolean verify(String email, String verificationCode) {
     User user = userRepository.findByEmail(email);
-    boolean validForVerification = !Objects.isNull(user) && !user.isEmailVerified()
-        && user.getVerificationCode().equals(verificationCode);
     try {
-      if (validForVerification) {
-        userRepository.setEmailVerifiedTrueFirebase(user.getEmail());
+      if (helper.isUserValidForVerification(user, verificationCode)) {
+        userRepository.setEmailVerifiedTrueFirebase(user.getFirebaseUid());
+        user.setEmailVerified(true);
+        user.setVerificationCode(null);
+        userRepository.save(user);
+        return true;
+      }
+      return false;
+    } catch (FirebaseAuthException e) {
+      return false;
+    }
+  }
+
+  @Override
+  public boolean verifyEmailUpdate(String email, String verificationCode) {
+    User user = userRepository.findByEmail(email);
+    try {
+      if (helper.isUserValidForVerification(user, verificationCode)) {
+        userRepository.updateUserFirebase(user.getFirebaseUid(), user.getNewEmail(),
+            user.getPhoneNumber(), false);
+        user.setOldEmail(user.getEmail());
+        user.setEmail(user.getNewEmail());
+        user.setNewEmail(null);
+        user.setEmailVerified(false);
+        user.setVerificationCode(RandomString.make(64));
+        userRepository.save(user);
+        emailTemplateService.sendEmailVerification(user.getEmail(), user.getName(),
+            user.getVerificationCode());
+        return true;
+      }
+      return false;
+    } catch (FirebaseAuthException | TemplateException | MessagingException | IOException e) {
+      return false;
+    }
+  }
+
+  @Override
+  public boolean cancelEmailUpdate(String email, String verificationCode) {
+    User user = userRepository.findByEmail(email);
+    try {
+      if (helper.isUserValidForVerification(user, verificationCode)) {
+        userRepository.updateUserFirebase(user.getFirebaseUid(), user.getEmail(),
+            user.getPhoneNumber(), true);
+        user.setNewEmail(null);
         user.setEmailVerified(true);
         user.setVerificationCode(null);
         userRepository.save(user);

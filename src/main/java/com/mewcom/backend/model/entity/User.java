@@ -24,20 +24,34 @@ public class User extends BaseMongoEntity {
   private String name;
   private String username;
   private String email;
+  private String newEmail;
+  private String oldEmail;
   private boolean isEmailVerified;
   private String verificationCode;
+  private String phoneNumber;
+  private String gender;
+  private String biodata;
+  private Date birthdate;
 
   private String roleId;
   private String firebaseUid;
 
   public User(String id, Date createdAt, Date updatedAt, String name, String username, String email,
-      boolean isEmailVerified, String verificationCode, String roleId, String firebaseUid) {
+      String newEmail, String oldEmail, boolean isEmailVerified, String verificationCode,
+      String phoneNumber, String gender, String biodata, Date birthdate, String roleId,
+      String firebaseUid) {
     super(id, createdAt, updatedAt);
     this.name = name;
     this.username = username;
     this.email = email;
+    this.newEmail = newEmail;
+    this.oldEmail = oldEmail;
     this.isEmailVerified = isEmailVerified;
     this.verificationCode = verificationCode;
+    this.phoneNumber = phoneNumber;
+    this.gender = gender;
+    this.biodata = biodata;
+    this.birthdate = birthdate;
     this.roleId = roleId;
     this.firebaseUid = firebaseUid;
   }

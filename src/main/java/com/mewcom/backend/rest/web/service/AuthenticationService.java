@@ -18,4 +18,8 @@ public interface AuthenticationService {
       MessagingException, IOException;
 
   boolean verify(String email, String verificationCode);
+
+  boolean verifyEmailUpdate(String email, String verificationCode);
+
+  boolean cancelEmailUpdate(String email, String verificationCode);
 }

@@ -82,4 +82,29 @@ public class EmailTemplateUtil {
     String link = sysparamProperties.getEmailVerificationUrl() + "?email=%s&code=%s";
     return String.format(link, email, verificationCode);
   }
+
+  public EmailTemplateSendRequest buildEmailUpdateNotificationRequest(String email, String name,
+      String verificationCode) {
+    Map<String, Object> content = new HashMap<>();
+    content.put("name", name);
+    content.put("email_update_verification_link",
+        buildEmailUpdateVerificationLink(email, verificationCode));
+    content.put("email_update_cancellation_link",
+        buildEmailUpdateCancellationLink(email, verificationCode));
+    return EmailTemplateSendRequest.builder()
+        .receiverAddress(email)
+        .templateName("EmailUpdateNotification")
+        .templateKeyAndValues(content)
+        .build();
+  }
+
+  private String buildEmailUpdateVerificationLink(String email, String verificationCode) {
+    String link = sysparamProperties.getEmailUpdateVerificationUrl() + "?email=%s&code=%s";
+    return String.format(link, email, verificationCode);
+  }
+
+  private String buildEmailUpdateCancellationLink(String email, String verificationCode) {
+    String link = sysparamProperties.getEmailUpdateCancellationUrl() + "?email=%s&code=%s";
+    return String.format(link, email, verificationCode);
+  }
 }

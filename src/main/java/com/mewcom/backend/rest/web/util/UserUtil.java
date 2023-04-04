@@ -3,8 +3,11 @@ package com.mewcom.backend.rest.web.util;
 
 import com.mewcom.backend.model.constant.ErrorCode;
 import com.mewcom.backend.model.exception.BaseException;
+import com.mewcom.backend.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.util.regex.Pattern;
 
 @Component
@@ -12,6 +15,15 @@ public class UserUtil {
 
   private final int PASSWORD_MIN_LENGTH = 8;
   private final int PASSWORD_MAX_LENGTH = 16;
+
+  @Autowired
+  private UserRepository userRepository;
+
+  public void validateEmailDoesNotExists(String email) {
+    if (userRepository.existsByEmail(email) || userRepository.existsByNewEmail(email)) {
+      throw new BaseException(ErrorCode.EMAIL_ALREADY_EXISTS);
+    }
+  }
 
   public void validateEmail(String email) {
     Pattern pattern = Pattern.compile("^(.+)@(\\S+)$");
@@ -48,9 +60,16 @@ public class UserUtil {
 
   public void validatePhoneNumber(String phoneNumber) {
     Pattern pattern =
-        Pattern.compile("^\\+?[1-9]\\d{1,14}$");
+        Pattern.compile("^\\+[1-9]\\d{1,14}$");
     if (!pattern.matcher(phoneNumber).matches()) {
       throw new BaseException(ErrorCode.USER_PHONE_NUMBER_INVALID);
+    }
+  }
+
+  public void validateBirthdate(LocalDate birthdate) {
+    LocalDate today = LocalDate.now();
+    if (birthdate.isAfter(today.minusYears(17))) {
+      throw new BaseException(ErrorCode.BIRTHDATE_INVALID);
     }
   }
 }

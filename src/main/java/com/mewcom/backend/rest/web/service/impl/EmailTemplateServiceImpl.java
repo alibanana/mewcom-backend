@@ -63,4 +63,11 @@ public class EmailTemplateServiceImpl implements EmailTemplateService {
       throws TemplateException, MessagingException, IOException {
     sendTemplate(emailTemplateUtil.buildEmailVerificationRequest(email, name, verificationCode));
   }
+
+  @Override
+  public void sendEmailUpdateNotification(String email, String name, String verificationCode)
+      throws TemplateException, MessagingException, IOException {
+    sendTemplate(emailTemplateUtil.buildEmailUpdateNotificationRequest(email, name,
+        verificationCode));
+  }
 }

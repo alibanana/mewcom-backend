@@ -10,4 +10,8 @@ public interface UserRepository extends MongoRepository<User, String>, UserFireb
   Boolean existsByUsername(String username);
 
   Boolean existsByEmail(String email);
+
+  Boolean existsByNewEmail(String newEmail);
+
+  User findByEmailAndIsEmailVerifiedTrue(String email);
 }
