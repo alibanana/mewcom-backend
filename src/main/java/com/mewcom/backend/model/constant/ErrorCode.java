@@ -18,7 +18,7 @@ public enum ErrorCode {
   PASSWORD_DIGIT_COUNT_INVALID("ERR-PA40005", 400,
       "Password must have one or more numerical character"),
   USER_PHONE_NUMBER_INVALID("ERR-PA40006", 400,
-      "Phone number requested is invalid, please re-check"),
+      "Phone number requested is invalid, please follow the E.164 format."),
   ROLE_TYPE_INVALID("ERR-PA40007", 400,
       "The requested role type does not exists"),
   ROLE_TITLE_IS_BLANK("ERR-PA40008", 400,
@@ -27,6 +27,8 @@ public enum ErrorCode {
       "The requested role title does not exists"),
   EMAIL_TEMPLATE_KEY_VALUES_MISSING("ERR-PA40010", 400,
       "Some key & value pairs are missing for the requested email template"),
+  BIRTHDATE_INVALID("ERR-PA40011", 400,
+      "Age must be above 17"),
 
   USER_EMAIL_NOT_FOUND("ERR-PA40101", 401,
       "The requested email does not exists"),

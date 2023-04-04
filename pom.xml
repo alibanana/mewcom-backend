@@ -13,7 +13,7 @@
 
   <groupId>com.mewcom</groupId>
   <artifactId>backend</artifactId>
-  <version>0.1.0-4</version>
+  <version>0.1.0-5</version>
   <name>mewcom-backend</name>
   <description>mewcom-backend</description>
 
@@ -27,6 +27,7 @@
     <firebase-admin.version>9.1.1</firebase-admin.version>
     <feign-core.version>9.4.0</feign-core.version>
     <feign-form.version>2.1.0</feign-form.version>
+    <javatuples.version>1.2</javatuples.version>
   </properties>
 
   <dependencies>
@@ -131,6 +132,11 @@
       <groupId>io.github.openfeign.form</groupId>
       <artifactId>feign-form</artifactId>
       <version>${feign-form.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.javatuples</groupId>
+      <artifactId>javatuples</artifactId>
+      <version>${javatuples.version}</version>
     </dependency>
 
     <dependency>

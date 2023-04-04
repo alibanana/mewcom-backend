@@ -15,6 +15,12 @@ public class SysparamProperties {
   @Value("${sysparam.email-verification.url}")
   private String emailVerificationUrl;
 
+  @Value("${sysparam.email-update-verification.url}")
+  private String emailUpdateVerificationUrl;
+
+  @Value("${sysparam.email-update-cancellation.url}")
+  private String emailUpdateCancellationUrl;
+
   @Value("${sysparam.file.upload-dir}")
   private String fileStorageLocation;
 
