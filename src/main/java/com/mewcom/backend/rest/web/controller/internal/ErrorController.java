@@ -1,6 +1,7 @@
 package com.mewcom.backend.rest.web.controller.internal;
 
 import com.mewcom.backend.model.constant.ErrorCode;
+import com.mewcom.backend.model.constant.ErrorMessage;
 import com.mewcom.backend.model.exception.BaseException;
 import com.mewcom.backend.rest.web.controller.helper.ErrorControllerHelper;
 import com.mewcom.backend.rest.web.model.response.error.ErrorFieldAndMessageResponse;
@@ -9,11 +10,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -36,16 +39,25 @@ public class ErrorController {
         null, errorFieldAndMessageList);
   }
 
+  @ExceptionHandler(HttpMessageNotReadableException.class)
+  public ResponseEntity<RestBaseResponse> handleHttpMessageNotReadableException(
+      HttpMessageNotReadableException e) {
+    if (Objects.nonNull(e.getMessage()) && e.getMessage()
+        .contains(ErrorMessage.INVALID_DATE_FORMAT)) {
+      return handleBaseException(new BaseException(ErrorCode.INVALID_DATE_FORMAT));
+    }
+    return handleException(e);
+  }
+
   @ExceptionHandler(BaseException.class)
-  public ResponseEntity<RestBaseResponse> handleGeneralException(BaseException e) {
+  public ResponseEntity<RestBaseResponse> handleBaseException(BaseException e) {
     return helper.buildErrorResponse(e.getCode(), e.getMessage(), e.getHttpStatus(),
         e.getErrorList(), null);
   }
 
   @ExceptionHandler(Exception.class)
   public ResponseEntity<RestBaseResponse> handleException(Exception e) {
-    ErrorCode errorCode = ErrorCode.UNSPECIFIED_ERROR;
-    return helper.buildErrorResponse(errorCode.getErrorCode(), errorCode.getDescription(),
-        errorCode.getHttpStatus(), null, null);
+    log.error(e.getMessage());
+    return handleBaseException(new BaseException(ErrorCode.UNSPECIFIED_ERROR));
   }
 }

@@ -7,7 +7,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.Date;
 
 @Data
 @Builder
@@ -26,6 +28,9 @@ public class RegisterRequest implements Serializable {
 
   @NotBlank
   private String email;
+
+  @NotNull
+  private Date birthdate;
 
   @NotBlank
   private String password;
