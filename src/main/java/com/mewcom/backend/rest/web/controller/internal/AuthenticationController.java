@@ -11,8 +11,10 @@ import com.mewcom.backend.rest.web.model.response.LoginResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestBaseResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestSingleResponse;
 import com.mewcom.backend.rest.web.service.AuthenticationService;
+import com.mewcom.backend.rest.web.util.DateUtil;
 import freemarker.template.TemplateException;
 import io.swagger.annotations.Api;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +35,9 @@ public class AuthenticationController extends BaseController {
   @Autowired
   private AuthenticationService authenticationService;
 
+  @Autowired
+  private DateUtil dateUtil;
+
   @PostMapping(value = ApiPath.LOGIN)
   public ResponseEntity<RestSingleResponse<LoginResponse>> login(
       @Valid @RequestBody LoginRequest request) throws FirebaseAuthException {
@@ -43,12 +48,11 @@ public class AuthenticationController extends BaseController {
   }
 
   private LoginResponse toLoginResponse(Tuple<String, User> tupleOfTokenAndUser) {
-    return LoginResponse.builder()
-        .name(tupleOfTokenAndUser.y().getName())
-        .username(tupleOfTokenAndUser.y().getUsername())
-        .email(tupleOfTokenAndUser.y().getEmail())
-        .token(tupleOfTokenAndUser.x())
-        .build();
+    LoginResponse response = new LoginResponse();
+    BeanUtils.copyProperties(tupleOfTokenAndUser.y(), response);
+    response.setBirthdate(dateUtil.toDateOnlyFormat(tupleOfTokenAndUser.y().getBirthdate()));
+    response.setToken(tupleOfTokenAndUser.x());
+    return response;
   }
 
   @PostMapping(value = ApiPath.REGISTER)
