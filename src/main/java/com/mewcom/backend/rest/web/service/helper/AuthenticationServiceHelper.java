@@ -81,6 +81,7 @@ public class AuthenticationServiceHelper {
     }
     userUtil.validateEmailDoesNotExists(request.getEmail());
     userUtil.validateEmail(request.getEmail());
+    userUtil.validateBirthdate(request.getBirthdate());
     userUtil.validatePasswordValid(request.getPassword());
     roleUtil.validateRoleType(request.getRoleType());
   }
@@ -92,6 +93,7 @@ public class AuthenticationServiceHelper {
         .email(request.getEmail())
         .isEmailVerified(false)
         .verificationCode(RandomString.make(64))
+        .birthdate(request.getBirthdate())
         .roleId(roleRepository.findByTitle(request.getRoleType()).getId())
         .firebaseUid(firebaseUid)
         .build();

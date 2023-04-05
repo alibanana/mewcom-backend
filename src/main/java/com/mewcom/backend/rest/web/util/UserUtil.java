@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.regex.Pattern;
 
 @Component
@@ -29,6 +31,14 @@ public class UserUtil {
     Pattern pattern = Pattern.compile("^(.+)@(\\S+)$");
     if (!pattern.matcher(email).matches()) {
       throw new BaseException(ErrorCode.USER_EMAIL_INVALID);
+    }
+  }
+
+  public void validateBirthdate(Date birthdate) {
+    LocalDate birthdateLocal = birthdate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    LocalDate today = LocalDate.now();
+    if (birthdateLocal.isAfter(today.minusYears(17))) {
+      throw new BaseException(ErrorCode.BIRTHDATE_INVALID);
     }
   }
 
@@ -63,13 +73,6 @@ public class UserUtil {
         Pattern.compile("^\\+[1-9]\\d{1,14}$");
     if (!pattern.matcher(phoneNumber).matches()) {
       throw new BaseException(ErrorCode.USER_PHONE_NUMBER_INVALID);
-    }
-  }
-
-  public void validateBirthdate(LocalDate birthdate) {
-    LocalDate today = LocalDate.now();
-    if (birthdate.isAfter(today.minusYears(17))) {
-      throw new BaseException(ErrorCode.BIRTHDATE_INVALID);
     }
   }
 }
