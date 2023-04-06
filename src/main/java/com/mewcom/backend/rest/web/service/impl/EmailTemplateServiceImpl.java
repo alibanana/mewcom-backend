@@ -70,4 +70,10 @@ public class EmailTemplateServiceImpl implements EmailTemplateService {
     sendTemplate(emailTemplateUtil.buildEmailUpdateNotificationRequest(email, name,
         verificationCode));
   }
+
+  @Override
+  public void sendEmailResetPassword(String email, String name, String newPassword)
+      throws TemplateException, MessagingException, IOException {
+    sendTemplate(emailTemplateUtil.buildEmailResetPasswordRequest(email, name, newPassword));
+  }
 }

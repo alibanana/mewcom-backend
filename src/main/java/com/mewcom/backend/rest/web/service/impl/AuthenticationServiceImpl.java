@@ -11,14 +11,13 @@ import com.mewcom.backend.rest.web.model.request.RegisterRequest;
 import com.mewcom.backend.rest.web.service.AuthenticationService;
 import com.mewcom.backend.rest.web.service.EmailTemplateService;
 import com.mewcom.backend.rest.web.service.helper.AuthenticationServiceHelper;
+import com.mewcom.backend.rest.web.util.StringUtil;
 import freemarker.template.TemplateException;
-import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.util.Objects;
 
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
@@ -52,6 +51,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
   }
 
   @Override
+  public void resetPassword(String email) throws FirebaseAuthException, TemplateException,
+      MessagingException, IOException {
+    User user = helper.validateResetPasswordRequestAndRetrieveUser(email);
+    String newPassword = StringUtil.generatePassword();
+    userRepository.updatePasswordFirebase(user.getFirebaseUid(), newPassword);
+    emailTemplateService.sendEmailResetPassword(user.getEmail(), user.getName(), newPassword);
+  }
+
+  @Override
   public boolean verify(String email, String verificationCode) {
     User user = userRepository.findByEmail(email);
     try {
@@ -79,7 +87,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setEmail(user.getNewEmail());
         user.setNewEmail(null);
         user.setEmailVerified(false);
-        user.setVerificationCode(RandomString.make(64));
+        user.setVerificationCode(StringUtil.generateVerificationCode());
         userRepository.save(user);
         emailTemplateService.sendEmailVerification(user.getEmail(), user.getName(),
             user.getVerificationCode());
