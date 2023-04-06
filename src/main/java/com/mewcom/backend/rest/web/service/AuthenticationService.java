@@ -17,6 +17,9 @@ public interface AuthenticationService {
   void register(RegisterRequest request) throws FirebaseAuthException, TemplateException,
       MessagingException, IOException;
 
+  void resetPassword(String email) throws FirebaseAuthException, TemplateException,
+      MessagingException, IOException;
+
   boolean verify(String email, String verificationCode);
 
   boolean verifyEmailUpdate(String email, String verificationCode);

@@ -7,9 +7,9 @@ import com.mewcom.backend.repository.UserRepository;
 import com.mewcom.backend.rest.web.model.request.UpdateClientRequest;
 import com.mewcom.backend.rest.web.service.ClientService;
 import com.mewcom.backend.rest.web.service.EmailTemplateService;
+import com.mewcom.backend.rest.web.util.StringUtil;
 import com.mewcom.backend.rest.web.util.UserUtil;
 import freemarker.template.TemplateException;
-import net.bytebuddy.utility.RandomString;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -57,7 +57,7 @@ public class ClientServiceImpl implements ClientService {
       userUtil.validateEmailDoesNotExists(request.getEmail());
       user.setEmailVerified(false);
       user.setNewEmail(request.getEmail());
-      user.setVerificationCode(RandomString.make(64));
+      user.setVerificationCode(StringUtil.generateVerificationCode());
     }
 
     userRepository.updateUserFirebase(user.getFirebaseUid(), request.getName(), user.getEmail(),

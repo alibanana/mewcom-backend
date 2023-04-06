@@ -16,4 +16,6 @@ public interface UserFirebaseRepository {
 
   void updateUserFirebase(String uid, String name, String email, String phoneNumber,
       boolean emailVerified) throws FirebaseAuthException;
+
+  void updatePasswordFirebase(String uid, String password) throws FirebaseAuthException;
 }

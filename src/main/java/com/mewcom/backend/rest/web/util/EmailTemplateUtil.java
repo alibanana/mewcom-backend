@@ -107,4 +107,16 @@ public class EmailTemplateUtil {
     String link = sysparamProperties.getEmailUpdateCancellationUrl() + "?email=%s&code=%s";
     return String.format(link, email, verificationCode);
   }
+
+  public EmailTemplateSendRequest buildEmailResetPasswordRequest(String email, String name,
+      String newPassword) {
+    Map<String, Object> content = new HashMap<>();
+    content.put("name", name);
+    content.put("new_password", newPassword);
+    return EmailTemplateSendRequest.builder()
+        .receiverAddress(email)
+        .templateName("EmailResetPassword")
+        .templateKeyAndValues(content)
+        .build();
+  }
 }

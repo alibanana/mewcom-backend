@@ -14,8 +14,8 @@ import com.mewcom.backend.repository.UserRepository;
 import com.mewcom.backend.rest.web.model.request.LoginRequest;
 import com.mewcom.backend.rest.web.model.request.RegisterRequest;
 import com.mewcom.backend.rest.web.util.RoleUtil;
+import com.mewcom.backend.rest.web.util.StringUtil;
 import com.mewcom.backend.rest.web.util.UserUtil;
-import net.bytebuddy.utility.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -86,13 +86,22 @@ public class AuthenticationServiceHelper {
     roleUtil.validateRoleType(request.getRoleType());
   }
 
+  public User validateResetPasswordRequestAndRetrieveUser(String email) {
+    StringUtil.isStringNullOrBlank(email);
+    User user = userRepository.findByEmail(email);
+    if (Objects.isNull(user)) {
+      throw new BaseException(ErrorCode.USER_EMAIL_NOT_FOUND);
+    }
+    return user;
+  }
+
   public User buildUserForRegistration(RegisterRequest request, String firebaseUid) {
     return User.builder()
         .name(request.getName())
         .username(request.getUsername())
         .email(request.getEmail())
         .isEmailVerified(false)
-        .verificationCode(RandomString.make(64))
+        .verificationCode(StringUtil.generateVerificationCode())
         .birthdate(request.getBirthdate())
         .roleId(roleRepository.findByTitle(request.getRoleType()).getId())
         .firebaseUid(firebaseUid)

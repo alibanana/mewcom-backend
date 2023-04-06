@@ -21,10 +21,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 
 @Api(value = "Authentication", description = "Authentication Service API")
@@ -59,6 +61,13 @@ public class AuthenticationController extends BaseController {
   public RestBaseResponse register(@Valid @RequestBody RegisterRequest request)
       throws FirebaseAuthException, TemplateException, MessagingException, IOException {
     authenticationService.register(request);
+    return toBaseResponse();
+  }
+
+  @PostMapping(value = ApiPath.RESET_PASSWORD)
+  public RestBaseResponse resetPassword(@RequestParam(required = false) String email)
+      throws FirebaseAuthException, TemplateException, MessagingException, IOException {
+    authenticationService.resetPassword(email);
     return toBaseResponse();
   }
 }

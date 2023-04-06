@@ -22,4 +22,7 @@ public interface EmailTemplateService {
 
   void sendEmailUpdateNotification(String email, String name, String verificationCode)
       throws TemplateException, MessagingException, IOException;
+
+  void sendEmailResetPassword(String email, String name, String newPassword)
+      throws TemplateException, MessagingException, IOException;
 }
