@@ -3,8 +3,10 @@ package com.mewcom.backend.rest.web.service.impl;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.mewcom.backend.model.auth.UserAuthDto;
 import com.mewcom.backend.model.entity.User;
+import com.mewcom.backend.outbound.GoogleIdentityToolkitOutbound;
 import com.mewcom.backend.repository.UserRepository;
-import com.mewcom.backend.rest.web.model.request.UpdateClientRequest;
+import com.mewcom.backend.rest.web.model.request.client.ClientUpdatePasswordRequest;
+import com.mewcom.backend.rest.web.model.request.client.ClientUpdateRequest;
 import com.mewcom.backend.rest.web.service.ClientService;
 import com.mewcom.backend.rest.web.service.EmailTemplateService;
 import com.mewcom.backend.rest.web.util.StringUtil;
@@ -30,10 +32,13 @@ public class ClientServiceImpl implements ClientService {
   @Autowired
   private EmailTemplateService emailTemplateService;
 
+  @Autowired
+  private GoogleIdentityToolkitOutbound googleIdentityToolkitOutbound;
+
   @Override
-  public Pair<User, Boolean> updateClient(UpdateClientRequest request) throws TemplateException,
+  public Pair<User, Boolean> updateClient(ClientUpdateRequest request) throws TemplateException,
       MessagingException, IOException, FirebaseAuthException {
-    validateUpdateClientRequest(request);
+    validateClientUpdateRequest(request);
     UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
     User user = userRepository.findByEmailAndIsEmailVerifiedTrue(userAuthDto.getEmail());
@@ -46,12 +51,12 @@ public class ClientServiceImpl implements ClientService {
     return Pair.with(updatedUser, isEmailUpdated);
   }
 
-  private void validateUpdateClientRequest(UpdateClientRequest request) {
+  private void validateClientUpdateRequest(ClientUpdateRequest request) {
     userUtil.validateEmail(request.getEmail());
     userUtil.validatePhoneNumber(request.getPhoneNumber());
   }
 
-  private User updateClientFromRequest(UpdateClientRequest request, User user,
+  private User updateClientFromRequest(ClientUpdateRequest request, User user,
       boolean isEmailUpdated) throws FirebaseAuthException {
     if (isEmailUpdated) {
       userUtil.validateEmailDoesNotExists(request.getEmail());
@@ -69,5 +74,21 @@ public class ClientServiceImpl implements ClientService {
       user.setProfileUpdated(true);
     }
     return userRepository.save(user);
+  }
+
+  @Override
+  public void updateClientPassword(ClientUpdatePasswordRequest request)
+      throws FirebaseAuthException {
+    UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
+        .getAuthentication().getPrincipal();
+    validateClientUpdatePasswordRequest(request, userAuthDto.getEmail());
+    userRepository.updatePasswordFirebase(userAuthDto.getUid(), request.getNewPassword());
+  }
+
+  private void validateClientUpdatePasswordRequest(ClientUpdatePasswordRequest request,
+      String email) {
+    googleIdentityToolkitOutbound.signInWithPassword(email, request.getOldPassword());
+    userUtil.validatePasswordUpdate(request.getOldPassword(), request.getNewPassword(),
+        request.getConfirmNewPassword());
   }
 }

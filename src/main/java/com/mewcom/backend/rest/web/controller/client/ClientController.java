@@ -4,8 +4,10 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.mewcom.backend.model.constant.ClientApiPath;
 import com.mewcom.backend.model.entity.User;
 import com.mewcom.backend.rest.web.controller.BaseController;
-import com.mewcom.backend.rest.web.model.request.UpdateClientRequest;
-import com.mewcom.backend.rest.web.model.response.client.UpdateClientResponse;
+import com.mewcom.backend.rest.web.model.request.client.ClientUpdatePasswordRequest;
+import com.mewcom.backend.rest.web.model.request.client.ClientUpdateRequest;
+import com.mewcom.backend.rest.web.model.response.client.ClientUpdateResponse;
+import com.mewcom.backend.rest.web.model.response.rest.RestBaseResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestSingleResponse;
 import com.mewcom.backend.rest.web.service.ClientService;
 import com.mewcom.backend.rest.web.util.DateUtil;
@@ -23,7 +25,7 @@ import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
 
-@Api(value = "Public - Client", description = "Public - Client Service API")
+@Api(value = "Client - Client", description = "Client - Client Service API")
 @RestController
 @RequestMapping(value = ClientApiPath.BASE_PATH_CLIENT)
 public class ClientController extends BaseController {
@@ -35,21 +37,28 @@ public class ClientController extends BaseController {
   private DateUtil dateUtil;
 
   @PutMapping(value = ClientApiPath.CLIENT_UPDATE)
-  public RestSingleResponse<UpdateClientResponse> updateClient(
-      @Valid @RequestBody UpdateClientRequest request) throws TemplateException, MessagingException,
+  public RestSingleResponse<ClientUpdateResponse> updateClient(
+      @Valid @RequestBody ClientUpdateRequest request) throws TemplateException, MessagingException,
       IOException, FirebaseAuthException {
     Pair<User, Boolean> pair = clientService.updateClient(request);
-    return toSingleResponse(toClientResponse(pair));
+    return toSingleResponse(toClientUpdateResponse(pair));
   }
 
-  private UpdateClientResponse toClientResponse(Pair<User, Boolean> pair) {
+  @PutMapping(value = ClientApiPath.CLIENT_UPDATE_PASSWORD)
+  public RestBaseResponse updateClientPassword(
+      @Valid @RequestBody ClientUpdatePasswordRequest request) throws FirebaseAuthException {
+    clientService.updateClientPassword(request);
+    return toBaseResponse();
+  }
+
+  private ClientUpdateResponse toClientUpdateResponse(Pair<User, Boolean> pair) {
     if (!pair.getValue1()) {
-      UpdateClientResponse response = new UpdateClientResponse();
+      ClientUpdateResponse response = new ClientUpdateResponse();
       BeanUtils.copyProperties(pair.getValue0(), response);
       response.setBirthdate(dateUtil.toDateOnlyFormat(pair.getValue0().getBirthdate()));
       response.setEmailUpdated(false);
       return response;
     }
-    return UpdateClientResponse.builder().isEmailUpdated(true).build();
+    return ClientUpdateResponse.builder().isEmailUpdated(true).build();
   }
 }

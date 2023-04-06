@@ -11,4 +11,6 @@ public class ClientApiPath {
   public static final String BASE_PATH_CLIENT = BASE_PATH_API + "/clients";
 
   public static final String CLIENT_UPDATE = "/update";
+
+  public static final String CLIENT_UPDATE_PASSWORD = "/update-password";
 }

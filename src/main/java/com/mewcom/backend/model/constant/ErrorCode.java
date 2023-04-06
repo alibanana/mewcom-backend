@@ -29,6 +29,10 @@ public enum ErrorCode {
   BIRTHDATE_INVALID("ERR-PA40011", 400, "Age must be above 17"),
   INVALID_DATE_FORMAT("ERR-PA40012", 400,
       "Invalid date format, the expected format is yyyy-MM-dd"),
+  PASSWORD_CONFIRMATION_DIFFERENT("ERR-PA40013", 400,
+      "New and confirmed password must be the same"),
+  OLD_AND_NEW_PASSWORD_SAME("ERR-PA40014", 400,
+      "Old and new password must not be the same"),
 
   USER_EMAIL_NOT_FOUND("ERR-PA40101", 401,
       "The requested email does not exists"),
