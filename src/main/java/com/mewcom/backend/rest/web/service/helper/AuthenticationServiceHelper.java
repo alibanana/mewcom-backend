@@ -103,6 +103,7 @@ public class AuthenticationServiceHelper {
         .isEmailVerified(false)
         .verificationCode(StringUtil.generateVerificationCode())
         .birthdate(request.getBirthdate())
+        .isProfileUpdated(false)
         .roleId(roleRepository.findByTitle(request.getRoleType()).getId())
         .firebaseUid(firebaseUid)
         .build();

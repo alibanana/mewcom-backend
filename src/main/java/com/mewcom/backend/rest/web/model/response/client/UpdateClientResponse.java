@@ -25,5 +25,6 @@ public class UpdateClientResponse implements Serializable {
   private String gender;
   private String biodata;
   private String birthdate;
+  private boolean isProfileUpdated;
   private boolean isEmailUpdated;
 }
