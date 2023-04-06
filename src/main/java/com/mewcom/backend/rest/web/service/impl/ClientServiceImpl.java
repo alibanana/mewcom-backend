@@ -59,8 +59,10 @@ public class ClientServiceImpl implements ClientService {
       user.setNewEmail(request.getEmail());
       user.setVerificationCode(RandomString.make(64));
     }
-    userRepository.updateUserFirebase(user.getFirebaseUid(), user.getEmail(),
+
+    userRepository.updateUserFirebase(user.getFirebaseUid(), request.getName(), user.getEmail(),
         request.getPhoneNumber(), user.isEmailVerified());
+    user.setName(request.getName());
     user.setPhoneNumber(request.getPhoneNumber());
     user.setGender(request.getGender());
     user.setBiodata(request.getBiodata());

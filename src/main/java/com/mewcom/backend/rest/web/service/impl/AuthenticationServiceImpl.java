@@ -73,7 +73,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     User user = userRepository.findByEmail(email);
     try {
       if (helper.isUserValidForVerification(user, verificationCode)) {
-        userRepository.updateUserFirebase(user.getFirebaseUid(), user.getNewEmail(),
+        userRepository.updateUserFirebase(user.getFirebaseUid(), user.getName(), user.getNewEmail(),
             user.getPhoneNumber(), false);
         user.setOldEmail(user.getEmail());
         user.setEmail(user.getNewEmail());
@@ -96,7 +96,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     User user = userRepository.findByEmail(email);
     try {
       if (helper.isUserValidForVerification(user, verificationCode)) {
-        userRepository.updateUserFirebase(user.getFirebaseUid(), user.getEmail(),
+        userRepository.updateUserFirebase(user.getFirebaseUid(), user.getName(), user.getEmail(),
             user.getPhoneNumber(), true);
         user.setNewEmail(null);
         user.setEmailVerified(true);

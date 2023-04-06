@@ -19,6 +19,9 @@ public class UpdateClientRequest implements Serializable {
   private static final long serialVersionUID = 1496576045520577085L;
 
   @NotBlank
+  private String name;
+
+  @NotBlank
   private String email;
 
   @NotBlank

@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.time.LocalDate;
 
 @Data
 @Builder
@@ -25,6 +24,6 @@ public class UpdateClientResponse implements Serializable {
   private String phoneNumber;
   private String gender;
   private String biodata;
-  private LocalDate birthdate;
+  private String birthdate;
   private boolean isEmailUpdated;
 }
