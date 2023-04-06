@@ -32,14 +32,15 @@ public class User extends BaseMongoEntity {
   private String gender;
   private String biodata;
   private Date birthdate;
+  private boolean isProfileUpdated;
 
   private String roleId;
   private String firebaseUid;
 
   public User(String id, Date createdAt, Date updatedAt, String name, String username, String email,
       String newEmail, String oldEmail, boolean isEmailVerified, String verificationCode,
-      String phoneNumber, String gender, String biodata, Date birthdate, String roleId,
-      String firebaseUid) {
+      String phoneNumber, String gender, String biodata, Date birthdate, boolean isProfileUpdated,
+      String roleId, String firebaseUid) {
     super(id, createdAt, updatedAt);
     this.name = name;
     this.username = username;
@@ -52,6 +53,7 @@ public class User extends BaseMongoEntity {
     this.gender = gender;
     this.biodata = biodata;
     this.birthdate = birthdate;
+    this.isProfileUpdated = isProfileUpdated;
     this.roleId = roleId;
     this.firebaseUid = firebaseUid;
   }

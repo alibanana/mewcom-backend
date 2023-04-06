@@ -94,6 +94,7 @@ public class AuthenticationServiceHelper {
         .isEmailVerified(false)
         .verificationCode(RandomString.make(64))
         .birthdate(request.getBirthdate())
+        .isProfileUpdated(false)
         .roleId(roleRepository.findByTitle(request.getRoleType()).getId())
         .firebaseUid(firebaseUid)
         .build();
