@@ -13,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UpdateClientResponse implements Serializable {
+public class ClientUpdateResponse implements Serializable {
 
   private static final long serialVersionUID = 7806231961520685396L;
 

@@ -1,4 +1,4 @@
-package com.mewcom.backend.rest.web.model.request;
+package com.mewcom.backend.rest.web.model.request.client;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -14,7 +14,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UpdateClientRequest implements Serializable {
+public class ClientUpdateRequest implements Serializable {
 
   private static final long serialVersionUID = 1496576045520577085L;
 

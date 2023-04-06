@@ -75,4 +75,14 @@ public class UserUtil {
       throw new BaseException(ErrorCode.USER_PHONE_NUMBER_INVALID);
     }
   }
+
+  public void validatePasswordUpdate(String oldPassword, String newPassword,
+      String confirmNewPassword) {
+    if (!newPassword.equals(confirmNewPassword)) {
+      throw new BaseException(ErrorCode.PASSWORD_CONFIRMATION_DIFFERENT);
+    } else if (oldPassword.equals(newPassword)) {
+      throw new BaseException(ErrorCode.OLD_AND_NEW_PASSWORD_SAME);
+    }
+    validatePasswordValid(newPassword);
+  }
 }
