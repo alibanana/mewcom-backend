@@ -31,4 +31,12 @@ public class ApiPath {
   public static final String EMAIL_TEMPLATE_VIEW_BY_TEMPLATE_NAME = "/{templateName}/view";
 
   public static final String EMAIL_TEMPLATE_SEND = "/send";
+
+  public static final String BASE_PATH_IMAGE = BASE_PATH_API + "/images";
+
+  public static final String IMAGE_UPLOAD = "/upload";
+
+  public static final String IMAGE_RETRIEVE_BY_ID = "/{id}";
+
+  public static final String IMAGE_DELETE_BY_ID = "/{id}";
 }
