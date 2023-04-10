@@ -21,11 +21,11 @@ public class SysparamProperties {
   @Value("${sysparam.email-update-cancellation.url}")
   private String emailUpdateCancellationUrl;
 
-  @Value("${sysparam.file.upload-dir}")
-  private String fileStorageLocation;
+  @Value("${sysparam.image.retrieve-url}")
+  private String imageRetrieveUrl;
 
-  @Value("${sysparam.file.retrieve-url}")
-  private String fileRetrieveUrl;
+  @Value("${sysparam.user.default-image-id}")
+  private String userDefaultImageId;
 
   @Value("${sysparam.qrcode.default-width}")
   private Integer qrCodeDefaultWidth;

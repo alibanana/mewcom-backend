@@ -3,10 +3,12 @@ package com.mewcom.backend.rest.web.service.helper;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
+import com.mewcom.backend.config.properties.SysparamProperties;
 import com.mewcom.backend.model.auth.Credentials;
 import com.mewcom.backend.model.auth.UserAuthDto;
 import com.mewcom.backend.model.constant.ErrorCode;
 import com.mewcom.backend.model.entity.User;
+import com.mewcom.backend.model.entity.UserImage;
 import com.mewcom.backend.model.exception.BaseException;
 import com.mewcom.backend.outbound.GoogleIdentityToolkitOutbound;
 import com.mewcom.backend.repository.RoleRepository;
@@ -21,6 +23,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 @Component
@@ -40,6 +44,9 @@ public class AuthenticationServiceHelper {
 
   @Autowired
   private RoleUtil roleUtil;
+
+  @Autowired
+  private SysparamProperties sysparamProperties;
 
   public String validateLoginRequestAndRetrieveToken(LoginRequest request) {
     return googleIdentityToolkitOutbound.signInWithPassword(request.getEmail(),
@@ -104,9 +111,19 @@ public class AuthenticationServiceHelper {
         .verificationCode(StringUtil.generateVerificationCode())
         .birthdate(request.getBirthdate())
         .isProfileUpdated(false)
+        .images(buildDefaultUserImages())
         .roleId(roleRepository.findByTitle(request.getRoleType()).getId())
         .firebaseUid(firebaseUid)
         .build();
+  }
+
+  private List<UserImage> buildDefaultUserImages() {
+    UserImage image = UserImage.builder()
+        .imageId(sysparamProperties.getUserDefaultImageId())
+        .url(sysparamProperties.getImageRetrieveUrl() + sysparamProperties.getUserDefaultImageId())
+        .isDefault(true)
+        .build();
+    return Arrays.asList(image, image, image, image, image, image);
   }
 
   public boolean isUserValidForVerification(User user, String verificationCode) {
