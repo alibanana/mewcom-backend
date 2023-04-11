@@ -6,6 +6,7 @@ import com.mewcom.backend.rest.web.model.request.client.ClientUpdatePasswordRequ
 import com.mewcom.backend.rest.web.model.request.client.ClientUpdateRequest;
 import freemarker.template.TemplateException;
 import org.javatuples.Pair;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -16,4 +17,6 @@ public interface ClientService {
       MessagingException, IOException, FirebaseAuthException;
 
   void updateClientPassword(ClientUpdatePasswordRequest request) throws FirebaseAuthException;
+
+  String updateClientImage(MultipartFile image) throws IOException;
 }

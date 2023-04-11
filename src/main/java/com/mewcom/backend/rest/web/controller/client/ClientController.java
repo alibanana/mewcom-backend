@@ -7,6 +7,7 @@ import com.mewcom.backend.model.entity.UserImage;
 import com.mewcom.backend.rest.web.controller.BaseController;
 import com.mewcom.backend.rest.web.model.request.client.ClientUpdatePasswordRequest;
 import com.mewcom.backend.rest.web.model.request.client.ClientUpdateRequest;
+import com.mewcom.backend.rest.web.model.response.client.ClientUpdateImageResponse;
 import com.mewcom.backend.rest.web.model.response.client.ClientUpdateResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestBaseResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestSingleResponse;
@@ -20,7 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
@@ -53,6 +56,13 @@ public class ClientController extends BaseController {
       @Valid @RequestBody ClientUpdatePasswordRequest request) throws FirebaseAuthException {
     clientService.updateClientPassword(request);
     return toBaseResponse();
+  }
+
+  @PutMapping(value = ClientApiPath.CLIENT_UPDATE_IMAGE)
+  public RestSingleResponse<ClientUpdateImageResponse> updateClientImage(
+      @RequestParam("image") MultipartFile image) throws IOException {
+    String url = clientService.updateClientImage(image);
+    return toSingleResponse(ClientUpdateImageResponse.builder().imageUrl(url).build());
   }
 
   private ClientUpdateResponse toClientUpdateResponse(Pair<User, Boolean> pair) {

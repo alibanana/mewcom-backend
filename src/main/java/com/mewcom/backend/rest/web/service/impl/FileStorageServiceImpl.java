@@ -9,10 +9,10 @@ import com.mewcom.backend.config.properties.AmazonProperties;
 import com.mewcom.backend.model.constant.ErrorCode;
 import com.mewcom.backend.model.exception.BaseException;
 import com.mewcom.backend.rest.web.service.FileStorageService;
+import com.mewcom.backend.rest.web.util.FileUtil;
 import net.bytebuddy.utility.RandomString;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.io.IOUtils;
-import org.javatuples.Pair;
 import org.javatuples.Triplet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class FileStorageServiceImpl implements FileStorageService {
   @Override
   public Triplet<String, String, String> storeFile(MultipartFile file) throws IOException {
     String filename = generateUniqueFilename(file.getOriginalFilename());
-    validateFileNotEmpty(file);
+    FileUtil.validateFileNotEmpty(file);
     validateFileName(filename);
     PutObjectRequest request = new PutObjectRequest(amazonProperties.getBucketName(), filename,
         file.getInputStream(), generateMetadata(file));
@@ -67,12 +67,6 @@ public class FileStorageServiceImpl implements FileStorageService {
     objectMetadata.addUserMetadata("Content-Type", file.getContentType());
     objectMetadata.addUserMetadata("Content-Length", String.valueOf(file.getSize()));
     return objectMetadata;
-  }
-
-  private void validateFileNotEmpty(MultipartFile file) {
-    if (file.isEmpty()) {
-      throw new BaseException(ErrorCode.FILE_IS_EMPTY);
-    }
   }
 
   private void validateFileName(String filename) {
