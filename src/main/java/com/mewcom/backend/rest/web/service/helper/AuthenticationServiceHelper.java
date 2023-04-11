@@ -121,9 +121,8 @@ public class AuthenticationServiceHelper {
     UserImage image = UserImage.builder()
         .imageId(sysparamProperties.getUserDefaultImageId())
         .url(sysparamProperties.getImageRetrieveUrl() + sysparamProperties.getUserDefaultImageId())
-        .isDefault(true)
         .build();
-    return Arrays.asList(image, image, image, image, image, image);
+    return Arrays.asList(image);
   }
 
   public boolean isUserValidForVerification(User user, String verificationCode) {

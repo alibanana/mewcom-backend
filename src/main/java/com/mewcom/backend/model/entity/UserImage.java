@@ -19,5 +19,4 @@ public class UserImage implements Serializable {
 
   String imageId;
   String url;
-  boolean isDefault;
 }
