@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Builder
@@ -25,6 +26,7 @@ public class ClientUpdateResponse implements Serializable {
   private String gender;
   private String biodata;
   private String birthdate;
+  private List<String> imageUrls;
   private boolean isProfileUpdated;
   private boolean isEmailUpdated;
 }

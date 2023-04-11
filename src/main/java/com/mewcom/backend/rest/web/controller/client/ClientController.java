@@ -3,6 +3,7 @@ package com.mewcom.backend.rest.web.controller.client;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.mewcom.backend.model.constant.ClientApiPath;
 import com.mewcom.backend.model.entity.User;
+import com.mewcom.backend.model.entity.UserImage;
 import com.mewcom.backend.rest.web.controller.BaseController;
 import com.mewcom.backend.rest.web.model.request.client.ClientUpdatePasswordRequest;
 import com.mewcom.backend.rest.web.model.request.client.ClientUpdateRequest;
@@ -24,6 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Api(value = "Client - Client", description = "Client - Client Service API")
 @RestController
@@ -56,6 +60,11 @@ public class ClientController extends BaseController {
       ClientUpdateResponse response = new ClientUpdateResponse();
       BeanUtils.copyProperties(pair.getValue0(), response);
       response.setBirthdate(dateUtil.toDateOnlyFormat(pair.getValue0().getBirthdate()));
+      response.setImageUrls(Optional.ofNullable(pair.getValue0().getImages())
+          .orElse(Collections.emptyList())
+          .stream()
+          .map(UserImage::getUrl)
+          .collect(Collectors.toList()));
       response.setEmailUpdated(false);
       return response;
     }
