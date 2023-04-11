@@ -121,6 +121,7 @@ public class AuthenticationServiceHelper {
     UserImage image = UserImage.builder()
         .imageId(sysparamProperties.getUserDefaultImageId())
         .url(sysparamProperties.getImageRetrieveUrl() + sysparamProperties.getUserDefaultImageId())
+        .isDefault(true)
         .build();
     return Arrays.asList(image);
   }
