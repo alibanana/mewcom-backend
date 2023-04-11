@@ -4,6 +4,7 @@ import com.google.cloud.Tuple;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.mewcom.backend.model.constant.ApiPath;
 import com.mewcom.backend.model.entity.User;
+import com.mewcom.backend.model.entity.UserImage;
 import com.mewcom.backend.rest.web.controller.BaseController;
 import com.mewcom.backend.rest.web.model.request.LoginRequest;
 import com.mewcom.backend.rest.web.model.request.RegisterRequest;
@@ -27,6 +28,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Api(value = "Authentication", description = "Authentication Service API")
 @RestController
@@ -52,6 +56,11 @@ public class AuthenticationController extends BaseController {
     LoginResponse response = new LoginResponse();
     BeanUtils.copyProperties(tupleOfTokenAndUser.y(), response);
     response.setBirthdate(dateUtil.toDateOnlyFormat(tupleOfTokenAndUser.y().getBirthdate()));
+    response.setImageUrls(Optional.ofNullable(tupleOfTokenAndUser.y().getImages())
+        .orElse(Collections.emptyList())
+        .stream()
+        .map(UserImage::getUrl)
+        .collect(Collectors.toList()));
     response.setToken(tupleOfTokenAndUser.x());
     return response;
   }

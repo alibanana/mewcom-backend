@@ -6,6 +6,7 @@ import com.mewcom.backend.model.exception.BaseException;
 import com.mewcom.backend.repository.FileRepository;
 import com.mewcom.backend.rest.web.service.FileStorageService;
 import com.mewcom.backend.rest.web.service.ImageService;
+import com.mewcom.backend.rest.web.util.FileUtil;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,7 @@ public class ImageServiceImpl implements ImageService {
 
   @Override
   public File uploadImage(MultipartFile file) throws IOException {
+    FileUtil.validateFileNotEmpty(file);
     validateFileTypeFromFileName(file.getOriginalFilename());
     Triplet<String, String, String> triplet = fileStorageService.storeFile(file);
     return fileRepository.save(File.builder()

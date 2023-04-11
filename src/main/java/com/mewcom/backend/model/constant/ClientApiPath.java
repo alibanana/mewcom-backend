@@ -13,4 +13,6 @@ public class ClientApiPath {
   public static final String CLIENT_UPDATE = "/update";
 
   public static final String CLIENT_UPDATE_PASSWORD = "/update-password";
+
+  public static final String CLIENT_UPDATE_IMAGE = "/update-image";
 }
