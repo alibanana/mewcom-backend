@@ -18,7 +18,7 @@ public enum ErrorCode {
   PASSWORD_DIGIT_COUNT_INVALID("ERR-PA40005", 400,
       "Password must have one or more numerical character"),
   USER_PHONE_NUMBER_INVALID("ERR-PA40006", 400,
-      "Phone number requested is invalid, please follow the E.164 format."),
+      "Phone number requested is invalid, please use this format +628121231234"),
   ROLE_TYPE_INVALID("ERR-PA40007", 400,
       "The requested role type does not exists"),
   ROLE_TITLE_IS_BLANK("ERR-PA40008", 400, "Role title must not be blank"),
