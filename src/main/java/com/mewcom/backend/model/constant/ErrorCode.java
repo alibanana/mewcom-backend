@@ -50,6 +50,8 @@ public enum ErrorCode {
       "The requested user has not been verified"),
   USER_EMAIL_VERIFIED("ERR-PA40104", 401,
       "The requested user has already been verified"),
+  USER_NEW_EMAIL_UNVERIFIED("ERR-PA40105", 401,
+      "The user's new email has not been verified"),
 
   EMAIL_TEMPLATE_NAME_NOT_FOUND("ERR-PA40401", 404,
       "Email template with the requested template name doesn't exists"),

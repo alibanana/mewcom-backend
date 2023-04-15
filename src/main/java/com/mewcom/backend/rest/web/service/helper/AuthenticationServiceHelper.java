@@ -18,6 +18,7 @@ import com.mewcom.backend.rest.web.model.request.RegisterRequest;
 import com.mewcom.backend.rest.web.util.RoleUtil;
 import com.mewcom.backend.rest.web.util.StringUtil;
 import com.mewcom.backend.rest.web.util.UserUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -78,8 +79,17 @@ public class AuthenticationServiceHelper {
 
   private void validateUserAuthDto(UserAuthDto userAuthDto) {
     if (!userAuthDto.isEmailVerified()) {
+      User user = userRepository.findByEmail(userAuthDto.getEmail());
+      if (isInUpdateEmailProccess(user)) {
+        throw new BaseException(ErrorCode.USER_NEW_EMAIL_UNVERIFIED);
+      }
       throw new BaseException(ErrorCode.USER_EMAIL_UNVERIFIED);
     }
+  }
+
+  private boolean isInUpdateEmailProccess(User user) {
+    return !StringUtil.isStringNullOrBlank(user.getNewEmail())
+        && !StringUtil.isStringNullOrBlank(user.getVerificationCode());
   }
 
   public void validateRegisterRequest(RegisterRequest request) {
