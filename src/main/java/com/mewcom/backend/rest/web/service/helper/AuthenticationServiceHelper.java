@@ -81,7 +81,7 @@ public class AuthenticationServiceHelper {
     if (!userAuthDto.isEmailVerified()) {
       User user = userRepository.findByEmail(userAuthDto.getEmail());
       if (isInUpdateEmailProccess(user)) {
-        throw new BaseException(ErrorCode.USER_NEW_EMAIL_UNVERIFIED);
+        throw new BaseException(ErrorCode.USER_EMAIL_UPDATE_UNVERIFIED);
       }
       throw new BaseException(ErrorCode.USER_EMAIL_UNVERIFIED);
     }
