@@ -9,16 +9,6 @@ import com.mewcom.backend.repository.UserFirebaseRepository;
 public class UserFirebaseRepositoryImpl implements UserFirebaseRepository {
 
   @Override
-  public UserRecord findByIdFirebase(String id) throws FirebaseAuthException {
-    return FirebaseAuth.getInstance().getUser(id);
-  }
-
-  @Override
-  public UserRecord findByEmailFirebase(String email) throws FirebaseAuthException {
-    return FirebaseAuth.getInstance().getUserByEmail(email);
-  }
-
-  @Override
   public UserRecord createUserFirebase(String email, String password, String displayName)
       throws FirebaseAuthException {
     CreateRequest request = new CreateRequest()
@@ -52,5 +42,10 @@ public class UserFirebaseRepositoryImpl implements UserFirebaseRepository {
     UserRecord userRecord = FirebaseAuth.getInstance().getUser(uid);
     FirebaseAuth.getInstance().updateUser(userRecord.updateRequest()
         .setPassword(password));
+  }
+
+  @Override
+  public void deleteByUidFirebase(String uid) throws FirebaseAuthException {
+    FirebaseAuth.getInstance().deleteUser(uid);
   }
 }
