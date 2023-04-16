@@ -8,6 +8,7 @@ import com.mewcom.backend.rest.web.controller.BaseController;
 import com.mewcom.backend.rest.web.model.request.client.ClientUpdatePasswordRequest;
 import com.mewcom.backend.rest.web.model.request.client.ClientUpdateRequest;
 import com.mewcom.backend.rest.web.model.response.client.ClientDashboardDetailsResponse;
+import com.mewcom.backend.rest.web.model.response.client.ClientDetailsResponse;
 import com.mewcom.backend.rest.web.model.response.client.ClientUpdateImageResponse;
 import com.mewcom.backend.rest.web.model.response.client.ClientUpdateResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestBaseResponse;
@@ -68,9 +69,15 @@ public class ClientController extends BaseController {
   }
 
   @PostMapping(value = ClientApiPath.CLIENT_DASHBOARD_DETAILS)
-  public RestSingleResponse<ClientDashboardDetailsResponse> getDashboardDetails() {
+  public RestSingleResponse<ClientDashboardDetailsResponse> getClientDashboardDetails() {
     User user = clientService.getClientDashboardDetails();
     return toSingleResponse(toClientDashboardDetailsResponse(user));
+  }
+
+  @PostMapping(value = ClientApiPath.CLIENT_DETAILS)
+  public RestSingleResponse<ClientDetailsResponse> getClientDetails() {
+    User user = clientService.getClientDetails();
+    return toSingleResponse(toClientDetailsResponse(user));
   }
 
   private ClientUpdateResponse toClientUpdateResponse(Pair<User, Boolean> pair) {
@@ -93,6 +100,18 @@ public class ClientController extends BaseController {
     ClientDashboardDetailsResponse response = new ClientDashboardDetailsResponse();
     BeanUtils.copyProperties(user, response);
     response.setImageUrls(Optional.ofNullable(user.getImages()).orElse(Collections.emptyList())
+        .stream()
+        .map(UserImage::getUrl)
+        .collect(Collectors.toList()));
+    return response;
+  }
+
+  private ClientDetailsResponse toClientDetailsResponse(User user) {
+    ClientDetailsResponse response = new ClientDetailsResponse();
+    BeanUtils.copyProperties(user, response);
+    response.setBirthdate(dateUtil.toDateOnlyFormat(user.getBirthdate()));
+    response.setImageUrls(Optional.ofNullable(user.getImages())
+        .orElse(Collections.emptyList())
         .stream()
         .map(UserImage::getUrl)
         .collect(Collectors.toList()));
