@@ -139,4 +139,12 @@ public class ClientServiceImpl implements ClientService {
     user.setImages(images);
     userRepository.save(user);
   }
+
+  @Override
+  public User getClientDashboardDetails() {
+    UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
+        .getAuthentication().getPrincipal();
+    return userRepository.findByEmailAndIsEmailVerifiedIncludeNameAndUsernameAndImages(
+        userAuthDto.getEmail(), true);
+  }
 }

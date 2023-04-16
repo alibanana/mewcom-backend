@@ -19,4 +19,6 @@ public interface ClientService {
   void updateClientPassword(ClientUpdatePasswordRequest request) throws FirebaseAuthException;
 
   String updateClientImage(MultipartFile image) throws IOException;
+
+  User getClientDashboardDetails();
 }

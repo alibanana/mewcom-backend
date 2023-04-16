@@ -7,6 +7,7 @@ import com.mewcom.backend.model.entity.UserImage;
 import com.mewcom.backend.rest.web.controller.BaseController;
 import com.mewcom.backend.rest.web.model.request.client.ClientUpdatePasswordRequest;
 import com.mewcom.backend.rest.web.model.request.client.ClientUpdateRequest;
+import com.mewcom.backend.rest.web.model.response.client.ClientDashboardDetailsResponse;
 import com.mewcom.backend.rest.web.model.response.client.ClientUpdateImageResponse;
 import com.mewcom.backend.rest.web.model.response.client.ClientUpdateResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestBaseResponse;
@@ -18,6 +19,7 @@ import io.swagger.annotations.Api;
 import org.javatuples.Pair;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,6 +67,12 @@ public class ClientController extends BaseController {
     return toSingleResponse(ClientUpdateImageResponse.builder().imageUrl(url).build());
   }
 
+  @PostMapping(value = ClientApiPath.CLIENT_DASHBOARD_DETAILS)
+  public RestSingleResponse<ClientDashboardDetailsResponse> getDashboardDetails() {
+    User user = clientService.getClientDashboardDetails();
+    return toSingleResponse(toClientDashboardDetailsResponse(user));
+  }
+
   private ClientUpdateResponse toClientUpdateResponse(Pair<User, Boolean> pair) {
     if (!pair.getValue1()) {
       ClientUpdateResponse response = new ClientUpdateResponse();
@@ -79,5 +87,15 @@ public class ClientController extends BaseController {
       return response;
     }
     return ClientUpdateResponse.builder().isEmailUpdated(true).build();
+  }
+
+  private ClientDashboardDetailsResponse toClientDashboardDetailsResponse(User user) {
+    ClientDashboardDetailsResponse response = new ClientDashboardDetailsResponse();
+    BeanUtils.copyProperties(user, response);
+    response.setImageUrls(Optional.ofNullable(user.getImages()).orElse(Collections.emptyList())
+        .stream()
+        .map(UserImage::getUrl)
+        .collect(Collectors.toList()));
+    return response;
   }
 }
