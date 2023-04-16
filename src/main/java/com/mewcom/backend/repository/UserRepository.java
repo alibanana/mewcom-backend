@@ -20,4 +20,6 @@ public interface UserRepository extends MongoRepository<User, String>, UserFireb
       fields = "{ '_id': 0, 'name': 1, 'username': 1, 'images': 1 }")
   User findByEmailAndIsEmailVerifiedIncludeNameAndUsernameAndImages(String email,
       boolean isEmailVerified);
+
+  Boolean existsByPhoneNumber(String phoneNumber);
 }

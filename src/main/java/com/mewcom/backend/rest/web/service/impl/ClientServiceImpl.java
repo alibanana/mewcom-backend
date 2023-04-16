@@ -58,7 +58,8 @@ public class ClientServiceImpl implements ClientService {
         .getAuthentication().getPrincipal();
     User user = userRepository.findByEmailAndIsEmailVerifiedTrue(userAuthDto.getEmail());
     boolean isEmailUpdated = !request.getEmail().equals(user.getEmail());
-    User updatedUser = updateClientFromRequest(request, user, isEmailUpdated);
+    boolean isPhoneNumberUpdated = !request.getPhoneNumber().equals(user.getPhoneNumber());
+    User updatedUser = updateClientFromRequest(request, user, isEmailUpdated, isPhoneNumberUpdated);
     if (isEmailUpdated) {
       emailTemplateService.sendEmailUpdateNotification(updatedUser.getEmail(),
           updatedUser.getName(), updatedUser.getVerificationCode());
@@ -72,22 +73,26 @@ public class ClientServiceImpl implements ClientService {
   }
 
   private User updateClientFromRequest(ClientUpdateRequest request, User user,
-      boolean isEmailUpdated) throws FirebaseAuthException {
+      boolean isEmailUpdated, boolean isPhoneNumberUpdated) throws FirebaseAuthException {
     if (isEmailUpdated) {
       userUtil.validateEmailDoesNotExists(request.getEmail());
       user.setEmailVerified(false);
       user.setNewEmail(request.getEmail());
       user.setVerificationCode(StringUtil.generateVerificationCode());
     }
+
+    if (isPhoneNumberUpdated) {
+      userUtil.validatePhoneNumberDoesNotExists(request.getPhoneNumber());
+      user.setPhoneNumber(request.getPhoneNumber());
+      user.setPhoneNumberVerified(false);
+    }
+
     userRepository.updateUserFirebase(user.getFirebaseUid(), request.getName(), user.getEmail(),
-        request.getPhoneNumber(), user.isEmailVerified());
+        user.getPhoneNumber(), user.isEmailVerified());
     user.setName(request.getName());
-    user.setPhoneNumber(request.getPhoneNumber());
     user.setGender(request.getGender());
     user.setBiodata(request.getBiodata());
-    if (!user.isProfileUpdated()) {
-      user.setProfileUpdated(true);
-    }
+    user.setProfileUpdated(true);
     return userRepository.save(user);
   }
 

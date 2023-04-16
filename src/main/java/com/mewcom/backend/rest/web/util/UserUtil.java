@@ -68,6 +68,12 @@ public class UserUtil {
     }
   }
 
+  public void validatePhoneNumberDoesNotExists(String phoneNumber) {
+    if (userRepository.existsByPhoneNumber(phoneNumber)) {
+      throw new BaseException(ErrorCode.PHONE_NUMBER_ALREADY_EXISTS);
+    }
+  }
+
   public void validatePhoneNumber(String phoneNumber) {
     Pattern pattern =
         Pattern.compile("^\\+[1-9]\\d{1,14}$");
