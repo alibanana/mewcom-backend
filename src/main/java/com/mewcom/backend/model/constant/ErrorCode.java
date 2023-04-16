@@ -41,6 +41,8 @@ public enum ErrorCode {
       "Only images (png, jpeg/jpg) are allowed, please double check the filetype"),
   IMAGE_ID_DOES_NOT_EXISTS("ERR-PA40018", 400,
       "Image with the requested id does not exists"),
+  USER_ID_DOES_NOT_EXISTS("ERR-PA40019", 400,
+      "User with the requested id does not exists"),
 
   USER_EMAIL_NOT_FOUND("ERR-PA40101", 401,
       "The requested email does not exists"),

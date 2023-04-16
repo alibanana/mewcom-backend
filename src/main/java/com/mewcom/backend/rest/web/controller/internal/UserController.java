@@ -1,13 +1,17 @@
 package com.mewcom.backend.rest.web.controller.internal;
 
+import com.google.firebase.auth.FirebaseAuthException;
 import com.mewcom.backend.model.constant.ApiPath;
 import com.mewcom.backend.model.entity.User;
 import com.mewcom.backend.rest.web.controller.BaseController;
 import com.mewcom.backend.rest.web.model.response.UserResponse;
+import com.mewcom.backend.rest.web.model.response.rest.RestBaseResponse;
 import com.mewcom.backend.rest.web.service.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,7 +23,11 @@ public class UserController extends BaseController {
   @Autowired
   private UserService userService;
 
-
+  @DeleteMapping(value = ApiPath.USER_DELETE_BY_ID)
+  public RestBaseResponse deleteById(@PathVariable("id") String id) throws FirebaseAuthException {
+    userService.deleteById(id);
+    return toBaseResponse();
+  }
 
   private UserResponse toUserResponse(User user) {
     UserResponse response = new UserResponse();

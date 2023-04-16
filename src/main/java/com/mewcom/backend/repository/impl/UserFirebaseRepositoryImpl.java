@@ -43,4 +43,9 @@ public class UserFirebaseRepositoryImpl implements UserFirebaseRepository {
     FirebaseAuth.getInstance().updateUser(userRecord.updateRequest()
         .setPassword(password));
   }
+
+  @Override
+  public void deleteByUidFirebase(String uid) throws FirebaseAuthException {
+    FirebaseAuth.getInstance().deleteUser(uid);
+  }
 }
