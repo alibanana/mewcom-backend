@@ -147,4 +147,11 @@ public class ClientServiceImpl implements ClientService {
     return userRepository.findByEmailAndIsEmailVerifiedIncludeNameAndUsernameAndImages(
         userAuthDto.getEmail(), true);
   }
+
+  @Override
+  public User getClientDetails() {
+    UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
+        .getAuthentication().getPrincipal();
+    return userRepository.findByEmailAndIsEmailVerifiedTrue(userAuthDto.getEmail());
+  }
 }

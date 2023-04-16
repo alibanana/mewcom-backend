@@ -17,4 +17,6 @@ public class ClientApiPath {
   public static final String CLIENT_UPDATE_IMAGE = "/update-image";
 
   public static final String CLIENT_DASHBOARD_DETAILS = "/dashboard-details";
+
+  public static final String CLIENT_DETAILS = "/details";
 }
