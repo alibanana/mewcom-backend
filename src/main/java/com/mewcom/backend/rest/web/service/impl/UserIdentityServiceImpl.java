@@ -36,7 +36,7 @@ public class UserIdentityServiceImpl implements UserIdentityService {
 
   @Override
   public String uploadUserIdentityIdCardImage(MultipartFile image) throws IOException {
-    UserIdentity userIdentity = getUserIdentity();
+    UserIdentity userIdentity = getUserIdentityOrDefault();
     UserIdentityImage existingIdCardImage = userIdentity.getIdCardImage();
     UserIdentity updatedUserIdentity =
         updateIdCardImageAndSaveUserIdentity(userIdentity, image);
@@ -46,7 +46,7 @@ public class UserIdentityServiceImpl implements UserIdentityService {
 
   @Override
   public String uploadUserIdentitySelfieImage(MultipartFile image) throws IOException {
-    UserIdentity userIdentity = getUserIdentity();
+    UserIdentity userIdentity = getUserIdentityOrDefault();
     UserIdentityImage existingSelfieImage = userIdentity.getSelfieImage();
     UserIdentity updatedUserIdentity =
         updateSelfieImageAndSaveUserIdentity(userIdentity, image);
@@ -54,7 +54,17 @@ public class UserIdentityServiceImpl implements UserIdentityService {
     return updatedUserIdentity.getSelfieImage().getUrl();
   }
 
-  private UserIdentity getUserIdentity() {
+  @Override
+  public void deleteUserIdentityByUserId(String userId) {
+    UserIdentity userIdentity = userIdentityRepository.findByUserId(userId);
+    if (Objects.nonNull(userIdentity)) {
+      deleteUserIdentityImage(userIdentity.getIdCardImage());
+      deleteUserIdentityImage(userIdentity.getSelfieImage());
+      userIdentityRepository.delete(userIdentity);
+    }
+  }
+
+  private UserIdentity getUserIdentityOrDefault() {
     UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
     String userId = userRepository.findByEmailAndIsEmailVerifiedIncludeIdOnly(
