@@ -8,8 +8,8 @@ import com.mewcom.backend.model.entity.UserIdentity;
 import com.mewcom.backend.model.entity.UserIdentityImage;
 import com.mewcom.backend.repository.UserIdentityRepository;
 import com.mewcom.backend.repository.UserRepository;
-import com.mewcom.backend.rest.web.service.ClientIdentityService;
 import com.mewcom.backend.rest.web.service.ImageService;
+import com.mewcom.backend.rest.web.service.UserIdentityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
-public class ClientIdentityServiceImpl implements ClientIdentityService {
+public class UserIdentityServiceImpl implements UserIdentityService {
 
   @Autowired
   private UserRepository userRepository;
@@ -35,7 +35,7 @@ public class ClientIdentityServiceImpl implements ClientIdentityService {
   private SysparamProperties sysparamProperties;
 
   @Override
-  public String uploadClientIdentityIdCardImage(MultipartFile image) throws IOException {
+  public String uploadUserIdentityIdCardImage(MultipartFile image) throws IOException {
     UserIdentity userIdentity = getUserIdentity();
     UserIdentityImage existingIdCardImage = userIdentity.getIdCardImage();
     UserIdentity updatedUserIdentity =
@@ -45,7 +45,7 @@ public class ClientIdentityServiceImpl implements ClientIdentityService {
   }
 
   @Override
-  public String uploadClientIdentitySelfieImage(MultipartFile image) throws IOException {
+  public String uploadUserIdentitySelfieImage(MultipartFile image) throws IOException {
     UserIdentity userIdentity = getUserIdentity();
     UserIdentityImage existingSelfieImage = userIdentity.getSelfieImage();
     UserIdentity updatedUserIdentity =

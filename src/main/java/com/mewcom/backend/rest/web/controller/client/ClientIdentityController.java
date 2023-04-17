@@ -5,7 +5,7 @@ import com.mewcom.backend.rest.web.controller.BaseController;
 import com.mewcom.backend.rest.web.model.response.clientidentity.ClientIdentityUploadIdCardImageResponse;
 import com.mewcom.backend.rest.web.model.response.clientidentity.ClientIdentityUploadSelfieImageResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestSingleResponse;
-import com.mewcom.backend.rest.web.service.ClientIdentityService;
+import com.mewcom.backend.rest.web.service.UserIdentityService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,12 +22,12 @@ import java.io.IOException;
 public class ClientIdentityController extends BaseController {
 
   @Autowired
-  private ClientIdentityService clientIdentityService;
+  private UserIdentityService userIdentityService;
 
   @PostMapping(value = ClientApiPath.CLIENT_IDENTITY_UPLOAD_ID_CARD_IMAGE)
   public RestSingleResponse<ClientIdentityUploadIdCardImageResponse> uploadClientIdentityIdCardImage(
       @RequestParam("image") MultipartFile image) throws IOException {
-    String imageUrl = clientIdentityService.uploadClientIdentityIdCardImage(image);
+    String imageUrl = userIdentityService.uploadUserIdentityIdCardImage(image);
     return toSingleResponse(ClientIdentityUploadIdCardImageResponse.builder()
         .imageUrl(imageUrl).build());
   }
@@ -35,7 +35,7 @@ public class ClientIdentityController extends BaseController {
   @PostMapping(value = ClientApiPath.CLIENT_IDENTITY_UPLOAD_SELFIE_IMAGE)
   public RestSingleResponse<ClientIdentityUploadSelfieImageResponse> uploadClientIdentitySelfieImage(
       @RequestParam("image") MultipartFile image) throws IOException {
-    String imageUrl = clientIdentityService.uploadClientIdentitySelfieImage(image);
+    String imageUrl = userIdentityService.uploadUserIdentitySelfieImage(image);
     return toSingleResponse(ClientIdentityUploadSelfieImageResponse.builder()
         .imageUrl(imageUrl).build());
   }
