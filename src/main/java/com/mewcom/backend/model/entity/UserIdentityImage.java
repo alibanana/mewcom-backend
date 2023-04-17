@@ -13,11 +13,10 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserImage implements Serializable {
+public class UserIdentityImage implements Serializable {
 
-  private static final long serialVersionUID = -323996209557603020L;
+  private static final long serialVersionUID = -4941751813649583222L;
 
   private String imageId;
   private String url;
-  private boolean isDefault;
 }
