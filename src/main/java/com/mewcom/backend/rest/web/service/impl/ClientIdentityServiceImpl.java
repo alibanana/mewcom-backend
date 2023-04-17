@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ClientIdentityServiceImpl implements ClientIdentityService {
@@ -34,44 +35,61 @@ public class ClientIdentityServiceImpl implements ClientIdentityService {
 
   @Override
   public String uploadClientIdentityIdCardImage(MultipartFile image) throws IOException {
+    UserIdentity userIdentity = getUserIdentity();
+    UserIdentityImage existingIdCardImage = userIdentity.getIdCardImage();
+    UserIdentity updatedUserIdentity =
+        updateIdCardImageAndSaveUserIdentity(userIdentity, image);
+    deleteUserIdentityImage(existingIdCardImage);
+    return updatedUserIdentity.getIdCardImage().getUrl();
+  }
+
+  @Override
+  public String uploadClientIdentitySelfieImage(MultipartFile image) throws IOException {
+    UserIdentity userIdentity = getUserIdentity();
+    UserIdentityImage existingSelfieImage = userIdentity.getSelfieImage();
+    UserIdentity updatedUserIdentity =
+        updateSelfieImageAndSaveUserIdentity(userIdentity, image);
+    deleteUserIdentityImage(existingSelfieImage);
+    return updatedUserIdentity.getSelfieImage().getUrl();
+  }
+
+  private UserIdentity getUserIdentity() {
     UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
     String userId = userRepository.findByEmailAndIsEmailVerifiedIncludeIdOnly(
         userAuthDto.getEmail(), true).getId();
-    UserIdentity userIdentity = userIdentityRepository.findByUserId(userId);
-    UserIdentityImage existingIdCardImage = getExistingIdCardImage(userIdentity);
-    UserIdentity updatedUserIdentity =
-        updateIdCardImageAndSaveUserIdentity(userIdentity, image, userId);
-    deleteExistingIdCardImage(existingIdCardImage);
-    return updatedUserIdentity.getIdCardImage().getUrl();
-  }
-
-  private UserIdentityImage getExistingIdCardImage(UserIdentity userIdentity) {
-    if (Objects.nonNull(userIdentity) && Objects.nonNull(userIdentity.getIdCardImage())) {
-      return userIdentity.getIdCardImage();
-    }
-    return null;
+    return Optional.ofNullable(userIdentityRepository.findByUserId(userId))
+        .orElse(UserIdentity.builder()
+            .userId(userId)
+            .build());
   }
 
   private UserIdentity updateIdCardImageAndSaveUserIdentity(UserIdentity userIdentity,
-      MultipartFile image, String userId) throws IOException {
-    if (Objects.isNull(userIdentity)) {
-      userIdentity = UserIdentity.builder()
-          .userId(userId)
-          .build();
-    }
-    File file = imageService.uploadImage(image);
-    UserIdentityImage idCardImage = UserIdentityImage.builder()
-        .imageId(file.getId())
-        .url(sysparamProperties.getImageRetrieveUrl() + file.getId())
-        .build();
+      MultipartFile image) throws IOException {
+    UserIdentityImage idCardImage = uploadAndBuildNewUserIdentityImage(image);
     userIdentity.setIdCardImage(idCardImage);
     return userIdentityRepository.save(userIdentity);
   }
 
-  private void deleteExistingIdCardImage(UserIdentityImage idCardImage) {
-    if (Objects.nonNull(idCardImage)) {
-      imageService.deleteImageById(idCardImage.getImageId());
+  private UserIdentity updateSelfieImageAndSaveUserIdentity(UserIdentity userIdentity,
+      MultipartFile image) throws IOException {
+    UserIdentityImage selfieImage = uploadAndBuildNewUserIdentityImage(image);
+    userIdentity.setSelfieImage(selfieImage);
+    return userIdentityRepository.save(userIdentity);
+  }
+
+  private UserIdentityImage uploadAndBuildNewUserIdentityImage(MultipartFile image)
+      throws IOException {
+    File file = imageService.uploadImage(image);
+    return UserIdentityImage.builder()
+        .imageId(file.getId())
+        .url(sysparamProperties.getImageRetrieveUrl() + file.getId())
+        .build();
+  }
+
+  private void deleteUserIdentityImage(UserIdentityImage userIdentityImage) {
+    if (Objects.nonNull(userIdentityImage)) {
+      imageService.deleteImageById(userIdentityImage.getImageId());
     }
   }
 }

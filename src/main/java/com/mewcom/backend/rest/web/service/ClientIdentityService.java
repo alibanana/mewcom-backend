@@ -7,4 +7,6 @@ import java.io.IOException;
 public interface ClientIdentityService {
 
   String uploadClientIdentityIdCardImage(MultipartFile image) throws IOException;
+
+  String uploadClientIdentitySelfieImage(MultipartFile image) throws IOException;
 }

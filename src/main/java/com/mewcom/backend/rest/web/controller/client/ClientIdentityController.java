@@ -2,7 +2,8 @@ package com.mewcom.backend.rest.web.controller.client;
 
 import com.mewcom.backend.model.constant.ClientApiPath;
 import com.mewcom.backend.rest.web.controller.BaseController;
-import com.mewcom.backend.rest.web.model.response.clientidentity.ClientIdentityUploadIdPhotoResponse;
+import com.mewcom.backend.rest.web.model.response.clientidentity.ClientIdentityUploadIdCardImageResponse;
+import com.mewcom.backend.rest.web.model.response.clientidentity.ClientIdentityUploadSelfieImageResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestSingleResponse;
 import com.mewcom.backend.rest.web.service.ClientIdentityService;
 import io.swagger.annotations.Api;
@@ -24,10 +25,18 @@ public class ClientIdentityController extends BaseController {
   private ClientIdentityService clientIdentityService;
 
   @PostMapping(value = ClientApiPath.CLIENT_IDENTITY_UPLOAD_ID_CARD_IMAGE)
-  public RestSingleResponse<ClientIdentityUploadIdPhotoResponse> uploadClientIdentityIdCardImage(
+  public RestSingleResponse<ClientIdentityUploadIdCardImageResponse> uploadClientIdentityIdCardImage(
       @RequestParam("image") MultipartFile image) throws IOException {
     String imageUrl = clientIdentityService.uploadClientIdentityIdCardImage(image);
-    return toSingleResponse(ClientIdentityUploadIdPhotoResponse.builder()
+    return toSingleResponse(ClientIdentityUploadIdCardImageResponse.builder()
+        .imageUrl(imageUrl).build());
+  }
+
+  @PostMapping(value = ClientApiPath.CLIENT_IDENTITY_UPLOAD_SELFIE_IMAGE)
+  public RestSingleResponse<ClientIdentityUploadSelfieImageResponse> uploadClientIdentitySelfieImage(
+      @RequestParam("image") MultipartFile image) throws IOException {
+    String imageUrl = clientIdentityService.uploadClientIdentitySelfieImage(image);
+    return toSingleResponse(ClientIdentityUploadSelfieImageResponse.builder()
         .imageUrl(imageUrl).build());
   }
 }

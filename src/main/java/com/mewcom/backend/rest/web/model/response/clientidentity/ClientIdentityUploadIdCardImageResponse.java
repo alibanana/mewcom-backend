@@ -13,7 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ClientIdentityUploadIdPhotoResponse implements Serializable {
+public class ClientIdentityUploadIdCardImageResponse implements Serializable {
 
   private static final long serialVersionUID = 8704257986475176608L;
 
