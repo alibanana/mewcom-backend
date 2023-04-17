@@ -122,6 +122,7 @@ public class AuthenticationServiceHelper {
         .birthdate(request.getBirthdate())
         .isProfileUpdated(false)
         .images(buildDefaultUserImages())
+        .isIdentityVerified(false)
         .roleId(roleRepository.findByTitle(request.getRoleType()).getId())
         .firebaseUid(firebaseUid)
         .build();
