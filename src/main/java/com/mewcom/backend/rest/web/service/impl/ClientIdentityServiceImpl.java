@@ -2,6 +2,7 @@ package com.mewcom.backend.rest.web.service.impl;
 
 import com.mewcom.backend.config.properties.SysparamProperties;
 import com.mewcom.backend.model.auth.UserAuthDto;
+import com.mewcom.backend.model.constant.UserIdentityStatus;
 import com.mewcom.backend.model.entity.File;
 import com.mewcom.backend.model.entity.UserIdentity;
 import com.mewcom.backend.model.entity.UserIdentityImage;
@@ -60,6 +61,7 @@ public class ClientIdentityServiceImpl implements ClientIdentityService {
         userAuthDto.getEmail(), true).getId();
     return Optional.ofNullable(userIdentityRepository.findByUserId(userId))
         .orElse(UserIdentity.builder()
+            .status(UserIdentityStatus.CREATED.getStatus())
             .userId(userId)
             .build());
   }
