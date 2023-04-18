@@ -2,18 +2,22 @@ package com.mewcom.backend.rest.web.controller.client;
 
 import com.mewcom.backend.model.constant.ClientApiPath;
 import com.mewcom.backend.rest.web.controller.BaseController;
+import com.mewcom.backend.rest.web.model.request.ClientIdentitySubmitRequest;
 import com.mewcom.backend.rest.web.model.response.clientidentity.ClientIdentityUploadIdCardImageResponse;
 import com.mewcom.backend.rest.web.model.response.clientidentity.ClientIdentityUploadSelfieImageResponse;
+import com.mewcom.backend.rest.web.model.response.rest.RestBaseResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestSingleResponse;
 import com.mewcom.backend.rest.web.service.UserIdentityService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.validation.Valid;
 import java.io.IOException;
 
 @Api(value = "Client - Client Identity", description = "Client - Client Identity Service API")
@@ -38,5 +42,12 @@ public class ClientIdentityController extends BaseController {
     String imageUrl = userIdentityService.uploadUserIdentitySelfieImage(image);
     return toSingleResponse(ClientIdentityUploadSelfieImageResponse.builder()
         .imageUrl(imageUrl).build());
+  }
+
+  @PostMapping(value = ClientApiPath.CLIENT_IDENTITY_SUBMIT)
+  public RestBaseResponse submitClientIdentity(
+      @Valid @RequestBody ClientIdentitySubmitRequest request) {
+    userIdentityService.submitUserIdentity(request);
+    return toBaseResponse();
   }
 }

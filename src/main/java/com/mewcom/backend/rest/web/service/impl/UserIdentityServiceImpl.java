@@ -2,12 +2,15 @@ package com.mewcom.backend.rest.web.service.impl;
 
 import com.mewcom.backend.config.properties.SysparamProperties;
 import com.mewcom.backend.model.auth.UserAuthDto;
+import com.mewcom.backend.model.constant.ErrorCode;
 import com.mewcom.backend.model.constant.UserIdentityStatus;
 import com.mewcom.backend.model.entity.File;
 import com.mewcom.backend.model.entity.UserIdentity;
 import com.mewcom.backend.model.entity.UserIdentityImage;
+import com.mewcom.backend.model.exception.BaseException;
 import com.mewcom.backend.repository.UserIdentityRepository;
 import com.mewcom.backend.repository.UserRepository;
+import com.mewcom.backend.rest.web.model.request.ClientIdentitySubmitRequest;
 import com.mewcom.backend.rest.web.service.ImageService;
 import com.mewcom.backend.rest.web.service.UserIdentityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 @Service
 public class UserIdentityServiceImpl implements UserIdentityService {
@@ -52,6 +56,16 @@ public class UserIdentityServiceImpl implements UserIdentityService {
         updateSelfieImageAndSaveUserIdentity(userIdentity, image);
     deleteUserIdentityImage(existingSelfieImage);
     return updatedUserIdentity.getSelfieImage().getUrl();
+  }
+
+  @Override
+  public void submitUserIdentity(ClientIdentitySubmitRequest request) {
+    UserIdentity userIdentity = getUserIdentityOrDefault();
+    validateUserIdentityForSubmission(userIdentity);
+    validateIdCardNumber(request.getIdCardNumber());
+    userIdentity.setIdCardNumber(request.getIdCardNumber());
+    userIdentity.setStatus(UserIdentityStatus.SUBMITTED.getStatus());
+    userIdentityRepository.save(userIdentity);
   }
 
   @Override
@@ -102,6 +116,25 @@ public class UserIdentityServiceImpl implements UserIdentityService {
   private void deleteUserIdentityImage(UserIdentityImage userIdentityImage) {
     if (Objects.nonNull(userIdentityImage)) {
       imageService.deleteImageById(userIdentityImage.getImageId());
+    }
+  }
+
+  private void validateUserIdentityForSubmission(UserIdentity userIdentity) {
+    if (Objects.isNull(userIdentity.getIdCardImage())) {
+      throw new BaseException(ErrorCode.ID_CARD_IMAGE_NOT_EXISTS);
+    } else if (Objects.isNull(userIdentity.getSelfieImage())) {
+      throw new BaseException(ErrorCode.SELFIE_IMAGE_NOT_EXISTS);
+    } else if (userIdentity.getStatus().equals(UserIdentityStatus.SUBMITTED.getStatus())
+        || userIdentity.getStatus().equals(UserIdentityStatus.VERIFIED.getStatus())) {
+      throw new BaseException(ErrorCode.USER_IDENTITY_STATUS_INVALID);
+    }
+  }
+
+  private void validateIdCardNumber(String idCardNumber) {
+    Pattern pattern = Pattern.compile(
+        "^(1[1-9]|21|[37][1-6]|5[1-3]|6[1-5]|[89][12])\\d{2}\\d{2}([04][1-9]|[1256][0-9]|[37][01])(0[1-9]|1[0-2])\\d{2}\\d{4}$");
+    if (!pattern.matcher(idCardNumber).matches()) {
+      throw new BaseException(ErrorCode.ID_CARD_NUMBER_INVALID);
     }
   }
 }

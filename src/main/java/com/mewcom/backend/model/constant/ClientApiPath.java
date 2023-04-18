@@ -25,4 +25,6 @@ public class ClientApiPath {
   public static final String CLIENT_IDENTITY_UPLOAD_ID_CARD_IMAGE = "/upload-id-card-image";
 
   public static final String CLIENT_IDENTITY_UPLOAD_SELFIE_IMAGE = "/upload-selfie-image";
+
+  public static final String CLIENT_IDENTITY_SUBMIT = "/submit";
 }

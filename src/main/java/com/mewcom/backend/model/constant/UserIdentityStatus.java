@@ -9,7 +9,8 @@ public enum UserIdentityStatus {
 
   CREATED("created"),
   SUBMITTED("submitted"),
-  VERIFIED("verified");
+  VERIFIED("verified"),
+  REJECTED("rejected");
 
   private final String status;
 }
