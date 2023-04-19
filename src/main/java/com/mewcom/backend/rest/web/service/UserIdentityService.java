@@ -1,5 +1,6 @@
 package com.mewcom.backend.rest.web.service;
 
+import com.mewcom.backend.model.entity.UserIdentity;
 import com.mewcom.backend.rest.web.model.request.ClientIdentitySubmitRequest;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -12,6 +13,8 @@ public interface UserIdentityService {
   String uploadUserIdentitySelfieImage(MultipartFile image) throws IOException;
 
   void submitUserIdentity(ClientIdentitySubmitRequest request);
+
+  UserIdentity getUserIdentity();
 
   void deleteUserIdentityByUserId(String userId);
 }

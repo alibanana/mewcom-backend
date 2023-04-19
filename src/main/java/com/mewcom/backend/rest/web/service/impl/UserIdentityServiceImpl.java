@@ -69,6 +69,11 @@ public class UserIdentityServiceImpl implements UserIdentityService {
   }
 
   @Override
+  public UserIdentity getUserIdentity() {
+    return getUserIdentityOrDefault();
+  }
+
+  @Override
   public void deleteUserIdentityByUserId(String userId) {
     UserIdentity userIdentity = userIdentityRepository.findByUserId(userId);
     if (Objects.nonNull(userIdentity)) {
@@ -85,7 +90,6 @@ public class UserIdentityServiceImpl implements UserIdentityService {
         userAuthDto.getEmail(), true).getId();
     return Optional.ofNullable(userIdentityRepository.findByUserId(userId))
         .orElse(UserIdentity.builder()
-            .status(UserIdentityStatus.CREATED.getStatus())
             .userId(userId)
             .build());
   }
@@ -94,6 +98,7 @@ public class UserIdentityServiceImpl implements UserIdentityService {
       MultipartFile image) throws IOException {
     UserIdentityImage idCardImage = uploadAndBuildNewUserIdentityImage(image);
     userIdentity.setIdCardImage(idCardImage);
+    userIdentity.setStatus(UserIdentityStatus.CREATED.getStatus());
     return userIdentityRepository.save(userIdentity);
   }
 
@@ -101,6 +106,7 @@ public class UserIdentityServiceImpl implements UserIdentityService {
       MultipartFile image) throws IOException {
     UserIdentityImage selfieImage = uploadAndBuildNewUserIdentityImage(image);
     userIdentity.setSelfieImage(selfieImage);
+    userIdentity.setStatus(UserIdentityStatus.CREATED.getStatus());
     return userIdentityRepository.save(userIdentity);
   }
 
