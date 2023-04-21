@@ -35,6 +35,7 @@ public class User extends BaseMongoEntity {
   private Date birthdate;
   private boolean isProfileUpdated;
   private List<UserImage> images;
+  private boolean isIdentityVerified;
 
   private String roleId;
   private String firebaseUid;
@@ -42,7 +43,7 @@ public class User extends BaseMongoEntity {
   public User(String id, Date createdAt, Date updatedAt, String name, String username, String email,
       String newEmail, String oldEmail, boolean isEmailVerified, String verificationCode,
       String phoneNumber, String gender, String biodata, Date birthdate, boolean isProfileUpdated,
-      List<UserImage> images, String roleId, String firebaseUid) {
+      List<UserImage> images, boolean isIdentityVerified, String roleId, String firebaseUid) {
     super(id, createdAt, updatedAt);
     this.name = name;
     this.username = username;
@@ -57,6 +58,7 @@ public class User extends BaseMongoEntity {
     this.birthdate = birthdate;
     this.isProfileUpdated = isProfileUpdated;
     this.images = images;
+    this.isIdentityVerified = isIdentityVerified;
     this.roleId = roleId;
     this.firebaseUid = firebaseUid;
   }

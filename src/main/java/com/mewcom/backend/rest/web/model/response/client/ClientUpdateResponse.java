@@ -29,4 +29,5 @@ public class ClientUpdateResponse implements Serializable {
   private List<String> imageUrls;
   private boolean isProfileUpdated;
   private boolean isEmailUpdated;
+  private boolean isIdentityVerified;
 }

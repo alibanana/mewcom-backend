@@ -1,4 +1,4 @@
-package com.mewcom.backend.model.entity;
+package com.mewcom.backend.rest.web.model.response.clientidentity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -13,11 +13,8 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class UserImage implements Serializable {
+public class ClientIdentityUploadSelfieImageResponse implements Serializable {
 
-  private static final long serialVersionUID = -323996209557603020L;
-
-  private String imageId;
-  private String url;
-  private boolean isDefault;
+  private static final long serialVersionUID = -3304918477300224788L;
+  private String imageUrl;
 }

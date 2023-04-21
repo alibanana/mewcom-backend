@@ -19,4 +19,14 @@ public class ClientApiPath {
   public static final String CLIENT_DASHBOARD_DETAILS = "/dashboard-details";
 
   public static final String CLIENT_DETAILS = "/details";
+
+  public static final String BASE_PATH_CLIENT_IDENTITY = BASE_PATH_API + "/client-identities";
+
+  public static final String CLIENT_IDENTITY_UPLOAD_ID_CARD_IMAGE = "/upload-id-card-image";
+
+  public static final String CLIENT_IDENTITY_UPLOAD_SELFIE_IMAGE = "/upload-selfie-image";
+
+  public static final String CLIENT_IDENTITY_SUBMIT = "/submit";
+
+  public static final String CLIENT_IDENTITY_DETAILS = "/details";
 }

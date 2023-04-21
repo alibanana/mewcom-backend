@@ -27,4 +27,5 @@ public class ClientDetailsResponse implements Serializable {
   private String birthdate;
   private List<String> imageUrls;
   private boolean isProfileUpdated;
+  private boolean isIdentityVerified;
 }

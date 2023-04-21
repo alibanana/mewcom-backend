@@ -27,5 +27,6 @@ public class LoginResponse implements Serializable {
   private String birthdate;
   private boolean isProfileUpdated;
   private List<String> imageUrls;
+  private boolean isIdentityVerified;
   private String token;
 }
