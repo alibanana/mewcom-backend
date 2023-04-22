@@ -42,6 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private static final String[] API_URLS = {
       "/api/roles/**",
       "/api/users/**",
+      "/api/user-identities/**",
       "/api/auth/**",
       "/api/email-templates/**",
       "/api/images/**"
