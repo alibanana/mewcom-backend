@@ -37,4 +37,8 @@ public class ApiPath {
   public static final String IMAGE_RETRIEVE_BY_ID = "/{id}";
 
   public static final String IMAGE_DELETE_BY_ID = "/{id}";
+
+  public static final String BASE_PATH_USER_IDENTITY = BASE_PATH_API + "/user-identities";
+
+  public static final String USER_IDENTITY_FIND_BY_FILTER = "/findByFilter";
 }

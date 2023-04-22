@@ -43,9 +43,6 @@ public class ClientController extends BaseController {
   @Autowired
   private ClientService clientService;
 
-  @Autowired
-  private DateUtil dateUtil;
-
   @PutMapping(value = ClientApiPath.CLIENT_UPDATE)
   public RestSingleResponse<ClientUpdateResponse> updateClient(
       @Valid @RequestBody ClientUpdateRequest request) throws TemplateException, MessagingException,
@@ -84,7 +81,7 @@ public class ClientController extends BaseController {
     if (!pair.getValue1()) {
       ClientUpdateResponse response = new ClientUpdateResponse();
       BeanUtils.copyProperties(pair.getValue0(), response);
-      response.setBirthdate(dateUtil.toDateOnlyFormat(pair.getValue0().getBirthdate()));
+      response.setBirthdate(DateUtil.toDateOnlyFormat(pair.getValue0().getBirthdate()));
       response.setImageUrls(Optional.ofNullable(pair.getValue0().getImages())
           .orElse(Collections.emptyList())
           .stream()
@@ -109,7 +106,7 @@ public class ClientController extends BaseController {
   private ClientDetailsResponse toClientDetailsResponse(User user) {
     ClientDetailsResponse response = new ClientDetailsResponse();
     BeanUtils.copyProperties(user, response);
-    response.setBirthdate(dateUtil.toDateOnlyFormat(user.getBirthdate()));
+    response.setBirthdate(DateUtil.toDateOnlyFormat(user.getBirthdate()));
     response.setImageUrls(Optional.ofNullable(user.getImages())
         .orElse(Collections.emptyList())
         .stream()

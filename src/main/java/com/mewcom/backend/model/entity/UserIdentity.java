@@ -25,16 +25,19 @@ public class UserIdentity extends BaseMongoEntity {
   private UserIdentityImage idCardImage;
   private UserIdentityImage selfieImage;
   private String status;
+  private Date submissionDate;
 
   private String userId;
 
   public UserIdentity(String id, Date createdAt, Date updatedAt, String idCardNumber,
-      UserIdentityImage idCardImage, UserIdentityImage selfieImage, String status, String userId) {
+      UserIdentityImage idCardImage, UserIdentityImage selfieImage, String status,
+      Date submissionDate, String userId) {
     super(id, createdAt, updatedAt);
     this.idCardNumber = idCardNumber;
     this.idCardImage = idCardImage;
     this.selfieImage = selfieImage;
     this.status = status;
+    this.submissionDate = submissionDate;
     this.userId = userId;
   }
 }
