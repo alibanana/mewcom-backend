@@ -3,25 +3,41 @@ package com.mewcom.backend.rest.web.service.impl;
 import com.mewcom.backend.config.properties.SysparamProperties;
 import com.mewcom.backend.model.auth.UserAuthDto;
 import com.mewcom.backend.model.constant.ErrorCode;
+import com.mewcom.backend.model.constant.MongoFieldNames;
 import com.mewcom.backend.model.constant.UserIdentityStatus;
 import com.mewcom.backend.model.entity.File;
+import com.mewcom.backend.model.entity.User;
 import com.mewcom.backend.model.entity.UserIdentity;
 import com.mewcom.backend.model.entity.UserIdentityImage;
 import com.mewcom.backend.model.exception.BaseException;
 import com.mewcom.backend.repository.UserIdentityRepository;
 import com.mewcom.backend.repository.UserRepository;
 import com.mewcom.backend.rest.web.model.request.ClientIdentitySubmitRequest;
+import com.mewcom.backend.rest.web.model.request.useridentity.UserIdentityFindByFilterRequest;
 import com.mewcom.backend.rest.web.service.ImageService;
 import com.mewcom.backend.rest.web.service.UserIdentityService;
+import com.mewcom.backend.rest.web.util.DateUtil;
+import com.mewcom.backend.rest.web.util.PageUtil;
+import com.mewcom.backend.rest.web.util.StringUtil;
+import org.javatuples.Triplet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.support.PageableExecutionUtils;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
 public class UserIdentityServiceImpl implements UserIdentityService {
@@ -65,12 +81,65 @@ public class UserIdentityServiceImpl implements UserIdentityService {
     validateIdCardNumber(request.getIdCardNumber());
     userIdentity.setIdCardNumber(request.getIdCardNumber());
     userIdentity.setStatus(UserIdentityStatus.SUBMITTED.getStatus());
+    userIdentity.setSubmissionDate(DateUtil.getDateNow());
     userIdentityRepository.save(userIdentity);
   }
 
   @Override
   public UserIdentity getUserIdentity() {
     return getUserIdentityOrDefault();
+  }
+
+  @Override
+  public Triplet<Page<UserIdentity>, Map<String, String>, Map<String, Date>> getUserIdentityByFilter(
+      Integer page, Integer size, String orderBy, String sortBy,
+      UserIdentityFindByFilterRequest request) {
+    validateUserIdentityFindByFilterRequest(orderBy, request);
+    PageRequest pageRequest = PageUtil.validateAndGetPageRequest(page, size, orderBy, sortBy);
+    List<User> users = userRepository
+        .findAllByNameAndIsEmailVerifiedTrueIncludeIdAndNameAndBirthdate(request.getName());
+    Page<UserIdentity> userIdentities = userIdentityRepository.findAllByFilter(
+        request.getIdCardNumber(), request.getStatus(), getUserIdsFromUsers(users), pageRequest);
+    if (StringUtil.isStringNullOrBlank(request.getName())
+        && !userIdentities.getContent().isEmpty()) {
+        users = userRepository.findAllByIdsAndIsAndIsEmailVerifiedTrueIncludeNameAndBirthdate(
+            getUserIdsFromUserIdentities(userIdentities.getContent()));
+    } else if (users.isEmpty()) {
+      userIdentities = PageableExecutionUtils.getPage(Collections.EMPTY_LIST, pageRequest, () -> 0);
+    }
+    return Triplet.with(userIdentities, buildMapOfUserIdAndNameFromUsers(users),
+        buildMapOfUserIdAndBirthdateFromUsers(users));
+  }
+
+  private void validateUserIdentityFindByFilterRequest(String orderBy,
+      UserIdentityFindByFilterRequest request) {
+    List<String> allowedOrderByFields = Arrays.asList(MongoFieldNames.CREATED_AT,
+        MongoFieldNames.UPDATED_AT, MongoFieldNames.USER_IDENTITY_SUBMISSION_DATE);
+    if (!allowedOrderByFields.contains(orderBy)) {
+      throw new BaseException(ErrorCode.USER_IDENTITY_ORDER_BY_NOT_ALLOWED, String.format(
+          ErrorCode.USER_IDENTITY_ORDER_BY_NOT_ALLOWED.getDescription(), allowedOrderByFields));
+    } else if (Objects.nonNull(request.getStatus())
+        && !UserIdentityStatus.contains(request.getStatus())) {
+      throw new BaseException(ErrorCode.USER_IDENTITY_STATUS_DOESNT_EXISTS, String.format(
+          ErrorCode.USER_IDENTITY_STATUS_DOESNT_EXISTS.getDescription(),
+          UserIdentityStatus.getAllStatus()));
+    }
+  }
+
+  private List<String> getUserIdsFromUsers(List<User> users) {
+    return users.stream().map(User::getId).collect(Collectors.toList());
+  }
+
+  private List<String> getUserIdsFromUserIdentities(List<UserIdentity> userIdentities) {
+    return userIdentities.stream().map(UserIdentity::getUserId).collect(Collectors.toList());
+  }
+
+  private Map<String, String> buildMapOfUserIdAndNameFromUsers(List<User> users) {
+    return users.stream().collect(Collectors.toMap(User::getId, User::getName));
+  }
+
+  private Map<String, Date> buildMapOfUserIdAndBirthdateFromUsers(List<User> users) {
+    return users.stream().collect(Collectors.toMap(User::getId, User::getBirthdate));
   }
 
   @Override

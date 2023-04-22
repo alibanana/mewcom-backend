@@ -40,9 +40,6 @@ public class AuthenticationController extends BaseController {
   @Autowired
   private AuthenticationService authenticationService;
 
-  @Autowired
-  private DateUtil dateUtil;
-
   @PostMapping(value = ApiPath.LOGIN)
   public ResponseEntity<RestSingleResponse<LoginResponse>> login(
       @Valid @RequestBody LoginRequest request) throws FirebaseAuthException {
@@ -55,7 +52,7 @@ public class AuthenticationController extends BaseController {
   private LoginResponse toLoginResponse(Tuple<String, User> tupleOfTokenAndUser) {
     LoginResponse response = new LoginResponse();
     BeanUtils.copyProperties(tupleOfTokenAndUser.y(), response);
-    response.setBirthdate(dateUtil.toDateOnlyFormat(tupleOfTokenAndUser.y().getBirthdate()));
+    response.setBirthdate(DateUtil.toDateOnlyFormat(tupleOfTokenAndUser.y().getBirthdate()));
     response.setImageUrls(Optional.ofNullable(tupleOfTokenAndUser.y().getImages())
         .orElse(Collections.emptyList())
         .stream()
