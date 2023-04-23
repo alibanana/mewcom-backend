@@ -111,37 +111,6 @@ public class UserIdentityServiceImpl implements UserIdentityService {
         buildMapOfUserIdAndBirthdateFromUsers(users));
   }
 
-  private void validateUserIdentityFindByFilterRequest(String orderBy,
-      UserIdentityFindByFilterRequest request) {
-    List<String> allowedOrderByFields = Arrays.asList(MongoFieldNames.CREATED_AT,
-        MongoFieldNames.UPDATED_AT, MongoFieldNames.USER_IDENTITY_SUBMISSION_DATE);
-    if (!allowedOrderByFields.contains(orderBy)) {
-      throw new BaseException(ErrorCode.USER_IDENTITY_ORDER_BY_NOT_ALLOWED, String.format(
-          ErrorCode.USER_IDENTITY_ORDER_BY_NOT_ALLOWED.getDescription(), allowedOrderByFields));
-    } else if (Objects.nonNull(request.getStatus())
-        && !UserIdentityStatus.contains(request.getStatus())) {
-      throw new BaseException(ErrorCode.USER_IDENTITY_STATUS_DOESNT_EXISTS, String.format(
-          ErrorCode.USER_IDENTITY_STATUS_DOESNT_EXISTS.getDescription(),
-          UserIdentityStatus.getAllStatus()));
-    }
-  }
-
-  private List<String> getUserIdsFromUsers(List<User> users) {
-    return users.stream().map(User::getId).collect(Collectors.toList());
-  }
-
-  private List<String> getUserIdsFromUserIdentities(List<UserIdentity> userIdentities) {
-    return userIdentities.stream().map(UserIdentity::getUserId).collect(Collectors.toList());
-  }
-
-  private Map<String, String> buildMapOfUserIdAndNameFromUsers(List<User> users) {
-    return users.stream().collect(Collectors.toMap(User::getId, User::getName));
-  }
-
-  private Map<String, Date> buildMapOfUserIdAndBirthdateFromUsers(List<User> users) {
-    return users.stream().collect(Collectors.toMap(User::getId, User::getBirthdate));
-  }
-
   @Override
   public void deleteUserIdentityByUserId(String userId) {
     UserIdentity userIdentity = userIdentityRepository.findByUserId(userId);
@@ -211,5 +180,36 @@ public class UserIdentityServiceImpl implements UserIdentityService {
     if (!pattern.matcher(idCardNumber).matches()) {
       throw new BaseException(ErrorCode.ID_CARD_NUMBER_INVALID);
     }
+  }
+
+  private void validateUserIdentityFindByFilterRequest(String orderBy,
+      UserIdentityFindByFilterRequest request) {
+    List<String> allowedOrderByFields = Arrays.asList(MongoFieldNames.CREATED_AT,
+        MongoFieldNames.UPDATED_AT, MongoFieldNames.USER_IDENTITY_SUBMISSION_DATE);
+    if (!StringUtil.isStringNullOrBlank(orderBy) && !allowedOrderByFields.contains(orderBy)) {
+      throw new BaseException(ErrorCode.USER_IDENTITY_ORDER_BY_NOT_ALLOWED, String.format(
+          ErrorCode.USER_IDENTITY_ORDER_BY_NOT_ALLOWED.getDescription(), allowedOrderByFields));
+    } else if (!StringUtil.isStringNullOrBlank(request.getStatus())
+        && !UserIdentityStatus.contains(request.getStatus())) {
+      throw new BaseException(ErrorCode.USER_IDENTITY_STATUS_DOESNT_EXISTS, String.format(
+          ErrorCode.USER_IDENTITY_STATUS_DOESNT_EXISTS.getDescription(),
+          UserIdentityStatus.getAllStatus()));
+    }
+  }
+
+  private List<String> getUserIdsFromUsers(List<User> users) {
+    return users.stream().map(User::getId).collect(Collectors.toList());
+  }
+
+  private List<String> getUserIdsFromUserIdentities(List<UserIdentity> userIdentities) {
+    return userIdentities.stream().map(UserIdentity::getUserId).collect(Collectors.toList());
+  }
+
+  private Map<String, String> buildMapOfUserIdAndNameFromUsers(List<User> users) {
+    return users.stream().collect(Collectors.toMap(User::getId, User::getName));
+  }
+
+  private Map<String, Date> buildMapOfUserIdAndBirthdateFromUsers(List<User> users) {
+    return users.stream().collect(Collectors.toMap(User::getId, User::getBirthdate));
   }
 }
