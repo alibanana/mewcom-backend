@@ -14,6 +14,7 @@ import com.mewcom.backend.repository.UserIdentityRepository;
 import com.mewcom.backend.repository.UserRepository;
 import com.mewcom.backend.rest.web.model.request.ClientIdentitySubmitRequest;
 import com.mewcom.backend.rest.web.model.request.useridentity.UserIdentityFindByFilterRequest;
+import com.mewcom.backend.rest.web.model.request.useridentity.UserIdentityVerifyRequest;
 import com.mewcom.backend.rest.web.service.ImageService;
 import com.mewcom.backend.rest.web.service.UserIdentityService;
 import com.mewcom.backend.rest.web.util.DateUtil;
@@ -109,6 +110,16 @@ public class UserIdentityServiceImpl implements UserIdentityService {
     }
     return Triplet.with(userIdentities, buildMapOfUserIdAndNameFromUsers(users),
         buildMapOfUserIdAndBirthdateFromUsers(users));
+  }
+
+  @Override
+  public void verifyUserIdentity(UserIdentityVerifyRequest request) {
+    UserIdentity userIdentity = userIdentityRepository.findByUserId(request.getUserId());
+    if (Objects.isNull(userIdentity)) {
+      throw new BaseException(ErrorCode.USER_ID_DOES_NOT_EXISTS);
+    }
+    userIdentity.setStatus(UserIdentityStatus.VERIFIED.getStatus());
+    userIdentityRepository.save(userIdentity);
   }
 
   @Override

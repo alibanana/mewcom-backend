@@ -41,4 +41,6 @@ public class ApiPath {
   public static final String BASE_PATH_USER_IDENTITY = BASE_PATH_API + "/user-identities";
 
   public static final String USER_IDENTITY_FIND_BY_FILTER = "/findByFilter";
+
+  public static final String USER_IDENTITY_VERIFY = "/verify";
 }
