@@ -147,7 +147,7 @@ public class UserIdentityServiceImpl implements UserIdentityService {
     validateUserIdentityStatusIsSubmitted(user, userIdentity);
     user.setIdentityVerified(false);
     userRepository.save(user);
-    userIdentity.setStatus(UserIdentityStatus.VERIFIED.getStatus());
+    userIdentity.setStatus(UserIdentityStatus.REJECTED.getStatus());
     userIdentity.setRejectionDetails(request.getDescription());
     userIdentityRepository.save(userIdentity);
     emailTemplateService.sendEmailIdentityVerificationRequestRejected(user.getEmail(),
