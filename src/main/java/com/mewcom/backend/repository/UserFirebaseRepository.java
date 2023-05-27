@@ -10,8 +10,8 @@ public interface UserFirebaseRepository {
 
   void setEmailVerifiedTrueFirebase(String uid) throws FirebaseAuthException;
 
-  void updateUserFirebase(String uid, String name, String email, String phoneNumber,
-      boolean emailVerified) throws FirebaseAuthException;
+  void updateUserFirebase(String uid, String name, String email, boolean emailVerified)
+      throws FirebaseAuthException;
 
   void updatePasswordFirebase(String uid, String password) throws FirebaseAuthException;
 

@@ -22,7 +22,6 @@ public class ClientUpdateResponse implements Serializable {
   private String username;
   private String oldEmail;
   private String email;
-  private String phoneNumber;
   private String gender;
   private String biodata;
   private String birthdate;

@@ -68,7 +68,6 @@ public class ClientServiceImpl implements ClientService {
 
   private void validateClientUpdateRequest(ClientUpdateRequest request) {
     userUtil.validateEmail(request.getEmail());
-    userUtil.validatePhoneNumber(request.getPhoneNumber());
   }
 
   private User updateClientFromRequest(ClientUpdateRequest request, User user,
@@ -80,9 +79,8 @@ public class ClientServiceImpl implements ClientService {
       user.setVerificationCode(StringUtil.generateVerificationCode());
     }
     userRepository.updateUserFirebase(user.getFirebaseUid(), request.getName(), user.getEmail(),
-        request.getPhoneNumber(), user.isEmailVerified());
+        user.isEmailVerified());
     user.setName(request.getName());
-    user.setPhoneNumber(request.getPhoneNumber());
     user.setGender(request.getGender());
     user.setBiodata(request.getBiodata());
     if (!user.isProfileUpdated()) {

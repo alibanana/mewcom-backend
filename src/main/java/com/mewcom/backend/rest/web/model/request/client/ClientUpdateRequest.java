@@ -25,9 +25,6 @@ public class ClientUpdateRequest implements Serializable {
   private String email;
 
   @NotBlank
-  private String phoneNumber;
-
-  @NotBlank
   private String gender;
 
   @NotBlank

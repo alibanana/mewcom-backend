@@ -27,13 +27,12 @@ public class UserFirebaseRepositoryImpl implements UserFirebaseRepository {
   }
 
   @Override
-  public void updateUserFirebase(String uid, String name, String email, String phoneNumber,
-      boolean emailVerified) throws FirebaseAuthException {
+  public void updateUserFirebase(String uid, String name, String email, boolean emailVerified)
+      throws FirebaseAuthException {
     UserRecord userRecord = FirebaseAuth.getInstance().getUser(uid);
     FirebaseAuth.getInstance().updateUser(userRecord.updateRequest()
         .setDisplayName(name)
         .setEmail(email)
-        .setPhoneNumber(phoneNumber)
         .setEmailVerified(emailVerified));
   }
 
