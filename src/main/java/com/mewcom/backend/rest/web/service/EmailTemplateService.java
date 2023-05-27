@@ -25,4 +25,10 @@ public interface EmailTemplateService {
 
   void sendEmailResetPassword(String email, String name, String newPassword)
       throws TemplateException, MessagingException, IOException;
+
+  void sendEmailIdentityVerificationRequestVerified(String email, String name)
+      throws TemplateException, MessagingException, IOException;
+
+  void sendEmailIdentityVerificationRequestRejected(String email, String name, String description)
+      throws TemplateException, MessagingException, IOException;
 }

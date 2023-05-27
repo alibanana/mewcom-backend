@@ -5,12 +5,14 @@ import com.mewcom.backend.model.entity.UserIdentity;
 import com.mewcom.backend.model.entity.UserIdentityImage;
 import com.mewcom.backend.rest.web.controller.BaseController;
 import com.mewcom.backend.rest.web.model.request.useridentity.UserIdentityFindByFilterRequest;
+import com.mewcom.backend.rest.web.model.request.useridentity.UserIdentityRejectRequest;
 import com.mewcom.backend.rest.web.model.request.useridentity.UserIdentityVerifyRequest;
 import com.mewcom.backend.rest.web.model.response.rest.RestBaseResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestPageResponse;
 import com.mewcom.backend.rest.web.model.response.useridentity.UserIdentityFindByFilterResponse;
 import com.mewcom.backend.rest.web.service.UserIdentityService;
 import com.mewcom.backend.rest.web.util.DateUtil;
+import freemarker.template.TemplateException;
 import io.swagger.annotations.Api;
 import org.javatuples.Triplet;
 import org.springframework.beans.BeanUtils;
@@ -22,7 +24,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -54,8 +58,16 @@ public class UserIdentityController extends BaseController {
   }
 
   @PostMapping(value = ApiPath.USER_IDENTITY_VERIFY)
-  public RestBaseResponse verify(@Valid @RequestBody UserIdentityVerifyRequest request) {
+  public RestBaseResponse verify(@Valid @RequestBody UserIdentityVerifyRequest request)
+      throws TemplateException, MessagingException, IOException {
     userIdentityService.verifyUserIdentity(request);
+    return toBaseResponse();
+  }
+
+  @PostMapping(value = ApiPath.USER_IDENTITY_REJECT)
+  public RestBaseResponse reject(@Valid @RequestBody UserIdentityRejectRequest request)
+      throws TemplateException, MessagingException, IOException {
+    userIdentityService.rejectUserIdentity(request);
     return toBaseResponse();
   }
 
