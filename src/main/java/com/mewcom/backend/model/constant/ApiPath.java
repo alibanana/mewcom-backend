@@ -43,4 +43,6 @@ public class ApiPath {
   public static final String USER_IDENTITY_FIND_BY_FILTER = "/findByFilter";
 
   public static final String USER_IDENTITY_VERIFY = "/verify";
+
+  public static final String USER_IDENTITY_REJECT = "/reject";
 }

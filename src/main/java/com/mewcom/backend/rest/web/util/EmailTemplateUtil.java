@@ -119,4 +119,27 @@ public class EmailTemplateUtil {
         .templateKeyAndValues(content)
         .build();
   }
+
+  public EmailTemplateSendRequest buildEmailIdentityVerificationRequestVerified(String email,
+      String name) {
+    Map<String, Object> content = new HashMap<>();
+    content.put("name", name);
+    return EmailTemplateSendRequest.builder()
+        .receiverAddress(email)
+        .templateName("EmailIdentityVerificationRequestVerified")
+        .templateKeyAndValues(content)
+        .build();
+  }
+
+  public EmailTemplateSendRequest buildEmailIdentityVerificationRequestRejected(String email,
+      String name, String description) {
+    Map<String, Object> content = new HashMap<>();
+    content.put("name", name);
+    content.put("description", description);
+    return EmailTemplateSendRequest.builder()
+        .receiverAddress(email)
+        .templateName("EmailIdentityVerificationRequestRejected")
+        .templateKeyAndValues(content)
+        .build();
+  }
 }

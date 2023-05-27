@@ -76,4 +76,17 @@ public class EmailTemplateServiceImpl implements EmailTemplateService {
       throws TemplateException, MessagingException, IOException {
     sendTemplate(emailTemplateUtil.buildEmailResetPasswordRequest(email, name, newPassword));
   }
+
+  @Override
+  public void sendEmailIdentityVerificationRequestVerified(String email, String name)
+      throws TemplateException, MessagingException, IOException {
+    sendTemplate(emailTemplateUtil.buildEmailIdentityVerificationRequestVerified(email, name));
+  }
+
+  @Override
+  public void sendEmailIdentityVerificationRequestRejected(String email, String name,
+      String description) throws TemplateException, MessagingException, IOException {
+    sendTemplate(
+        emailTemplateUtil.buildEmailIdentityVerificationRequestRejected(email, name, description));
+  }
 }

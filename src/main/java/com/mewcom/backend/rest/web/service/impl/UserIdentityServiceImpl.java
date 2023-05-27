@@ -14,12 +14,15 @@ import com.mewcom.backend.repository.UserIdentityRepository;
 import com.mewcom.backend.repository.UserRepository;
 import com.mewcom.backend.rest.web.model.request.ClientIdentitySubmitRequest;
 import com.mewcom.backend.rest.web.model.request.useridentity.UserIdentityFindByFilterRequest;
+import com.mewcom.backend.rest.web.model.request.useridentity.UserIdentityRejectRequest;
 import com.mewcom.backend.rest.web.model.request.useridentity.UserIdentityVerifyRequest;
+import com.mewcom.backend.rest.web.service.EmailTemplateService;
 import com.mewcom.backend.rest.web.service.ImageService;
 import com.mewcom.backend.rest.web.service.UserIdentityService;
 import com.mewcom.backend.rest.web.util.DateUtil;
 import com.mewcom.backend.rest.web.util.PageUtil;
 import com.mewcom.backend.rest.web.util.StringUtil;
+import freemarker.template.TemplateException;
 import org.javatuples.Triplet;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -29,6 +32,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Collections;
@@ -54,6 +58,9 @@ public class UserIdentityServiceImpl implements UserIdentityService {
 
   @Autowired
   private SysparamProperties sysparamProperties;
+
+  @Autowired
+  private EmailTemplateService emailTemplateService;
 
   @Override
   public String uploadUserIdentityIdCardImage(MultipartFile image) throws IOException {
@@ -103,7 +110,7 @@ public class UserIdentityServiceImpl implements UserIdentityService {
         request.getIdCardNumber(), request.getStatus(), getUserIdsFromUsers(users), pageRequest);
     if (StringUtil.isStringNullOrBlank(request.getName())
         && !userIdentities.getContent().isEmpty()) {
-        users = userRepository.findAllByIdsAndIsAndIsEmailVerifiedTrueIncludeNameAndBirthdate(
+        users = userRepository.findAllByIdsAndIsEmailVerifiedTrueIncludeNameAndBirthdate(
             getUserIdsFromUserIdentities(userIdentities.getContent()));
     } else if (users.isEmpty()) {
       userIdentities = PageableExecutionUtils.getPage(Collections.EMPTY_LIST, pageRequest, () -> 0);
@@ -113,13 +120,38 @@ public class UserIdentityServiceImpl implements UserIdentityService {
   }
 
   @Override
-  public void verifyUserIdentity(UserIdentityVerifyRequest request) {
+  public void verifyUserIdentity(UserIdentityVerifyRequest request) throws TemplateException,
+      MessagingException, IOException {
+    User user = userRepository.findById(request.getUserId()).orElse(null);
     UserIdentity userIdentity = userIdentityRepository.findByUserId(request.getUserId());
-    if (Objects.isNull(userIdentity)) {
+    if (Objects.isNull(user) || Objects.isNull(userIdentity)) {
       throw new BaseException(ErrorCode.USER_ID_DOES_NOT_EXISTS);
     }
+    validateUserIdentityStatusIsSubmitted(user, userIdentity);
+    user.setIdentityVerified(true);
+    userRepository.save(user);
     userIdentity.setStatus(UserIdentityStatus.VERIFIED.getStatus());
     userIdentityRepository.save(userIdentity);
+    emailTemplateService.sendEmailIdentityVerificationRequestVerified(user.getEmail(),
+        user.getName());
+  }
+
+  @Override
+  public void rejectUserIdentity(UserIdentityRejectRequest request) throws TemplateException,
+      MessagingException, IOException {
+    User user = userRepository.findById(request.getUserId()).orElse(null);
+    UserIdentity userIdentity = userIdentityRepository.findByUserId(request.getUserId());
+    if (Objects.isNull(user) || Objects.isNull(userIdentity)) {
+      throw new BaseException(ErrorCode.USER_ID_DOES_NOT_EXISTS);
+    }
+    validateUserIdentityStatusIsSubmitted(user, userIdentity);
+    user.setIdentityVerified(false);
+    userRepository.save(user);
+    userIdentity.setStatus(UserIdentityStatus.VERIFIED.getStatus());
+    userIdentity.setRejectionDetails(request.getDescription());
+    userIdentityRepository.save(userIdentity);
+    emailTemplateService.sendEmailIdentityVerificationRequestRejected(user.getEmail(),
+        user.getName(), userIdentity.getRejectionDetails());
   }
 
   @Override
@@ -222,5 +254,12 @@ public class UserIdentityServiceImpl implements UserIdentityService {
 
   private Map<String, Date> buildMapOfUserIdAndBirthdateFromUsers(List<User> users) {
     return users.stream().collect(Collectors.toMap(User::getId, User::getBirthdate));
+  }
+
+  private void validateUserIdentityStatusIsSubmitted(User user, UserIdentity userIdentity) {
+    if (!user.isIdentityVerified() && !userIdentity.getStatus()
+        .equals(UserIdentityStatus.SUBMITTED.getStatus())) {
+      throw new BaseException(ErrorCode.USER_IDENTITY_STATUS_MUST_BE_SUBMITTED);
+    }
   }
 }

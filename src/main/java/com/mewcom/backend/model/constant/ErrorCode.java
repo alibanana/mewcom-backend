@@ -63,6 +63,8 @@ public enum ErrorCode {
       "The requested status does not exists, please choose either %s"),
   USER_IDENTITY_ORDER_BY_NOT_ALLOWED("ERR-PA40029", 400,
       "Request invalid, orderBy field may only be filled with %s"),
+  USER_IDENTITY_STATUS_MUST_BE_SUBMITTED("ERR-PA40030", 400,
+      "The only allowed User Identity status is submitted"),
 
   USER_EMAIL_NOT_FOUND("ERR-PA40101", 401,
       "The requested email does not exists"),
