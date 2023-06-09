@@ -18,7 +18,6 @@ import com.mewcom.backend.rest.web.model.request.RegisterRequest;
 import com.mewcom.backend.rest.web.util.RoleUtil;
 import com.mewcom.backend.rest.web.util.StringUtil;
 import com.mewcom.backend.rest.web.util.UserUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
