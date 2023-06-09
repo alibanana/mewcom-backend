@@ -28,6 +28,10 @@ public class RoleServiceImpl implements RoleService {
   private Role buildRole(CreateRoleRequest request) {
     Role role = new Role();
     BeanUtils.copyProperties(request, role);
+    role.setRoleId(StringUtil.generateRoleId());
+    while (roleRepository.existsByRoleId(role.getRoleId())) {
+      role.setRoleId(StringUtil.generateRoleId());
+    }
     return role;
   }
 

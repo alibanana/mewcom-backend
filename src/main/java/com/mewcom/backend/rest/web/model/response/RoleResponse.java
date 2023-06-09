@@ -17,6 +17,7 @@ public class RoleResponse implements Serializable {
 
   private static final long serialVersionUID = 6122189565291983420L;
 
+  private String roleId;
   private String title;
   private String description;
 }
