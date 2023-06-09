@@ -30,6 +30,7 @@
     <javatuples.version>1.2</javatuples.version>
     <aws-java-sdk.version>1.11.931</aws-java-sdk.version>
     <commons-io.version>2.6</commons-io.version>
+    <imgscalr-lib.version>4.2</imgscalr-lib.version>
   </properties>
 
   <dependencies>
@@ -149,6 +150,11 @@
       <groupId>commons-io</groupId>
       <artifactId>commons-io</artifactId>
       <version>${commons-io.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.imgscalr</groupId>
+      <artifactId>imgscalr-lib</artifactId>
+      <version>${imgscalr-lib.version}</version>
     </dependency>
 
     <dependency>
