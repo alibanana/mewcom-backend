@@ -21,11 +21,14 @@ public class Role extends BaseMongoEntity {
 
   private static final long serialVersionUID = 2155329778429704197L;
 
+  private String roleId;
   private String title;
   private String description;
 
-  public Role(String id, Date createdAt, Date updatedAt, String title, String description) {
+  public Role(String id, Date createdAt, Date updatedAt, String roleId, String title,
+      String description) {
     super(id, createdAt, updatedAt);
+    this.roleId = roleId;
     this.title = title;
     this.description = description;
   }

@@ -20,4 +20,8 @@ public class StringUtil {
   public static String generatePassword() {
     return RandomString.make(10);
   }
+
+  public static String generateRoleId() {
+    return "ROL-" + RandomString.make(5).toUpperCase();
+  }
 }

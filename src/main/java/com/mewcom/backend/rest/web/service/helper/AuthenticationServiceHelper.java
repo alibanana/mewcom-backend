@@ -123,7 +123,7 @@ public class AuthenticationServiceHelper {
         .isProfileUpdated(false)
         .images(buildDefaultUserImages())
         .isIdentityVerified(false)
-        .roleId(roleRepository.findByTitle(request.getRoleType()).getId())
+        .roleId(roleRepository.findByTitle(request.getRoleType()).getRoleId())
         .firebaseUid(firebaseUid)
         .build();
   }
