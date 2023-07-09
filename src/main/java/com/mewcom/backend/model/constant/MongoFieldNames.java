@@ -8,6 +8,7 @@ public interface MongoFieldNames {
   String UPDATED_AT = "updatedAt";
 
   // User
+  String USER_ID = "userId";
   String USER_NAME = "name";
   String USER_IS_EMAIL_VERIFIED = "isEmailVerified";
   String USER_BIRTHDATE = "birthdate";

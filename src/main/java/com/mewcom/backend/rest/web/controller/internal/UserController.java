@@ -24,8 +24,9 @@ public class UserController extends BaseController {
   private UserService userService;
 
   @DeleteMapping(value = ApiPath.USER_DELETE_BY_ID)
-  public RestBaseResponse deleteById(@PathVariable("id") String id) throws FirebaseAuthException {
-    userService.deleteById(id);
+  public RestBaseResponse deleteById(@PathVariable("userId") String userId)
+      throws FirebaseAuthException {
+    userService.deleteByUserId(userId);
     return toBaseResponse();
   }
 

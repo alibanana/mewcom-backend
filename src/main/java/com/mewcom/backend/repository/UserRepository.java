@@ -9,6 +9,8 @@ import java.util.List;
 public interface UserRepository extends MongoRepository<User, String>, UserFirebaseRepository,
     UserRepositoryCustom {
 
+  User findByUserId(String userId);
+
   User findByEmail(String email);
 
   Boolean existsByUsername(String username);
@@ -17,6 +19,8 @@ public interface UserRepository extends MongoRepository<User, String>, UserFireb
 
   Boolean existsByNewEmail(String newEmail);
 
+  Boolean existsByUserId(String userId);
+
   User findByEmailAndIsEmailVerifiedTrue(String email);
 
   @Query(value = "{ 'email': ?0, 'isEmailVerified': ?1 }",
@@ -24,10 +28,10 @@ public interface UserRepository extends MongoRepository<User, String>, UserFireb
   User findByEmailAndIsEmailVerifiedIncludeNameAndUsernameAndImages(String email,
       boolean isEmailVerified);
 
-  @Query(value = "{ 'email': ?0, 'isEmailVerified': ?1 }", fields = "{ '_id': 1 }")
-  User findByEmailAndIsEmailVerifiedIncludeIdOnly(String email, boolean isEmailVerified);
+  @Query(value = "{ 'email': ?0, 'isEmailVerified': ?1 }", fields = "{ '_id': 0, 'userId': 1 }")
+  User findByEmailAndIsEmailVerifiedIncludeUserIdOnly(String email, boolean isEmailVerified);
 
-  @Query(value = "{ '_id': { '$in': ?0 }, 'isEmailVerified': true }",
+  @Query(value = "{ 'userId': { '$in': ?0 }, 'isEmailVerified': true }",
       fields = "{ 'name': 1, 'birthdate': 1 }")
-  List<User> findAllByIdsAndIsEmailVerifiedTrueIncludeNameAndBirthdate(List<String> ids);
+  List<User> findAllByUserIdsAndIsEmailVerifiedTrueIncludeNameAndBirthdate(List<String> userIds);
 }
