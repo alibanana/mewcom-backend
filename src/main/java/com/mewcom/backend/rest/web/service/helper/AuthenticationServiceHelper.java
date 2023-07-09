@@ -112,7 +112,9 @@ public class AuthenticationServiceHelper {
   }
 
   public User buildUserForRegistration(RegisterRequest request, String firebaseUid) {
+    String roleId = roleRepository.findByTitle(request.getRoleType()).getRoleId();
     return User.builder()
+        .userId(buildNewUserId(roleId))
         .name(request.getName())
         .username(request.getUsername())
         .email(request.getEmail())
@@ -122,9 +124,17 @@ public class AuthenticationServiceHelper {
         .isProfileUpdated(false)
         .images(buildDefaultUserImages())
         .isIdentityVerified(false)
-        .roleId(roleRepository.findByTitle(request.getRoleType()).getRoleId())
+        .roleId(roleId)
         .firebaseUid(firebaseUid)
         .build();
+  }
+
+  private String buildNewUserId(String roleId) {
+    String userId = StringUtil.generateUserId(roleId);
+    if (userRepository.existsByUserId(userId)) {
+      userId = StringUtil.generateUserId(roleId);
+    }
+    return userId;
   }
 
   private List<UserImage> buildDefaultUserImages() {

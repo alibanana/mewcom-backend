@@ -104,13 +104,14 @@ public class UserIdentityServiceImpl implements UserIdentityService {
       UserIdentityFindByFilterRequest request) {
     validateUserIdentityFindByFilterRequest(orderBy, request);
     PageRequest pageRequest = PageUtil.validateAndGetPageRequest(page, size, orderBy, sortBy);
-    List<User> users = userRepository
-        .findAllByNameAndIsEmailVerifiedTrueIncludeIdAndNameAndBirthdate(request.getName());
+    List<User> users =
+        userRepository.findAllByNameAndIsEmailVerifiedTrueIncludeIdAndUserIdAndNameAndBirthdate(
+            request.getName());
     Page<UserIdentity> userIdentities = userIdentityRepository.findAllByFilter(
         request.getIdCardNumber(), request.getStatus(), getUserIdsFromUsers(users), pageRequest);
     if (StringUtil.isStringNullOrBlank(request.getName())
         && !userIdentities.getContent().isEmpty()) {
-        users = userRepository.findAllByIdsAndIsEmailVerifiedTrueIncludeNameAndBirthdate(
+        users = userRepository.findAllByUserIdsAndIsEmailVerifiedTrueIncludeNameAndBirthdate(
             getUserIdsFromUserIdentities(userIdentities.getContent()));
     } else if (users.isEmpty()) {
       userIdentities = PageableExecutionUtils.getPage(Collections.EMPTY_LIST, pageRequest, () -> 0);
@@ -167,8 +168,8 @@ public class UserIdentityServiceImpl implements UserIdentityService {
   private UserIdentity getUserIdentityOrDefault() {
     UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
-    String userId = userRepository.findByEmailAndIsEmailVerifiedIncludeIdOnly(
-        userAuthDto.getEmail(), true).getId();
+    String userId = userRepository.findByEmailAndIsEmailVerifiedIncludeUserIdOnly(
+        userAuthDto.getEmail(), true).getUserId();
     return Optional.ofNullable(userIdentityRepository.findByUserId(userId))
         .orElse(UserIdentity.builder()
             .userId(userId)
@@ -241,7 +242,7 @@ public class UserIdentityServiceImpl implements UserIdentityService {
   }
 
   private List<String> getUserIdsFromUsers(List<User> users) {
-    return users.stream().map(User::getId).collect(Collectors.toList());
+    return users.stream().map(User::getUserId).collect(Collectors.toList());
   }
 
   private List<String> getUserIdsFromUserIdentities(List<UserIdentity> userIdentities) {
@@ -249,11 +250,11 @@ public class UserIdentityServiceImpl implements UserIdentityService {
   }
 
   private Map<String, String> buildMapOfUserIdAndNameFromUsers(List<User> users) {
-    return users.stream().collect(Collectors.toMap(User::getId, User::getName));
+    return users.stream().collect(Collectors.toMap(User::getUserId, User::getName));
   }
 
   private Map<String, Date> buildMapOfUserIdAndBirthdateFromUsers(List<User> users) {
-    return users.stream().collect(Collectors.toMap(User::getId, User::getBirthdate));
+    return users.stream().collect(Collectors.toMap(User::getUserId, User::getBirthdate));
   }
 
   private void validateUserIdentityStatusIsSubmitted(User user, UserIdentity userIdentity) {

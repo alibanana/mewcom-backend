@@ -28,12 +28,12 @@ public class UserServiceImpl implements UserService {
   private UserIdentityService userIdentityService;
 
   @Override
-  public void deleteById(String id) throws FirebaseAuthException {
-    User user = userRepository.findById(id).orElse(null);
+  public void deleteByUserId(String userId) throws FirebaseAuthException {
+    User user = userRepository.findByUserId(userId);
     if (Objects.isNull(user)) {
       throw new BaseException(ErrorCode.USER_ID_DOES_NOT_EXISTS);
     }
-    userIdentityService.deleteUserIdentityByUserId(user.getId());
+    userIdentityService.deleteUserIdentityByUserId(user.getUserId());
     deleteUserImages(user);
     userRepository.deleteByUidFirebase(user.getFirebaseUid());
     userRepository.delete(user);
@@ -41,7 +41,9 @@ public class UserServiceImpl implements UserService {
 
   private void deleteUserImages(User user) {
     Optional.ofNullable(user.getImages()).orElse(Collections.emptyList()).forEach(userImage -> {
-      imageService.deleteImageById(userImage.getImageId());
+      if (!userImage.isDefault()) {
+        imageService.deleteImageById(userImage.getImageId());
+      }
     });
   }
 }

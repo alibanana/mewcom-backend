@@ -19,10 +19,11 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
   private MongoTemplate mongoTemplate;
 
   @Override
-  public List<User> findAllByNameAndIsEmailVerifiedTrueIncludeIdAndNameAndBirthdate(String name) {
+  public List<User> findAllByNameAndIsEmailVerifiedTrueIncludeIdAndUserIdAndNameAndBirthdate(
+      String name) {
     if (!StringUtil.isStringNullOrBlank(name)) {
       Query query = new Query();
-      query.fields().include(MongoFieldNames.ID, MongoFieldNames.USER_NAME,
+      query.fields().include(MongoFieldNames.ID, MongoFieldNames.USER_ID, MongoFieldNames.USER_NAME,
           MongoFieldNames.USER_BIRTHDATE);
       query.addCriteria(where(MongoFieldNames.USER_IS_EMAIL_VERIFIED).is(true));
       query.addCriteria(where(MongoFieldNames.USER_NAME)

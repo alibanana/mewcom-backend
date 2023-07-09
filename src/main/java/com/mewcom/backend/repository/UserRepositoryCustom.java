@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface UserRepositoryCustom {
 
-  List<User> findAllByNameAndIsEmailVerifiedTrueIncludeIdAndNameAndBirthdate(String name);
+  List<User> findAllByNameAndIsEmailVerifiedTrueIncludeIdAndUserIdAndNameAndBirthdate(String name);
 }
