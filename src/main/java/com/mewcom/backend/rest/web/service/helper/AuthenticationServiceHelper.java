@@ -114,7 +114,7 @@ public class AuthenticationServiceHelper {
   public User buildUserForRegistration(RegisterRequest request, String firebaseUid) {
     String roleId = roleRepository.findByTitle(request.getRoleType()).getRoleId();
     return User.builder()
-        .userId(buildNewUserId(roleId))
+        .userId(buildNewUserId())
         .name(request.getName())
         .username(request.getUsername())
         .email(request.getEmail())
@@ -129,10 +129,10 @@ public class AuthenticationServiceHelper {
         .build();
   }
 
-  private String buildNewUserId(String roleId) {
-    String userId = StringUtil.generateUserId(roleId);
+  private String buildNewUserId() {
+    String userId = StringUtil.generateUserId();
     if (userRepository.existsByUserId(userId)) {
-      userId = StringUtil.generateUserId(roleId);
+      userId = StringUtil.generateUserId();
     }
     return userId;
   }
