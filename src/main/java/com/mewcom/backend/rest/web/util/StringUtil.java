@@ -25,7 +25,7 @@ public class StringUtil {
     return "ROL-" + RandomString.make(5).toUpperCase();
   }
 
-  public static String generateUserId(String roleId) {
-    return roleId + "-USR-" + RandomString.make(5).toUpperCase();
+  public static String generateUserId() {
+    return "USR-" + RandomString.make(5).toUpperCase();
   }
 }
