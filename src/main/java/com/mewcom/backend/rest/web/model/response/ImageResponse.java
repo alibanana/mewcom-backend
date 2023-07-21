@@ -17,6 +17,7 @@ public class ImageResponse implements Serializable {
 
   private static final long serialVersionUID = 7711852915784030600L;
 
+  private String fileId;
   private String path;
   private String filename;
   private String filetype;

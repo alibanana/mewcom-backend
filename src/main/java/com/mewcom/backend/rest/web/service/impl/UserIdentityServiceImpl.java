@@ -196,8 +196,8 @@ public class UserIdentityServiceImpl implements UserIdentityService {
       throws IOException {
     File file = imageService.uploadImage(image);
     return UserIdentityImage.builder()
-        .imageId(file.getId())
-        .url(sysparamProperties.getImageRetrieveUrl() + file.getId())
+        .imageId(file.getFileId())
+        .url(sysparamProperties.getImageRetrieveUrl() + file.getFileId())
         .build();
   }
 

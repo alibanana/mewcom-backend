@@ -21,13 +21,15 @@ public class File extends BaseMongoEntity {
 
   private static final long serialVersionUID = 5347036516890566669L;
 
+  private String fileId;
   private String path;
   private String filename;
   private String filetype;
 
-  public File(String id, Date createdAt, Date updatedAt, String path, String filename,
-      String filetype) {
+  public File(String id, Date createdAt, Date updatedAt, String fileId, String path,
+      String filename, String filetype) {
     super(id, createdAt, updatedAt);
+    this.fileId = fileId;
     this.path = path;
     this.filename = filename;
     this.filetype = filetype;
