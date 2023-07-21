@@ -123,7 +123,7 @@ public class UserIdentityServiceImpl implements UserIdentityService {
   @Override
   public void verifyUserIdentity(UserIdentityVerifyRequest request) throws TemplateException,
       MessagingException, IOException {
-    User user = userRepository.findById(request.getUserId()).orElse(null);
+    User user = userRepository.findByUserId(request.getUserId());
     UserIdentity userIdentity = userIdentityRepository.findByUserId(request.getUserId());
     if (Objects.isNull(user) || Objects.isNull(userIdentity)) {
       throw new BaseException(ErrorCode.USER_ID_DOES_NOT_EXISTS);
@@ -140,7 +140,7 @@ public class UserIdentityServiceImpl implements UserIdentityService {
   @Override
   public void rejectUserIdentity(UserIdentityRejectRequest request) throws TemplateException,
       MessagingException, IOException {
-    User user = userRepository.findById(request.getUserId()).orElse(null);
+    User user = userRepository.findByUserId(request.getUserId());
     UserIdentity userIdentity = userIdentityRepository.findByUserId(request.getUserId());
     if (Objects.isNull(user) || Objects.isNull(userIdentity)) {
       throw new BaseException(ErrorCode.USER_ID_DOES_NOT_EXISTS);
