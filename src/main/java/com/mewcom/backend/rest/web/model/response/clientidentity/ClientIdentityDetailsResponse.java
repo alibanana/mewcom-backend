@@ -21,4 +21,5 @@ public class ClientIdentityDetailsResponse implements Serializable {
   private String idCardImageUrl;
   private String selfieImageUrl;
   private String status;
+  private String rejectionDetails;
 }
