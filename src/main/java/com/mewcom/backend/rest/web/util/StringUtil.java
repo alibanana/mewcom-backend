@@ -28,4 +28,8 @@ public class StringUtil {
   public static String generateUserId() {
     return "USR-" + RandomString.make(5).toUpperCase();
   }
+
+  public static String generateFileId() {
+    return "FIL-" + RandomString.make(6).toUpperCase();
+  }
 }

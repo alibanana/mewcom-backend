@@ -130,8 +130,8 @@ public class ClientServiceImpl implements ClientService {
   private void saveNewClientImage(User user, File file) {
     List<UserImage> images = Optional.ofNullable(user.getImages()).orElse(new ArrayList<>());
     images.add(0, UserImage.builder()
-        .imageId(file.getId())
-        .url(sysparamProperties.getImageRetrieveUrl() + file.getId())
+        .imageId(file.getFileId())
+        .url(sysparamProperties.getImageRetrieveUrl() + file.getFileId())
         .isDefault(false)
         .build());
     user.setImages(images);

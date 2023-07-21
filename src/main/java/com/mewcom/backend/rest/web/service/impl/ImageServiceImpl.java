@@ -8,6 +8,7 @@ import com.mewcom.backend.rest.web.service.FileStorageService;
 import com.mewcom.backend.rest.web.service.ImageService;
 import com.mewcom.backend.rest.web.util.FileUtil;
 import com.mewcom.backend.rest.web.util.ImageUtil;
+import com.mewcom.backend.rest.web.util.StringUtil;
 import org.javatuples.Pair;
 import org.javatuples.Triplet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +38,7 @@ public class ImageServiceImpl implements ImageService {
     Triplet<String, String, String> triplet =
         fileStorageService.storeFile(imageUtil.compressImage(file));
     return fileRepository.save(File.builder()
+        .fileId(StringUtil.generateFileId())
         .path(triplet.getValue0())
         .filename(triplet.getValue1())
         .filetype(triplet.getValue2())
@@ -65,7 +67,7 @@ public class ImageServiceImpl implements ImageService {
   }
 
   private File getImageById(String id) {
-    File file = fileRepository.findById(id).orElse(null);
+    File file = fileRepository.findByFileId(id).orElse(null);
     if (Objects.isNull(file)) {
       throw new BaseException(ErrorCode.IMAGE_ID_DOES_NOT_EXISTS);
     }
