@@ -65,6 +65,8 @@ public enum ErrorCode {
       "Request invalid, orderBy field may only be filled with %s"),
   USER_IDENTITY_STATUS_MUST_BE_SUBMITTED("ERR-PA40030", 400,
       "The only allowed User Identity status is submitted"),
+  TAP_TALK_GENERIC_ERROR("ERR-PA40031", 400,
+      "Sorry the server could not send your OTP message currently"),
 
   USER_EMAIL_NOT_FOUND("ERR-PA40101", 401,
       "The requested email does not exists"),

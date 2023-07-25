@@ -45,4 +45,8 @@ public class ApiPath {
   public static final String USER_IDENTITY_VERIFY = "/verify";
 
   public static final String USER_IDENTITY_REJECT = "/reject";
+
+  public static final String BASE_PATH_WHATSAPP = BASE_PATH_API + "/whatsapp";
+
+  public static final String WHATSAPP_SEND_MESSAGE = "/sendMessage";
 }
