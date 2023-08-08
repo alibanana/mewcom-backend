@@ -6,9 +6,11 @@ import com.mewcom.backend.model.entity.User;
 import com.mewcom.backend.model.exception.BaseException;
 import com.mewcom.backend.repository.UserRepository;
 import com.mewcom.backend.rest.web.service.ImageService;
+import com.mewcom.backend.rest.web.service.OtpService;
 import com.mewcom.backend.rest.web.service.UserIdentityService;
 import com.mewcom.backend.rest.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -27,16 +29,30 @@ public class UserServiceImpl implements UserService {
   @Autowired
   private UserIdentityService userIdentityService;
 
+  @Lazy
+  @Autowired
+  private OtpService otpService;
+
   @Override
   public void deleteByUserId(String userId) throws FirebaseAuthException {
     User user = userRepository.findByUserId(userId);
     if (Objects.isNull(user)) {
       throw new BaseException(ErrorCode.USER_ID_DOES_NOT_EXISTS);
     }
+    otpService.deleteOtpMessagesByUserId(user.getUserId());
     userIdentityService.deleteUserIdentityByUserId(user.getUserId());
     deleteUserImages(user);
     userRepository.deleteByUidFirebase(user.getFirebaseUid());
     userRepository.delete(user);
+  }
+
+  @Override
+  public void updatePhoneNumber(User user, String phoneNumber, boolean isPhoneNumberVerified)
+      throws FirebaseAuthException {
+    user.setPhoneNumber(phoneNumber);
+    user.setPhoneNumberVerified(isPhoneNumberVerified);
+    userRepository.save(user);
+    userRepository.updateUserPhoneNumberFirebase(user.getFirebaseUid(), phoneNumber);
   }
 
   private void deleteUserImages(User user) {

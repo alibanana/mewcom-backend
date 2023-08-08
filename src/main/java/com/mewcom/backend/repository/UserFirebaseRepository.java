@@ -13,6 +13,8 @@ public interface UserFirebaseRepository {
   void updateUserFirebase(String uid, String name, String email, boolean emailVerified)
       throws FirebaseAuthException;
 
+  void updateUserPhoneNumberFirebase(String uid, String phoneNumber) throws FirebaseAuthException;
+
   void updatePasswordFirebase(String uid, String password) throws FirebaseAuthException;
 
   void deleteByUidFirebase(String uid) throws FirebaseAuthException;
