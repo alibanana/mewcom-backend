@@ -29,4 +29,10 @@ public class ClientApiPath {
   public static final String CLIENT_IDENTITY_SUBMIT = "/submit";
 
   public static final String CLIENT_IDENTITY_DETAILS = "/details";
+
+  public static final String BASE_PATH_OTP = BASE_PATH_API + "/otp";
+
+  public static final String OTP_SEND_MESSAGE = "/send";
+
+  public static final String OTP_VERIFY_CODE = "/verify";
 }

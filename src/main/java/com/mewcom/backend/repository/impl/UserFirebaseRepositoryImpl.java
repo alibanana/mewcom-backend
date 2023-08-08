@@ -37,6 +37,14 @@ public class UserFirebaseRepositoryImpl implements UserFirebaseRepository {
   }
 
   @Override
+  public void updateUserPhoneNumberFirebase(String uid, String phoneNumber)
+      throws FirebaseAuthException {
+    UserRecord userRecord = FirebaseAuth.getInstance().getUser(uid);
+    FirebaseAuth.getInstance().updateUser(userRecord.updateRequest()
+        .setPhoneNumber(phoneNumber));
+  }
+
+  @Override
   public void updatePasswordFirebase(String uid, String password) throws FirebaseAuthException {
     UserRecord userRecord = FirebaseAuth.getInstance().getUser(uid);
     FirebaseAuth.getInstance().updateUser(userRecord.updateRequest()

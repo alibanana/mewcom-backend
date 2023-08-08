@@ -67,6 +67,12 @@ public enum ErrorCode {
       "The only allowed User Identity status is submitted"),
   TAP_TALK_GENERIC_ERROR("ERR-PA40031", 400,
       "Sorry the server could not send your OTP message currently"),
+  OTP_MESSAGE_DOES_NOT_EXISTS("ERR-PA40032", 400,
+      "Looks like we haven't send you a new OTP code, please request another OTP code and re-validate"),
+  WRONG_OTP_CODE("ERR-PA40033", 400,
+      "The requested code is wrong, please request another OTP code and re-validate"),
+  OTP_CODE_EXPIRED("ERR-PA40034", 400,
+      "The requested code is expired, please request another OTP code and re-validate"),
 
   USER_EMAIL_NOT_FOUND("ERR-PA40101", 401,
       "The requested email does not exists"),
