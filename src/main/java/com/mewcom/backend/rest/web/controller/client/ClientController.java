@@ -5,6 +5,7 @@ import com.mewcom.backend.model.constant.ClientApiPath;
 import com.mewcom.backend.model.entity.User;
 import com.mewcom.backend.model.entity.UserImage;
 import com.mewcom.backend.rest.web.controller.BaseController;
+import com.mewcom.backend.rest.web.model.request.client.ClientAddInterestsRequest;
 import com.mewcom.backend.rest.web.model.request.client.ClientUpdatePasswordRequest;
 import com.mewcom.backend.rest.web.model.request.client.ClientUpdateRequest;
 import com.mewcom.backend.rest.web.model.response.client.ClientDashboardDetailsResponse;
@@ -12,6 +13,7 @@ import com.mewcom.backend.rest.web.model.response.client.ClientDetailsResponse;
 import com.mewcom.backend.rest.web.model.response.client.ClientUpdateImageResponse;
 import com.mewcom.backend.rest.web.model.response.client.ClientUpdateResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestBaseResponse;
+import com.mewcom.backend.rest.web.model.response.rest.RestListResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestSingleResponse;
 import com.mewcom.backend.rest.web.service.ClientService;
 import com.mewcom.backend.rest.web.util.DateUtil;
@@ -75,6 +77,12 @@ public class ClientController extends BaseController {
   public RestSingleResponse<ClientDetailsResponse> getClientDetails() {
     User user = clientService.getClientDetails();
     return toSingleResponse(toClientDetailsResponse(user));
+  }
+
+  @PostMapping(value = ClientApiPath.CLIENT_ADD_INTERESTS)
+  public RestListResponse<String> addClientInterests(
+      @Valid @RequestBody ClientAddInterestsRequest request) {
+    return toListResponse(clientService.addClientInterests(request));
   }
 
   private ClientUpdateResponse toClientUpdateResponse(Pair<User, Boolean> pair) {

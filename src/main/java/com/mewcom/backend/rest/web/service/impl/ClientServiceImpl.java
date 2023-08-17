@@ -4,15 +4,18 @@ import com.google.firebase.auth.FirebaseAuthException;
 import com.mewcom.backend.config.properties.SysparamProperties;
 import com.mewcom.backend.model.auth.UserAuthDto;
 import com.mewcom.backend.model.entity.File;
+import com.mewcom.backend.model.entity.Interest;
 import com.mewcom.backend.model.entity.User;
 import com.mewcom.backend.model.entity.UserImage;
 import com.mewcom.backend.outbound.GoogleIdentityToolkitOutbound;
 import com.mewcom.backend.repository.UserRepository;
+import com.mewcom.backend.rest.web.model.request.client.ClientAddInterestsRequest;
 import com.mewcom.backend.rest.web.model.request.client.ClientUpdatePasswordRequest;
 import com.mewcom.backend.rest.web.model.request.client.ClientUpdateRequest;
 import com.mewcom.backend.rest.web.service.ClientService;
 import com.mewcom.backend.rest.web.service.EmailTemplateService;
 import com.mewcom.backend.rest.web.service.ImageService;
+import com.mewcom.backend.rest.web.service.InterestService;
 import com.mewcom.backend.rest.web.util.StringUtil;
 import com.mewcom.backend.rest.web.util.UserUtil;
 import freemarker.template.TemplateException;
@@ -28,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ClientServiceImpl implements ClientService {
@@ -43,6 +47,9 @@ public class ClientServiceImpl implements ClientService {
 
   @Autowired
   private ImageService imageService;
+
+  @Autowired
+  private InterestService interestService;
 
   @Autowired
   private GoogleIdentityToolkitOutbound googleIdentityToolkitOutbound;
@@ -151,5 +158,18 @@ public class ClientServiceImpl implements ClientService {
     UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
     return userRepository.findByEmailAndIsEmailVerifiedTrue(userAuthDto.getEmail());
+  }
+
+  @Override
+  public List<String> addClientInterests(ClientAddInterestsRequest request) {
+    List<String> interests = interestService.findInterests(request.getInterests()).stream()
+        .map(Interest::getInterest)
+        .collect(Collectors.toList());
+    UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
+        .getAuthentication().getPrincipal();
+    User user = userRepository.findByEmailAndIsEmailVerifiedTrue(userAuthDto.getEmail());
+    user.setInterests(interests);
+    userRepository.save(user);
+    return interests;
   }
 }

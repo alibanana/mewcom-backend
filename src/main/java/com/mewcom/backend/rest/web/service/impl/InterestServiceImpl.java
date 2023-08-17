@@ -36,6 +36,15 @@ public class InterestServiceImpl implements InterestService {
     interestRepository.deleteByInterestId(interestId);
   }
 
+  @Override
+  public List<Interest> findInterests(List<String> interests) {
+    List<Interest> interestList = interestRepository.findAllByInterestIn(interests);
+    if (interestList.isEmpty() || interestList.size() != interests.size()) {
+      throw new BaseException(ErrorCode.INTEREST_NOT_EXISTS);
+    }
+    return interestList;
+  }
+
   private Interest buildInterest(CreateInterestRequest request) {
     Interest interest = new Interest();
     interest.setInterest(request.getInterest());
