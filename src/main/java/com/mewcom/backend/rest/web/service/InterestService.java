@@ -12,4 +12,6 @@ public interface InterestService {
   List<Interest> findAll();
 
   void deleteByInterestId(String interestId);
+
+  List<Interest> findInterests(List<String> interests);
 }
