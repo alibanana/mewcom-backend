@@ -46,7 +46,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
       "/api/auth/**",
       "/api/email-templates/**",
       "/api/images/**",
-      "/api/whatsapp/**"
+      "/api/whatsapp/**",
+      "/api/interests/**"
   };
 
   private static final String[] CLIENT_API_URLS = {

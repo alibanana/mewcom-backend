@@ -49,4 +49,8 @@ public class ApiPath {
   public static final String BASE_PATH_WHATSAPP = BASE_PATH_API + "/whatsapp";
 
   public static final String WHATSAPP_SEND_MESSAGE = "/sendMessage";
+
+  public static final String BASE_PATH_INTEREST = BASE_PATH_API + "/interests";
+
+  public static final String INTEREST_DELETE_BY_ID = "/{id}";
 }

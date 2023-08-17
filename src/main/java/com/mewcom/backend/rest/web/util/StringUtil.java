@@ -51,6 +51,10 @@ public class StringUtil {
         DOUBLE_NEW_LINE_CHAR + "Mewcom";
   }
 
+  public static String generateInterestId() {
+    return generateIdOfPrefixAndLength("INT-", 5);
+  }
+
   private static String generateIdOfPrefixAndLength(String prefix, int length) {
     return prefix + RandomString.make(length).toUpperCase();
   }
