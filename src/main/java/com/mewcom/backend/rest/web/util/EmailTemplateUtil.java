@@ -142,4 +142,14 @@ public class EmailTemplateUtil {
         .templateKeyAndValues(content)
         .build();
   }
+
+  public EmailTemplateSendRequest buildEmailClientUpdatedAsHost(String email, String name) {
+    Map<String, Object> content = new HashMap<>();
+    content.put("name", name);
+    return EmailTemplateSendRequest.builder()
+        .receiverAddress(email)
+        .templateName("EmailClientUpdatedAsHost")
+        .templateKeyAndValues(content)
+        .build();
+  }
 }

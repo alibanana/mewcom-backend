@@ -24,6 +24,8 @@ public class ClientApiPath {
 
   public static final String CLIENT_ADD_INTERESTS = "/add-interests";
 
+  public static final String CLIENT_UPDATE_AS_HOST = "/update-as-host";
+
   public static final String BASE_PATH_CLIENT_IDENTITY = BASE_PATH_API + "/client-identities";
 
   public static final String CLIENT_IDENTITY_UPLOAD_ID_CARD_IMAGE = "/upload-id-card-image";
