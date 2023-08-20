@@ -10,6 +10,7 @@ import com.mewcom.backend.rest.web.model.request.client.ClientUpdatePasswordRequ
 import com.mewcom.backend.rest.web.model.request.client.ClientUpdateRequest;
 import com.mewcom.backend.rest.web.model.response.client.ClientDashboardDetailsResponse;
 import com.mewcom.backend.rest.web.model.response.client.ClientDetailsResponse;
+import com.mewcom.backend.rest.web.model.response.client.ClientGetAllStatusResponse;
 import com.mewcom.backend.rest.web.model.response.client.ClientUpdateImageResponse;
 import com.mewcom.backend.rest.web.model.response.client.ClientUpdateResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestBaseResponse;
@@ -22,6 +23,7 @@ import io.swagger.annotations.Api;
 import org.javatuples.Pair;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -79,6 +81,12 @@ public class ClientController extends BaseController {
     return toSingleResponse(toClientDetailsResponse(user));
   }
 
+  @GetMapping(value = ClientApiPath.CLIENT_GET_ALL_STATUS)
+  public RestSingleResponse<ClientGetAllStatusResponse> getAllStatus() {
+    User user = clientService.getAllStatus();
+    return toSingleResponse(toClientGetAllStatusResponse(user));
+  }
+
   @PostMapping(value = ClientApiPath.CLIENT_ADD_INTERESTS)
   public RestListResponse<String> addClientInterests(
       @Valid @RequestBody ClientAddInterestsRequest request) {
@@ -120,6 +128,12 @@ public class ClientController extends BaseController {
         .stream()
         .map(UserImage::getUrl)
         .collect(Collectors.toList()));
+    return response;
+  }
+
+  private ClientGetAllStatusResponse toClientGetAllStatusResponse(User user) {
+    ClientGetAllStatusResponse response = new ClientGetAllStatusResponse();
+    BeanUtils.copyProperties(user, response);
     return response;
   }
 }

@@ -164,6 +164,14 @@ public class ClientServiceImpl implements ClientService {
   }
 
   @Override
+  public User getAllStatus() {
+    UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
+        .getAuthentication().getPrincipal();
+    return userRepository.findByEmailAndIsEmailVerifiedIncludeIsPhoneNumberVerifiedAndIsProfileUpdatedAndIsIdentityVerifiedTrue(
+        userAuthDto.getEmail(), true);
+  }
+
+  @Override
   public List<String> addClientInterests(ClientAddInterestsRequest request) {
     List<String> interests = interestService.findInterests(request.getInterests()).stream()
         .map(Interest::getInterest)
@@ -171,7 +179,7 @@ public class ClientServiceImpl implements ClientService {
     UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
     User user =
-        userRepository.findByEmailAndIsEmailVerifiedTrueAndIsPhoneNumberVerifiedTrueAndIsIdentityVerifiedTrue(
+        userRepository.findByEmailAndIsEmailVerifiedTrueAndIsPhoneNumberVerifiedTrueAndIsProfileUpdatedTrueAndIsIdentityVerifiedTrue(
             userAuthDto.getEmail());
     if (Objects.isNull(user)) {
       throw new BaseException(ErrorCode.USER_NOT_ELIGIBLE);
