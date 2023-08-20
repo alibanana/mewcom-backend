@@ -26,7 +26,9 @@ public interface ClientService {
 
   User getClientDetails();
 
-  User getAllStatus();
+  User getClientAllStatus();
 
   List<String> addClientInterests(ClientAddInterestsRequest request);
+
+  void updateClientAsHost() throws TemplateException, MessagingException, IOException;
 }

@@ -31,4 +31,7 @@ public interface EmailTemplateService {
 
   void sendEmailIdentityVerificationRequestRejected(String email, String name, String description)
       throws TemplateException, MessagingException, IOException;
+
+  void sendEmailClientUpdatedAsHost(String email, String name) throws TemplateException,
+      MessagingException, IOException;
 }

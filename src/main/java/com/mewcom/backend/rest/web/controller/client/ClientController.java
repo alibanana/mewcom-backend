@@ -82,8 +82,8 @@ public class ClientController extends BaseController {
   }
 
   @GetMapping(value = ClientApiPath.CLIENT_GET_ALL_STATUS)
-  public RestSingleResponse<ClientGetAllStatusResponse> getAllStatus() {
-    User user = clientService.getAllStatus();
+  public RestSingleResponse<ClientGetAllStatusResponse> getClientAllStatus() {
+    User user = clientService.getClientAllStatus();
     return toSingleResponse(toClientGetAllStatusResponse(user));
   }
 
@@ -92,6 +92,14 @@ public class ClientController extends BaseController {
       @Valid @RequestBody ClientAddInterestsRequest request) {
     return toListResponse(clientService.addClientInterests(request));
   }
+
+  @PostMapping(value = ClientApiPath.CLIENT_UPDATE_AS_HOST)
+  public RestBaseResponse updateClientAsHost() throws TemplateException, MessagingException,
+      IOException {
+    clientService.updateClientAsHost();
+    return toBaseResponse();
+  }
+
 
   private ClientUpdateResponse toClientUpdateResponse(Pair<User, Boolean> pair) {
     if (!pair.getValue1()) {

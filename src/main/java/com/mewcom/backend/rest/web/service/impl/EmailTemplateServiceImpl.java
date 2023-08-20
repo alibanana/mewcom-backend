@@ -89,4 +89,10 @@ public class EmailTemplateServiceImpl implements EmailTemplateService {
     sendTemplate(
         emailTemplateUtil.buildEmailIdentityVerificationRequestRejected(email, name, description));
   }
+
+  @Override
+  public void sendEmailClientUpdatedAsHost(String email, String name) throws TemplateException,
+      MessagingException, IOException {
+    sendTemplate(emailTemplateUtil.buildEmailClientUpdatedAsHost(email, name));
+  }
 }

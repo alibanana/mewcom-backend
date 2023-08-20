@@ -22,6 +22,7 @@ public class LoginResponse implements Serializable {
   private String username;
   private String email;
   private String phoneNumber;
+  private boolean isPhoneNumberVerified;
   private String gender;
   private String biodata;
   private String birthdate;
