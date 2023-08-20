@@ -23,6 +23,9 @@ public interface UserRepository extends MongoRepository<User, String>, UserFireb
 
   User findByEmailAndIsEmailVerifiedTrue(String email);
 
+  User findByEmailAndIsEmailVerifiedTrueAndIsPhoneNumberVerifiedTrueAndIsIdentityVerifiedTrue(
+      String email);
+
   @Query(value = "{ 'email': ?0, 'isEmailVerified': ?1 }",
       fields = "{ '_id': 0, 'name': 1, 'username': 1, 'images': 1 }")
   User findByEmailAndIsEmailVerifiedIncludeNameAndUsernameAndImages(String email,

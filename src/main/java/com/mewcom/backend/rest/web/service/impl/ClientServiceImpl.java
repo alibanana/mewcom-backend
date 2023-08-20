@@ -3,10 +3,12 @@ package com.mewcom.backend.rest.web.service.impl;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.mewcom.backend.config.properties.SysparamProperties;
 import com.mewcom.backend.model.auth.UserAuthDto;
+import com.mewcom.backend.model.constant.ErrorCode;
 import com.mewcom.backend.model.entity.File;
 import com.mewcom.backend.model.entity.Interest;
 import com.mewcom.backend.model.entity.User;
 import com.mewcom.backend.model.entity.UserImage;
+import com.mewcom.backend.model.exception.BaseException;
 import com.mewcom.backend.outbound.GoogleIdentityToolkitOutbound;
 import com.mewcom.backend.repository.UserRepository;
 import com.mewcom.backend.rest.web.model.request.client.ClientAddInterestsRequest;
@@ -30,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -167,7 +170,12 @@ public class ClientServiceImpl implements ClientService {
         .collect(Collectors.toList());
     UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
-    User user = userRepository.findByEmailAndIsEmailVerifiedTrue(userAuthDto.getEmail());
+    User user =
+        userRepository.findByEmailAndIsEmailVerifiedTrueAndIsPhoneNumberVerifiedTrueAndIsIdentityVerifiedTrue(
+            userAuthDto.getEmail());
+    if (Objects.isNull(user)) {
+      throw new BaseException(ErrorCode.USER_NOT_ELIGIBLE);
+    }
     user.setInterests(interests);
     userRepository.save(user);
     return interests;

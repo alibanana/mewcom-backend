@@ -75,6 +75,8 @@ public enum ErrorCode {
       "The requested code is expired, please request another OTP code and re-validate"),
   INTEREST_NOT_EXISTS("ERR-PA40035", 400,
       "The requested interest does not exists in the database"),
+  USER_NOT_ELIGIBLE("ERR-PA40036", 400,
+      "Looks like the user requested is not eligible for this request yet"),
 
   USER_EMAIL_NOT_FOUND("ERR-PA40101", 401,
       "The requested email does not exists"),
