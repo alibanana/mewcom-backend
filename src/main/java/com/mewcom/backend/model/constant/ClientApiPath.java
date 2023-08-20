@@ -20,6 +20,8 @@ public class ClientApiPath {
 
   public static final String CLIENT_DETAILS = "/details";
 
+  public static final String CLIENT_GET_ALL_STATUS = "/all-status";
+
   public static final String CLIENT_ADD_INTERESTS = "/add-interests";
 
   public static final String BASE_PATH_CLIENT_IDENTITY = BASE_PATH_API + "/client-identities";

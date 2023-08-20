@@ -26,5 +26,7 @@ public interface ClientService {
 
   User getClientDetails();
 
+  User getAllStatus();
+
   List<String> addClientInterests(ClientAddInterestsRequest request);
 }
