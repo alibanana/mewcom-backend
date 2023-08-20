@@ -1,6 +1,7 @@
 package com.mewcom.backend.rest.web.service.impl;
 
 import com.google.firebase.auth.FirebaseAuthException;
+import com.mewcom.backend.config.properties.SysparamProperties;
 import com.mewcom.backend.model.constant.ErrorCode;
 import com.mewcom.backend.model.constant.OtpMessageStatus;
 import com.mewcom.backend.model.entity.OtpMessage;
@@ -38,13 +39,14 @@ public class OtpServiceImpl implements OtpService {
   @Autowired
   private WhatsappService whatsappService;
 
+  @Autowired
+  private SysparamProperties sysparamProperties;
+
   @Override
   public void sendOtpMessage(String phone) {
     userUtil.validatePhoneNumber(phone);
     User user = clientService.getClientDetails();
-    OtpMessage otpMessage = buildOtpMessage(user, phone);
-    whatsappService.sendMessage(buildWhatsappSendMessageRequest(phone, otpMessage.getMessage()));
-    otpMessageRepository.save(otpMessage);
+    otpMessageRepository.save(buildAndSendOtpMessage(user, phone));
   }
 
   @Override
@@ -63,6 +65,15 @@ public class OtpServiceImpl implements OtpService {
     otpMessageRepository.deleteAllByUserId(userId);
   }
 
+  private OtpMessage buildAndSendOtpMessage(User user, String phone) {
+    OtpMessage otpMessage = buildOtpMessage(user, phone);
+    if (!sysparamProperties.isOtpEnabled()) {
+      return otpMessage;
+    }
+    whatsappService.sendMessage(buildWhatsappSendMessageRequest(phone, otpMessage.getMessage()));
+    return otpMessage;
+  }
+
   private WhatsappSendMessageRequest buildWhatsappSendMessageRequest(String phone, String body) {
     return WhatsappSendMessageRequest.builder()
         .phone(phone)
@@ -72,6 +83,9 @@ public class OtpServiceImpl implements OtpService {
 
   private OtpMessage buildOtpMessage(User user, String phone) {
     String code = StringUtil.generateOtpCode();
+    if (!sysparamProperties.isOtpEnabled()) {
+      code = sysparamProperties.getOtpDummyCode();
+    }
     return OtpMessage.builder()
         .otpMessageId(StringUtil.generateOtpMessageId())
         .otpCode(code)

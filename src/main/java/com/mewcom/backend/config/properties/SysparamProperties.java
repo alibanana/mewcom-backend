@@ -37,11 +37,11 @@ public class SysparamProperties {
   @Value("${sysparam.user.default-image-id}")
   private String userDefaultImageId;
 
-  @Value("${sysparam.qrcode.default-width}")
-  private Integer qrCodeDefaultWidth;
+  @Value("${sysparam.otp.enabled}")
+  private boolean otpEnabled;
 
-  @Value("${sysparam.qrcode.default-height}")
-  private Integer qrCodeDefaultHeight;
+  @Value("${sysparam.otp.dummy-code}")
+  private String otpDummyCode;
 
   private Float maxImageCompressionSizeInKbValue;
 }
