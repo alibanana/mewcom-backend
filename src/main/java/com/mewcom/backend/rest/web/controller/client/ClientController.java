@@ -71,8 +71,8 @@ public class ClientController extends BaseController {
 
   @PostMapping(value = ClientApiPath.CLIENT_DASHBOARD_DETAILS)
   public RestSingleResponse<ClientDashboardDetailsResponse> getClientDashboardDetails() {
-    User user = clientService.getClientDashboardDetails();
-    return toSingleResponse(toClientDashboardDetailsResponse(user));
+    Pair<User, Boolean> tupleOfUserAndIsHost = clientService.getClientDashboardDetails();
+    return toSingleResponse(toClientDashboardDetailsResponse(tupleOfUserAndIsHost));
   }
 
   @PostMapping(value = ClientApiPath.CLIENT_DETAILS)
@@ -117,13 +117,16 @@ public class ClientController extends BaseController {
     return ClientUpdateResponse.builder().isEmailUpdated(true).build();
   }
 
-  private ClientDashboardDetailsResponse toClientDashboardDetailsResponse(User user) {
+  private ClientDashboardDetailsResponse toClientDashboardDetailsResponse(
+      Pair<User, Boolean> tupleOfUserAndIsHost) {
+    User user = tupleOfUserAndIsHost.getValue0();
     ClientDashboardDetailsResponse response = new ClientDashboardDetailsResponse();
     BeanUtils.copyProperties(user, response);
     response.setImageUrls(Optional.ofNullable(user.getImages()).orElse(Collections.emptyList())
         .stream()
         .map(UserImage::getUrl)
         .collect(Collectors.toList()));
+    response.setIsHost(tupleOfUserAndIsHost.getValue1());
     return response;
   }
 

@@ -46,6 +46,15 @@ public class RoleServiceImpl implements RoleService {
   }
 
   @Override
+  public Role findByRoleId(String roleId) {
+    Role role = roleRepository.findByRoleId(roleId);
+    if (Objects.isNull(role)) {
+      throw new BaseException(ErrorCode.ROLE_ID_INVALID);
+    }
+    return role;
+  }
+
+  @Override
   public void deleteByTitle(String title) {
     Role role = findRoleByTitle(title);
     roleRepository.delete(role);

@@ -105,11 +105,12 @@ public class ClientServiceImpl implements ClientService {
   }
 
   @Override
-  public User getClientDashboardDetails() {
+  public Pair<User, Boolean> getClientDashboardDetails() {
     UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
         .getAuthentication().getPrincipal();
-    return userRepository.findByEmailAndIsEmailVerifiedIncludeNameAndUsernameAndImages(
+    User user = userRepository.findByEmailAndIsEmailVerifiedIncludeNameAndUsernameAndImagesAndRoleId(
         userAuthDto.getEmail(), true);
+    return Pair.with(user, isRoleIdHost(user.getRoleId()));
   }
 
   @Override
@@ -209,6 +210,11 @@ public class ClientServiceImpl implements ClientService {
         .build());
     user.setImages(images);
     userRepository.save(user);
+  }
+
+  private boolean isRoleIdHost(String roleId) {
+    Role role = roleService.findByRoleId(roleId);
+    return role.getTitle().equals("host");
   }
 
   private void validateClientAddInterestRequest(ClientAddInterestsRequest request) {
