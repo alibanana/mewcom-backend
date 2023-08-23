@@ -79,6 +79,8 @@ public enum ErrorCode {
       "Looks like the user requested is not eligible for this request yet"),
   INTEREST_REQUEST_EMPTY("ERR-PA40037", 400,
       "Interests must not be empty"),
+  ROLE_ID_INVALID("ERR-PA40038", 400,
+      "The requested role id does not exists"),
 
   USER_EMAIL_NOT_FOUND("ERR-PA40101", 401,
       "The requested email does not exists"),

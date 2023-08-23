@@ -13,5 +13,7 @@ public interface RoleService {
 
   Role findByTitle(String title);
 
+  Role findByRoleId(String roleId);
+
   void deleteByTitle(String title);
 }

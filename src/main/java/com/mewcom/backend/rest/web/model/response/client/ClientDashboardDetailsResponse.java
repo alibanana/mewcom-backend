@@ -21,4 +21,5 @@ public class ClientDashboardDetailsResponse implements Serializable {
   private String name;
   private String username;
   private List<String> imageUrls;
+  private Boolean isHost;
 }

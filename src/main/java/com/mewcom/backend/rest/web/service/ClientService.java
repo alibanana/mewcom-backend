@@ -22,7 +22,7 @@ public interface ClientService {
 
   String updateClientImage(MultipartFile image) throws IOException;
 
-  User getClientDashboardDetails();
+  Pair<User, Boolean> getClientDashboardDetails();
 
   User getClientDetails();
 
