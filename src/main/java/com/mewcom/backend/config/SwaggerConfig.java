@@ -38,7 +38,7 @@ public class SwaggerConfig implements WebMvcConfigurer {
     private ApiInfo buildApiInfo () {
         return new ApiInfoBuilder()
             .title("Mewcom Backend Service")
-            .version("0.1.0-9")
+            .version("0.1.0-10-SNAPSHOT")
             .build();
     }
 }

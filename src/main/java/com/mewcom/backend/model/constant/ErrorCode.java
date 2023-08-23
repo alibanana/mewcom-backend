@@ -93,6 +93,9 @@ public enum ErrorCode {
   USER_EMAIL_UPDATE_UNVERIFIED("ERR-PA40105", 401,
       "Please check your email to verify the email update request"),
 
+  ACCESS_DENIED("ERR-PA40301", 403,
+      "User is not permitted for this request"),
+
   EMAIL_TEMPLATE_NAME_NOT_FOUND("ERR-PA40401", 404,
       "Email template with the requested template name doesn't exists"),
 
