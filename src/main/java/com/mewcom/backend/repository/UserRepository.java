@@ -42,4 +42,9 @@ public interface UserRepository extends MongoRepository<User, String>, UserFireb
       "'isPhoneNumberVerified': 1, 'isProfileUpdated': 1, 'isIdentityVerified': 1 }")
   User findByEmailAndIsEmailVerifiedIncludeIsPhoneNumberVerifiedAndIsProfileUpdatedAndIsIdentityVerifiedTrue(
       String email, boolean isEmailVerified);
+
+  @Query(value = "{ 'email': ?0, 'isEmailVerified': ?1 }", fields = "{ '_id': 0, 'name': 1," +
+      "'username': 1, 'hostImages': 1 }")
+  User findByEmailAndIsEmailVerifiedIncludeNameAndUsernameAndHostImages(String email,
+      boolean isEmailVerified);
 }

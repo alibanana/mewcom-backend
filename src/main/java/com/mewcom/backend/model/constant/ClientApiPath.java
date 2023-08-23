@@ -43,4 +43,8 @@ public class ClientApiPath {
   public static final String OTP_VERIFY_CODE = "/verify";
 
   public static final String BASE_PATH_INTEREST = BASE_PATH_API + "/interests";
+
+  public static final String BASE_PATH_HOST = BASE_PATH_API + "/hosts";
+
+  public static final String HOST_DASHBOARD_DETAILS = "/dashboard-details";
 }
