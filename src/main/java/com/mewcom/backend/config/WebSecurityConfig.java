@@ -3,6 +3,7 @@ package com.mewcom.backend.config;
 import com.mewcom.backend.config.filter.AuthTokenFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -17,6 +18,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 
 @EnableWebSecurity
+@EnableMethodSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Autowired

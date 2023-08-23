@@ -18,6 +18,7 @@ import org.javatuples.Triplet;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -42,6 +43,7 @@ public class UserIdentityController extends BaseController {
   @Autowired
   private UserIdentityService userIdentityService;
 
+  @PreAuthorize("hasAuthority('admin')")
   @PostMapping(value = ApiPath.USER_IDENTITY_FIND_BY_FILTER)
   public RestPageResponse<UserIdentityFindByFilterResponse> findUserIdentityByFilter(
       @RequestParam(required = false) Integer page, @RequestParam(required = false) Integer size,
@@ -57,6 +59,7 @@ public class UserIdentityController extends BaseController {
     return toPageResponse(content, triplet.getValue0());
   }
 
+  @PreAuthorize("hasAuthority('admin')")
   @PostMapping(value = ApiPath.USER_IDENTITY_VERIFY)
   public RestBaseResponse verify(@Valid @RequestBody UserIdentityVerifyRequest request)
       throws TemplateException, MessagingException, IOException {
@@ -64,6 +67,7 @@ public class UserIdentityController extends BaseController {
     return toBaseResponse();
   }
 
+  @PreAuthorize("hasAuthority('admin')")
   @PostMapping(value = ApiPath.USER_IDENTITY_REJECT)
   public RestBaseResponse reject(@Valid @RequestBody UserIdentityRejectRequest request)
       throws TemplateException, MessagingException, IOException {

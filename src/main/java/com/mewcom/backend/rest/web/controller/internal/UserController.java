@@ -10,6 +10,7 @@ import com.mewcom.backend.rest.web.service.UserService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ public class UserController extends BaseController {
   @Autowired
   private UserService userService;
 
+  @PreAuthorize("hasAuthority('admin')")
   @DeleteMapping(value = ApiPath.USER_DELETE_BY_ID)
   public RestBaseResponse deleteById(@PathVariable("userId") String userId)
       throws FirebaseAuthException {

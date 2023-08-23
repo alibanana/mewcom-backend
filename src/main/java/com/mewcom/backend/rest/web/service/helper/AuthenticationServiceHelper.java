@@ -7,6 +7,7 @@ import com.mewcom.backend.config.properties.SysparamProperties;
 import com.mewcom.backend.model.auth.Credentials;
 import com.mewcom.backend.model.auth.UserAuthDto;
 import com.mewcom.backend.model.constant.ErrorCode;
+import com.mewcom.backend.model.entity.Role;
 import com.mewcom.backend.model.entity.User;
 import com.mewcom.backend.model.entity.UserImage;
 import com.mewcom.backend.model.exception.BaseException;
@@ -20,10 +21,12 @@ import com.mewcom.backend.rest.web.util.StringUtil;
 import com.mewcom.backend.rest.web.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -57,10 +60,11 @@ public class AuthenticationServiceHelper {
       throws FirebaseAuthException {
     FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
     UserAuthDto userAuthDto = toUserAuthDto(decodedToken);
-    validateUserAuthDto(userAuthDto);
+    User user = userRepository.findByEmail(userAuthDto.getEmail());
+    validateUserAuthDto(userAuthDto, user);
     UsernamePasswordAuthenticationToken authentication =
         new UsernamePasswordAuthenticationToken(userAuthDto, new Credentials(decodedToken, idToken),
-            null);
+            getUserAuthorities(user));
     SecurityContextHolder.getContext().setAuthentication(authentication);
     return userAuthDto;
   }
@@ -76,14 +80,18 @@ public class AuthenticationServiceHelper {
         .build();
   }
 
-  private void validateUserAuthDto(UserAuthDto userAuthDto) {
+  private void validateUserAuthDto(UserAuthDto userAuthDto, User user) {
     if (!userAuthDto.isEmailVerified()) {
-      User user = userRepository.findByEmail(userAuthDto.getEmail());
       if (isInUpdateEmailProccess(user)) {
         throw new BaseException(ErrorCode.USER_EMAIL_UPDATE_UNVERIFIED);
       }
       throw new BaseException(ErrorCode.USER_EMAIL_UNVERIFIED);
     }
+  }
+
+  private List<SimpleGrantedAuthority> getUserAuthorities(User user) {
+    Role role = roleRepository.findByRoleId(user.getRoleId());
+    return Collections.singletonList(new SimpleGrantedAuthority(role.getTitle()));
   }
 
   private boolean isInUpdateEmailProccess(User user) {

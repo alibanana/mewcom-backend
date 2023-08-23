@@ -12,6 +12,7 @@ import com.mewcom.backend.rest.web.service.InterestService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,7 @@ public class InterestController extends BaseController {
   @Autowired
   private InterestService interestService;
 
+  @PreAuthorize("hasAuthority('admin')")
   @PostMapping
   public RestSingleResponse<InterestResponse> create(
       @Valid @RequestBody CreateInterestRequest request) {
@@ -38,6 +40,7 @@ public class InterestController extends BaseController {
     return toSingleResponse(toInterestResponse(interest));
   }
 
+  @PreAuthorize("hasAuthority('admin')")
   @GetMapping
   public RestListResponse<InterestResponse> findAll() {
     return toListResponse(interestService.findAll().stream()
@@ -45,6 +48,7 @@ public class InterestController extends BaseController {
         .collect(Collectors.toList()));
   }
 
+  @PreAuthorize("hasAuthority('admin')")
   @DeleteMapping(value = ApiPath.INTEREST_DELETE_BY_ID)
   public RestBaseResponse deleteById(@PathVariable("id") String id) {
     interestService.deleteByInterestId(id);
