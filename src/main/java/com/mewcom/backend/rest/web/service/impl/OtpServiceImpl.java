@@ -66,6 +66,7 @@ public class OtpServiceImpl implements OtpService {
   }
 
   private OtpMessage buildAndSendOtpMessage(User user, String phone) {
+    invalidateExistingOtpMessage(user);
     OtpMessage otpMessage = buildOtpMessage(user, phone);
     if (!sysparamProperties.isOtpEnabled()) {
       return otpMessage;
@@ -74,11 +75,13 @@ public class OtpServiceImpl implements OtpService {
     return otpMessage;
   }
 
-  private WhatsappSendMessageRequest buildWhatsappSendMessageRequest(String phone, String body) {
-    return WhatsappSendMessageRequest.builder()
-        .phone(phone)
-        .body(body)
-        .build();
+  private void invalidateExistingOtpMessage(User user) {
+    OtpMessage otpMessage = otpMessageRepository.findByUserIdAndStatus(user.getUserId(),
+        OtpMessageStatus.CREATED.getStatus());
+    if (Objects.nonNull(otpMessage)) {
+      otpMessage.setStatus(OtpMessageStatus.REJECTED.getStatus());
+      otpMessageRepository.save(otpMessage);
+    }
   }
 
   private OtpMessage buildOtpMessage(User user, String phone) {
@@ -94,6 +97,13 @@ public class OtpServiceImpl implements OtpService {
         .expiryTime(DateUtil.getTimeWithAddedSeconds(60))
         .status(OtpMessageStatus.CREATED.getStatus())
         .userId(user.getUserId())
+        .build();
+  }
+
+  private WhatsappSendMessageRequest buildWhatsappSendMessageRequest(String phone, String body) {
+    return WhatsappSendMessageRequest.builder()
+        .phone(phone)
+        .body(body)
         .build();
   }
 
