@@ -15,6 +15,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,6 +35,7 @@ public class EmailTemplateController extends BaseController {
   @Autowired
   private EmailTemplateService emailTemplateService;
 
+  @PreAuthorize("hasAuthority('admin')")
   @PostMapping
   public RestSingleResponse<EmailTemplateResponse> createEmailTemplate(
       @Valid @RequestBody EmailTemplateRequest request) {
@@ -41,6 +43,7 @@ public class EmailTemplateController extends BaseController {
     return toSingleResponse(toEmailTemplateResponse(emailTemplate));
   }
 
+  @PreAuthorize("hasAuthority('admin')")
   @GetMapping(value = ApiPath.EMAIL_TEMPLATE_FIND_BY_TEMPLATE_NAME)
   public RestSingleResponse<EmailTemplateResponse> findByTemplateName(
       @PathVariable("templateName") String templateName) {
@@ -48,6 +51,7 @@ public class EmailTemplateController extends BaseController {
     return toSingleResponse(toEmailTemplateResponse(emailTemplate));
   }
 
+  @PreAuthorize("hasAuthority('admin')")
   @GetMapping(value = ApiPath.EMAIL_TEMPLATE_VIEW_BY_TEMPLATE_NAME)
   public ResponseEntity<String> viewByTemplateName(
       @PathVariable("templateName") String templateName) {
@@ -57,6 +61,7 @@ public class EmailTemplateController extends BaseController {
         .body(htmlContent);
   }
 
+  @PreAuthorize("hasAuthority('admin')")
   @PostMapping(value = ApiPath.EMAIL_TEMPLATE_SEND)
   public RestBaseResponse sendEmailTemplate(@Valid @RequestBody EmailTemplateSendRequest request)
       throws TemplateException, IOException, MessagingException {

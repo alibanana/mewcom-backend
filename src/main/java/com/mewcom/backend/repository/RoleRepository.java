@@ -8,4 +8,6 @@ public interface RoleRepository extends MongoRepository<Role, String> {
   Role findByTitle(String title);
 
   Boolean existsByRoleId(String roleId);
+
+  Role findByRoleId(String roleId);
 }

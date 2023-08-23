@@ -8,6 +8,7 @@ import com.mewcom.backend.rest.web.model.response.rest.RestSingleResponse;
 import com.mewcom.backend.rest.web.service.WhatsappService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,7 @@ public class WhatsappController extends BaseController {
   @Autowired
   private WhatsappService whatsappService;
 
+  @PreAuthorize("hasAuthority('admin')")
   @PostMapping(value = ApiPath.WHATSAPP_SEND_MESSAGE)
   public RestSingleResponse<WhatsappSendMessageResponse> sendMessage(
       @RequestBody WhatsappSendMessageRequest request) {

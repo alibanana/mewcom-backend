@@ -12,6 +12,7 @@ import com.mewcom.backend.rest.web.service.RoleService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,11 +32,13 @@ public class RoleController extends BaseController {
   @Autowired
   private RoleService roleService;
 
+  @PreAuthorize("hasAuthority('admin')")
   @PostMapping
   public RestSingleResponse<RoleResponse> create(@Valid @RequestBody CreateRoleRequest request) {
     return toSingleResponse(toRoleResponse(roleService.create(request)));
   }
 
+  @PreAuthorize("hasAuthority('admin')")
   @GetMapping
   public RestListResponse<RoleResponse> findAll() {
     return toListResponse(roleService.findAll().stream()
@@ -43,12 +46,14 @@ public class RoleController extends BaseController {
         .collect(Collectors.toList()));
   }
 
+  @PreAuthorize("hasAuthority('admin')")
   @PostMapping(value = ApiPath.ROLE_FIND_BY_TITLE)
   public RestSingleResponse<RoleResponse> findByTitle(
       @RequestParam(required = false) String title) {
     return toSingleResponse(toRoleResponse(roleService.findByTitle(title)));
   }
 
+  @PreAuthorize("hasAuthority('admin')")
   @DeleteMapping(value = ApiPath.ROLE_DELETE_BY_TITLE)
   public RestBaseResponse deleteByTitle(@RequestParam(required = false) String title) {
     roleService.deleteByTitle(title);

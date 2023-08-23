@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ public class ImageController extends BaseController {
   @Autowired
   private ImageService imageService;
 
+  @PreAuthorize("hasAuthority('admin')")
   @PostMapping(value = ApiPath.IMAGE_UPLOAD)
   public RestSingleResponse<ImageResponse> upload(@RequestParam("file") MultipartFile file)
       throws IOException {
@@ -49,6 +51,7 @@ public class ImageController extends BaseController {
         .body(pair.getValue1());
   }
 
+  @PreAuthorize("hasAuthority('admin')")
   @DeleteMapping(value = ApiPath.IMAGE_DELETE_BY_ID)
   public RestBaseResponse deleteImageById(@PathVariable("id") String id) {
     imageService.deleteImageById(id);
