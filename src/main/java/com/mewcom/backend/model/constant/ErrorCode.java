@@ -77,6 +77,8 @@ public enum ErrorCode {
       "The requested interest does not exists in the database"),
   USER_NOT_ELIGIBLE("ERR-PA40036", 400,
       "Looks like the user requested is not eligible for this request yet"),
+  INTEREST_REQUEST_EMPTY("ERR-PA40037", 400,
+      "Interests must not be empty"),
 
   USER_EMAIL_NOT_FOUND("ERR-PA40101", 401,
       "The requested email does not exists"),

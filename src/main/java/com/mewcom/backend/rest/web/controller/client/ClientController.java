@@ -89,7 +89,7 @@ public class ClientController extends BaseController {
 
   @PostMapping(value = ClientApiPath.CLIENT_ADD_INTERESTS)
   public RestListResponse<String> addClientInterests(
-      @Valid @RequestBody ClientAddInterestsRequest request) {
+      @RequestBody ClientAddInterestsRequest request) {
     return toListResponse(clientService.addClientInterests(request));
   }
 

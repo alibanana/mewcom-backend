@@ -129,6 +129,7 @@ public class ClientServiceImpl implements ClientService {
 
   @Override
   public List<String> addClientInterests(ClientAddInterestsRequest request) {
+    validateClientAddInterestRequest(request);
     List<String> interests = interestService.findInterests(request.getInterests()).stream()
         .map(Interest::getInterest)
         .collect(Collectors.toList());
@@ -208,6 +209,12 @@ public class ClientServiceImpl implements ClientService {
         .build());
     user.setImages(images);
     userRepository.save(user);
+  }
+
+  private void validateClientAddInterestRequest(ClientAddInterestsRequest request) {
+    if (CollectionUtils.isEmpty(request.getInterests())) {
+      throw new BaseException(ErrorCode.INTEREST_REQUEST_EMPTY);
+    }
   }
 
   private void updateClientAsHostAndSendEmailNotification(User user) throws TemplateException,
