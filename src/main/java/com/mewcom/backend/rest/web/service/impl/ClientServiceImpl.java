@@ -18,6 +18,7 @@ import com.mewcom.backend.rest.web.model.request.client.ClientUpdatePasswordRequ
 import com.mewcom.backend.rest.web.model.request.client.ClientUpdateRequest;
 import com.mewcom.backend.rest.web.service.ClientService;
 import com.mewcom.backend.rest.web.service.EmailTemplateService;
+import com.mewcom.backend.rest.web.service.HostFeeService;
 import com.mewcom.backend.rest.web.service.ImageService;
 import com.mewcom.backend.rest.web.service.InterestService;
 import com.mewcom.backend.rest.web.service.RoleService;
@@ -61,6 +62,9 @@ public class ClientServiceImpl implements ClientService {
 
   @Autowired
   private RoleService roleService;
+
+  @Autowired
+  private HostFeeService hostFeeService;
 
   @Autowired
   private GoogleIdentityToolkitOutbound googleIdentityToolkitOutbound;
@@ -225,11 +229,19 @@ public class ClientServiceImpl implements ClientService {
 
   private void updateClientAsHostAndSendEmailNotification(User user) throws TemplateException,
       MessagingException, IOException {
-    Role role = roleService.findByTitle("host");
-    user.setRoleId(role.getRoleId());
+    if (isRoleIdClient(user.getRoleId())) {
+      Role role = roleService.findByTitle("host");
+      user.setRoleId(role.getRoleId());
+    }
     user.setHostImages(buildDefaultUserHostImages());
     userRepository.save(user);
+    hostFeeService.createAndSaveDefaultHostFeeForHost(user.getUserId());
     emailTemplateService.sendEmailClientUpdatedAsHost(user.getEmail(), user.getName());
+  }
+
+  private boolean isRoleIdClient(String roleId) {
+    Role role = roleService.findByRoleId(roleId);
+    return role.getTitle().equals("client");
   }
 
   private List<UserHostImage> buildDefaultUserHostImages() {

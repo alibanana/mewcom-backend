@@ -55,6 +55,14 @@ public class StringUtil {
     return generateIdOfPrefixAndLength("INT-", 5);
   }
 
+  public static String generateSysParamId() {
+    return generateIdOfPrefixAndLength("SYS-", 5);
+  }
+
+  public static String generateHostFeeId() {
+    return generateIdOfPrefixAndLength("HOF-", 5);
+  }
+
   private static String generateIdOfPrefixAndLength(String prefix, int length) {
     return prefix + RandomString.make(length).toUpperCase();
   }
