@@ -89,6 +89,8 @@ public enum ErrorCode {
       "The requested system parameter does not exists"),
   SYSTEM_PARAMETER_DATA_INVALID("ERR-PA40042", 400,
       "The requested data type does not matched the request given"),
+  HOST_FEE_NOT_EXISTS("ERR-PA40043", 400,
+      "The requested host fee does not exists in the database"),
 
   USER_EMAIL_NOT_FOUND("ERR-PA40101", 401,
       "The requested email does not exists"),

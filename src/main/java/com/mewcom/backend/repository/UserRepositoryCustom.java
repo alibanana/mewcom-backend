@@ -7,4 +7,6 @@ import java.util.List;
 public interface UserRepositoryCustom {
 
   List<User> findAllByNameAndIsEmailVerifiedTrueIncludeIdAndUserIdAndNameAndBirthdate(String name);
+
+  User findHostOrAdminByEmailIncludeUserIdOnly(String email);
 }
