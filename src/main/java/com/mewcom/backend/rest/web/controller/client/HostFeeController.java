@@ -5,7 +5,7 @@ import com.mewcom.backend.model.entity.HostFee;
 import com.mewcom.backend.model.entity.HostFeePerScheduleLength;
 import com.mewcom.backend.rest.web.controller.BaseController;
 import com.mewcom.backend.rest.web.model.response.HostFeeGetDetailsResponse;
-import com.mewcom.backend.rest.web.model.response.rest.RestListResponse;
+import com.mewcom.backend.rest.web.model.response.rest.RestSingleResponse;
 import com.mewcom.backend.rest.web.service.HostFeeService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.BeanUtils;
@@ -27,16 +27,24 @@ public class HostFeeController extends BaseController {
 
   @PreAuthorize("hasAnyAuthority('admin', 'host')")
   @GetMapping(value = ClientApiPath.HOST_FEE_DETAILS)
-  public RestListResponse<HostFeeGetDetailsResponse> getDetails() {
+  public RestSingleResponse<HostFeeGetDetailsResponse> getDetails() {
     HostFee hostFee = hostFeeService.getDetails();
-    return toListResponse(hostFee.getHostFeePerScheduleLengths().stream()
-        .map(this::toHostFeeGetDetailsResponse)
-        .collect(Collectors.toList()));
+    return toSingleResponse(toHostFeeGetDetailsResponse(hostFee));
   }
 
-  private HostFeeGetDetailsResponse toHostFeeGetDetailsResponse(
-      HostFeePerScheduleLength hostFeePerScheduleLength) {
+  private HostFeeGetDetailsResponse toHostFeeGetDetailsResponse(HostFee hostFee) {
     HostFeeGetDetailsResponse response = new HostFeeGetDetailsResponse();
+    BeanUtils.copyProperties(hostFee, response);
+    response.setHostFeePerScheduleLengths(hostFee.getHostFeePerScheduleLengths().stream()
+        .map(this::toHostFeePerScheduleLengthResponse)
+        .collect(Collectors.toList()));
+    return response;
+  }
+
+  private HostFeeGetDetailsResponse.HostFeePerScheduleLength toHostFeePerScheduleLengthResponse(
+      HostFeePerScheduleLength hostFeePerScheduleLength) {
+    HostFeeGetDetailsResponse.HostFeePerScheduleLength response =
+        new HostFeeGetDetailsResponse.HostFeePerScheduleLength();
     BeanUtils.copyProperties(hostFeePerScheduleLength, response);
     return response;
   }
