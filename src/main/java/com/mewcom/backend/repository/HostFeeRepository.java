@@ -6,4 +6,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface HostFeeRepository extends MongoRepository<HostFee, String> {
 
   Boolean existsByHostFeeId(String hostFeeId);
+
+  HostFee findByUserId(String userId);
 }

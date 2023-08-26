@@ -47,4 +47,8 @@ public class ClientApiPath {
   public static final String BASE_PATH_HOST = BASE_PATH_API + "/hosts";
 
   public static final String HOST_DASHBOARD_DETAILS = "/dashboard-details";
+
+  public static final String BASE_PATH_HOST_FEE = BASE_PATH_API + "/host-fees";
+
+  public static final String HOST_FEE_DETAILS = "/details";
 }
