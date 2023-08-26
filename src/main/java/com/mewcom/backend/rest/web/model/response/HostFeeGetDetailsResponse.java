@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Builder
@@ -17,9 +18,22 @@ public class HostFeeGetDetailsResponse implements Serializable {
 
   private static final long serialVersionUID = 2053256469569525035L;
 
-  private int scheduleLengthInMinutes;
-  private String scheduleLength;
-  private int hostFeeInCoins;
-  private int minHostFeeInCoins;
-  private int maxHostFeeInCoins;
+  private List<HostFeePerScheduleLength> hostFeePerScheduleLengths;
+  private boolean isUpdatable;
+
+  @Data
+  @Builder
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @JsonIgnoreProperties(ignoreUnknown = true)
+  public static class HostFeePerScheduleLength implements Serializable {
+
+    private static final long serialVersionUID = 8621002395640545958L;
+
+    private int scheduleLengthInMinutes;
+    private String scheduleLength;
+    private int hostFeeInCoins;
+    private int minHostFeeInCoins;
+    private int maxHostFeeInCoins;
+  }
 }
