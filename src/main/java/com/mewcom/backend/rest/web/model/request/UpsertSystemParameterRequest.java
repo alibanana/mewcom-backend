@@ -15,7 +15,7 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CreateSystemParameterRequest implements Serializable {
+public class UpsertSystemParameterRequest implements Serializable {
 
   private static final long serialVersionUID = 4381621390412979698L;
 
