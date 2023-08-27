@@ -3,7 +3,7 @@ package com.mewcom.backend.rest.web.controller.internal;
 import com.mewcom.backend.model.constant.ApiPath;
 import com.mewcom.backend.model.entity.SystemParameter;
 import com.mewcom.backend.rest.web.controller.BaseController;
-import com.mewcom.backend.rest.web.model.request.CreateSystemParameterRequest;
+import com.mewcom.backend.rest.web.model.request.UpsertSystemParameterRequest;
 import com.mewcom.backend.rest.web.model.response.SystemParameterResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestBaseResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestSingleResponse;
@@ -34,7 +34,7 @@ public class SystemParameterController extends BaseController {
   @PreAuthorize("hasAuthority('admin')")
   @PostMapping
   public RestSingleResponse<SystemParameterResponse> create(
-      @Valid @RequestBody CreateSystemParameterRequest request) {
+      @Valid @RequestBody UpsertSystemParameterRequest request) {
     SystemParameter systemParameter = systemParameterService.create(request);
     return toSingleResponse(toSystemParameterResponse(systemParameter));
   }

@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Api(value = "Client - Host Fee", description = "Client - Host Fee Service API")
 @RestController
 @RequestMapping(value = ClientApiPath.BASE_PATH_HOST_FEE)
-public class HostFeeController extends BaseController {
+public class HostFeePublicController extends BaseController {
 
   @Autowired
   private HostFeeService hostFeeService;

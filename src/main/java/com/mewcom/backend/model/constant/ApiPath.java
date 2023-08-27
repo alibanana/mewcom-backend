@@ -54,6 +54,10 @@ public class ApiPath {
 
   public static final String INTEREST_DELETE_BY_ID = "/{id}";
 
+  public static final String BASE_PATH_HOST_FEE = BASE_PATH_API + "/host-fees";
+
+  public static final String HOST_FEE_UPDATE_DEFAULT_VALUE = "/update-default-value";
+
   public static final String BASE_PATH_SYSTEM_PARAMETER = BASE_PATH_API + "/system-parameters";
 
   public static final String SYSTEM_PARAMETER_FIND_BY_TITLE = "/find-by-title";

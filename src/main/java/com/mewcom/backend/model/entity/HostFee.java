@@ -25,16 +25,18 @@ public class HostFee extends BaseMongoEntity {
   private String hostFeeId;
   private List<HostFeePerScheduleLength> hostFeePerScheduleLengths;
   private boolean isUpdatable;
+  private boolean isHostFeeUpdated;
 
   private String userId;
 
   public HostFee(String id, Date createdAt, Date updatedAt, String hostFeeId,
       List<HostFeePerScheduleLength> hostFeePerScheduleLengths, boolean isUpdatable,
-      String userId) {
+      boolean isHostFeeUpdated, String userId) {
     super(id, createdAt, updatedAt);
     this.hostFeeId = hostFeeId;
     this.hostFeePerScheduleLengths = hostFeePerScheduleLengths;
     this.isUpdatable = isUpdatable;
+    this.isHostFeeUpdated = isHostFeeUpdated;
     this.userId = userId;
   }
 }
