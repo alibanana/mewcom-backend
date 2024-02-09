@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
-import com.mewcom.backend.model.auth.UserAuthDto;
 import com.mewcom.backend.model.constant.ErrorCode;
 import com.mewcom.backend.model.constant.SystemParameterTitles;
 import com.mewcom.backend.model.constant.SystemParameterType;
@@ -21,8 +20,8 @@ import com.mewcom.backend.rest.web.model.request.UpsertSystemParameterRequest;
 import com.mewcom.backend.rest.web.service.HostFeeService;
 import com.mewcom.backend.rest.web.service.SystemParameterService;
 import com.mewcom.backend.rest.web.util.StringUtil;
+import com.mewcom.backend.rest.web.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -40,6 +39,9 @@ public class HostFeeServiceImpl implements HostFeeService {
 
   @Autowired
   private SystemParameterService systemParameterService;
+
+  @Autowired
+  private UserUtil userUtil;
 
   @Autowired
   private ObjectMapper objectMapper;
@@ -63,9 +65,8 @@ public class HostFeeServiceImpl implements HostFeeService {
 
   @Override
   public HostFee getDetails() {
-    UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
-        .getAuthentication().getPrincipal();
-    User user = userRepository.findHostOrAdminByEmailIncludeUserIdOnly(userAuthDto.getEmail());
+    User user = userRepository.findHostOrAdminByEmailIncludeUserIdOnly(
+        userUtil.getUserAuthDto().getEmail());
     HostFee hostFee = hostFeeRepository.findByUserId(user.getUserId());
     if (Objects.isNull(hostFee)) {
       throw new BaseException(ErrorCode.HOST_FEE_NOT_EXISTS);

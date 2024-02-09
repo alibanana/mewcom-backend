@@ -12,9 +12,9 @@ import com.mewcom.backend.rest.web.service.AuthenticationService;
 import com.mewcom.backend.rest.web.service.EmailTemplateService;
 import com.mewcom.backend.rest.web.service.helper.AuthenticationServiceHelper;
 import com.mewcom.backend.rest.web.util.StringUtil;
+import com.mewcom.backend.rest.web.util.UserUtil;
 import freemarker.template.TemplateException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -31,6 +31,9 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   @Autowired
   private EmailTemplateService emailTemplateService;
+
+  @Autowired
+  private UserUtil userUtil;
 
   @Override
   public Tuple<String, User> login(LoginRequest request) throws FirebaseAuthException {
@@ -62,9 +65,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
   @Override
   public String verifyToken() {
-    UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
-        .getAuthentication().getPrincipal();
-    return userAuthDto.getUid();
+    return userUtil.getUserAuthDto().getUid();
   }
 
   @Override

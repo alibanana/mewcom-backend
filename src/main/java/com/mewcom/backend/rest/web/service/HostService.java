@@ -5,4 +5,6 @@ import com.mewcom.backend.model.entity.User;
 public interface HostService {
 
   User getHostDashboardDetails();
+
+  User getHostDetails();
 }

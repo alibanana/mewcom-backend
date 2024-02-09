@@ -1,10 +1,12 @@
 package com.mewcom.backend.rest.web.util;
 
 
+import com.mewcom.backend.model.auth.UserAuthDto;
 import com.mewcom.backend.model.constant.ErrorCode;
 import com.mewcom.backend.model.exception.BaseException;
 import com.mewcom.backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -20,6 +22,10 @@ public class UserUtil {
 
   @Autowired
   private UserRepository userRepository;
+
+  public UserAuthDto getUserAuthDto() {
+    return (UserAuthDto) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  }
 
   public void validateEmailDoesNotExists(String email) {
     if (userRepository.existsByEmail(email) || userRepository.existsByNewEmail(email)) {
