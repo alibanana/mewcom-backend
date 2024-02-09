@@ -8,7 +8,8 @@ import com.mewcom.backend.model.entity.UserImage;
 import com.mewcom.backend.rest.web.controller.BaseController;
 import com.mewcom.backend.rest.web.model.request.LoginRequest;
 import com.mewcom.backend.rest.web.model.request.RegisterRequest;
-import com.mewcom.backend.rest.web.model.response.LoginResponse;
+import com.mewcom.backend.rest.web.model.response.auth.LoginResponse;
+import com.mewcom.backend.rest.web.model.response.auth.VerifyResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestBaseResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestSingleResponse;
 import com.mewcom.backend.rest.web.service.AuthenticationService;
@@ -19,6 +20,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,5 +76,14 @@ public class AuthenticationController extends BaseController {
       throws FirebaseAuthException, TemplateException, MessagingException, IOException {
     authenticationService.resetPassword(email);
     return toBaseResponse();
+  }
+
+  @PreAuthorize("hasAnyAuthority('admin', 'host', 'client')")
+  @PostMapping(value = ApiPath.VERIFY)
+  public RestSingleResponse<VerifyResponse> verifyToken() {
+    String userId = authenticationService.verifyToken();
+    return toSingleResponse(VerifyResponse.builder()
+        .userId(userId)
+        .build());
   }
 }

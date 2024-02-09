@@ -22,6 +22,8 @@ public class ApiPath {
 
   public static final String RESET_PASSWORD = "/reset-password";
 
+  public static final String VERIFY = "/verify";
+
   public static final String BASE_PATH_EMAIL_TEMPLATE = BASE_PATH_API + "/email-templates";
 
   public static final String EMAIL_TEMPLATE_FIND_BY_TEMPLATE_NAME = "/{templateName}";

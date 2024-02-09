@@ -1,4 +1,4 @@
-package com.mewcom.backend.rest.web.model.response;
+package com.mewcom.backend.rest.web.model.response.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
