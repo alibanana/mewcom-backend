@@ -14,6 +14,7 @@ import com.mewcom.backend.rest.web.service.helper.AuthenticationServiceHelper;
 import com.mewcom.backend.rest.web.util.StringUtil;
 import freemarker.template.TemplateException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -57,6 +58,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     String newPassword = StringUtil.generatePassword();
     userRepository.updatePasswordFirebase(user.getFirebaseUid(), newPassword);
     emailTemplateService.sendEmailResetPassword(user.getEmail(), user.getName(), newPassword);
+  }
+
+  @Override
+  public String verifyToken() {
+    UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
+        .getAuthentication().getPrincipal();
+    return userAuthDto.getUid();
   }
 
   @Override

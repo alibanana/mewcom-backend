@@ -20,6 +20,8 @@ public interface AuthenticationService {
   void resetPassword(String email) throws FirebaseAuthException, TemplateException,
       MessagingException, IOException;
 
+  String verifyToken();
+
   boolean verify(String email, String verificationCode);
 
   boolean verifyEmailUpdate(String email, String verificationCode);

@@ -61,6 +61,7 @@ public class AuthenticationServiceHelper {
     FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
     UserAuthDto userAuthDto = toUserAuthDto(decodedToken);
     User user = userRepository.findByEmail(userAuthDto.getEmail());
+    userAuthDto.setUid(user.getUserId());
     validateUserAuthDto(userAuthDto, user);
     UsernamePasswordAuthenticationToken authentication =
         new UsernamePasswordAuthenticationToken(userAuthDto, new Credentials(decodedToken, idToken),
@@ -71,7 +72,7 @@ public class AuthenticationServiceHelper {
 
   private UserAuthDto toUserAuthDto(FirebaseToken decodedToken) {
     return UserAuthDto.builder()
-        .uid(decodedToken.getUid())
+        .firebaseUid(decodedToken.getUid())
         .name(decodedToken.getName())
         .email(decodedToken.getEmail())
         .isEmailVerified(decodedToken.isEmailVerified())
