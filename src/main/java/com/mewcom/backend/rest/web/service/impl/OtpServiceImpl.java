@@ -9,7 +9,6 @@ import com.mewcom.backend.model.entity.User;
 import com.mewcom.backend.model.exception.BaseException;
 import com.mewcom.backend.repository.OtpMessageRepository;
 import com.mewcom.backend.rest.web.model.request.WhatsappSendMessageRequest;
-import com.mewcom.backend.rest.web.service.ClientService;
 import com.mewcom.backend.rest.web.service.OtpService;
 import com.mewcom.backend.rest.web.service.UserService;
 import com.mewcom.backend.rest.web.service.WhatsappService;
@@ -31,9 +30,6 @@ public class OtpServiceImpl implements OtpService {
   private OtpMessageRepository otpMessageRepository;
 
   @Autowired
-  private ClientService clientService;
-
-  @Autowired
   private UserService userService;
 
   @Autowired
@@ -45,13 +41,12 @@ public class OtpServiceImpl implements OtpService {
   @Override
   public void sendOtpMessage(String phone) {
     userUtil.validatePhoneNumber(phone);
-    User user = clientService.getClientDetails();
-    otpMessageRepository.save(buildAndSendOtpMessage(user, phone));
+    otpMessageRepository.save(buildAndSendOtpMessage(userService.getCurrentLoggedInUser(), phone));
   }
 
   @Override
   public void verifyOtpCode(String code) throws FirebaseAuthException {
-    User user = clientService.getClientDetails();
+    User user = userService.getCurrentLoggedInUser();
     OtpMessage otpMessage = otpMessageRepository.findByUserIdAndStatus(user.getUserId(),
         OtpMessageStatus.CREATED.getStatus());
     validateOtpCode(otpMessage, code);

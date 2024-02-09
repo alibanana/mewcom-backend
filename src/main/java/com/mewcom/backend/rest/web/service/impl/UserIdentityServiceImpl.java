@@ -22,6 +22,7 @@ import com.mewcom.backend.rest.web.service.UserIdentityService;
 import com.mewcom.backend.rest.web.util.DateUtil;
 import com.mewcom.backend.rest.web.util.PageUtil;
 import com.mewcom.backend.rest.web.util.StringUtil;
+import com.mewcom.backend.rest.web.util.UserUtil;
 import freemarker.template.TemplateException;
 import org.javatuples.Triplet;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,6 +62,9 @@ public class UserIdentityServiceImpl implements UserIdentityService {
 
   @Autowired
   private EmailTemplateService emailTemplateService;
+
+  @Autowired
+  private UserUtil userUtil;
 
   @Override
   public String uploadUserIdentityIdCardImage(MultipartFile image) throws IOException {
@@ -166,10 +170,8 @@ public class UserIdentityServiceImpl implements UserIdentityService {
   }
 
   private UserIdentity getUserIdentityOrDefault() {
-    UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
-        .getAuthentication().getPrincipal();
     String userId = userRepository.findByEmailAndIsEmailVerifiedIncludeUserIdOnly(
-        userAuthDto.getEmail(), true).getUserId();
+        userUtil.getUserAuthDto().getEmail(), true).getUserId();
     return Optional.ofNullable(userIdentityRepository.findByUserId(userId))
         .orElse(UserIdentity.builder()
             .userId(userId)

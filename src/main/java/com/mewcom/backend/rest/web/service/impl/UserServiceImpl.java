@@ -9,6 +9,7 @@ import com.mewcom.backend.rest.web.service.ImageService;
 import com.mewcom.backend.rest.web.service.OtpService;
 import com.mewcom.backend.rest.web.service.UserIdentityService;
 import com.mewcom.backend.rest.web.service.UserService;
+import com.mewcom.backend.rest.web.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ public class UserServiceImpl implements UserService {
   @Autowired
   private OtpService otpService;
 
+  @Autowired
+  private UserUtil userUtil;
+
   @Override
   public void deleteByUserId(String userId) throws FirebaseAuthException {
     User user = userRepository.findByUserId(userId);
@@ -53,6 +57,11 @@ public class UserServiceImpl implements UserService {
     user.setPhoneNumberVerified(isPhoneNumberVerified);
     userRepository.save(user);
     userRepository.updateUserPhoneNumberFirebase(user.getFirebaseUid(), phoneNumber);
+  }
+
+  @Override
+  public User getCurrentLoggedInUser() {
+    return userRepository.findByEmailAndIsEmailVerifiedTrue(userUtil.getUserAuthDto().getEmail());
   }
 
   private void deleteUserImages(User user) {

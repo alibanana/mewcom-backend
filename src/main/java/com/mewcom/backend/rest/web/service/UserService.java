@@ -9,4 +9,6 @@ public interface UserService {
 
   void updatePhoneNumber(User user, String phoneNumber, boolean isPhoneNumberVerified)
       throws FirebaseAuthException;
+
+  User getCurrentLoggedInUser();
 }

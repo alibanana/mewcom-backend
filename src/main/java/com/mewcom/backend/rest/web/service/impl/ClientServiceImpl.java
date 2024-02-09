@@ -22,13 +22,13 @@ import com.mewcom.backend.rest.web.service.HostFeeService;
 import com.mewcom.backend.rest.web.service.ImageService;
 import com.mewcom.backend.rest.web.service.InterestService;
 import com.mewcom.backend.rest.web.service.RoleService;
+import com.mewcom.backend.rest.web.service.UserService;
 import com.mewcom.backend.rest.web.util.StringUtil;
 import com.mewcom.backend.rest.web.util.UserUtil;
 import freemarker.template.TemplateException;
 import org.apache.commons.collections4.CollectionUtils;
 import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -50,6 +50,9 @@ public class ClientServiceImpl implements ClientService {
 
   @Autowired
   private UserRepository userRepository;
+
+  @Autowired
+  private UserService userService;
 
   @Autowired
   private EmailTemplateService emailTemplateService;
@@ -76,9 +79,8 @@ public class ClientServiceImpl implements ClientService {
   public Pair<User, Boolean> updateClient(ClientUpdateRequest request) throws TemplateException,
       MessagingException, IOException, FirebaseAuthException {
     validateClientUpdateRequest(request);
-    UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
-        .getAuthentication().getPrincipal();
-    User user = userRepository.findByEmailAndIsEmailVerifiedTrue(userAuthDto.getEmail());
+    User user = userRepository.findByEmailAndIsEmailVerifiedTrue(
+        userUtil.getUserAuthDto().getEmail());
     boolean isEmailUpdated = !request.getEmail().equals(user.getEmail());
     User updatedUser = updateClientFromRequest(request, user, isEmailUpdated);
     if (isEmailUpdated) {
@@ -91,17 +93,15 @@ public class ClientServiceImpl implements ClientService {
   @Override
   public void updateClientPassword(ClientUpdatePasswordRequest request)
       throws FirebaseAuthException {
-    UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
-        .getAuthentication().getPrincipal();
+    UserAuthDto userAuthDto = userUtil.getUserAuthDto();
     validateClientUpdatePasswordRequest(request, userAuthDto.getEmail());
     userRepository.updatePasswordFirebase(userAuthDto.getUid(), request.getNewPassword());
   }
 
   @Override
   public String updateClientImage(MultipartFile image) throws IOException {
-    UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
-        .getAuthentication().getPrincipal();
-    User user = userRepository.findByEmailAndIsEmailVerifiedTrue(userAuthDto.getEmail());
+    User user = userRepository.findByEmailAndIsEmailVerifiedTrue(
+        userUtil.getUserAuthDto().getEmail());
     deleteExistingClientImage(user);
     File file = imageService.uploadImage(image);
     saveNewClientImage(user, file);
@@ -110,26 +110,20 @@ public class ClientServiceImpl implements ClientService {
 
   @Override
   public Pair<User, Boolean> getClientDashboardDetails() {
-    UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
-        .getAuthentication().getPrincipal();
     User user = userRepository.findByEmailAndIsEmailVerifiedIncludeNameAndUsernameAndImagesAndRoleId(
-        userAuthDto.getEmail(), true);
+        userUtil.getUserAuthDto().getEmail(), true);
     return Pair.with(user, isRoleIdHost(user.getRoleId()));
   }
 
   @Override
   public User getClientDetails() {
-    UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
-        .getAuthentication().getPrincipal();
-    return userRepository.findByEmailAndIsEmailVerifiedTrue(userAuthDto.getEmail());
+    return userService.getCurrentLoggedInUser();
   }
 
   @Override
   public User getClientAllStatus() {
-    UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
-        .getAuthentication().getPrincipal();
     return userRepository.findByEmailAndIsEmailVerifiedIncludeIsPhoneNumberVerifiedAndIsProfileUpdatedAndIsIdentityVerifiedTrue(
-        userAuthDto.getEmail(), true);
+        userUtil.getUserAuthDto().getEmail(), true);
   }
 
   @Override
@@ -138,8 +132,7 @@ public class ClientServiceImpl implements ClientService {
     List<String> interests = interestService.findInterests(request.getInterests()).stream()
         .map(Interest::getInterest)
         .collect(Collectors.toList());
-    UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
-        .getAuthentication().getPrincipal();
+    UserAuthDto userAuthDto = userUtil.getUserAuthDto();
     User user =
         userRepository.findByEmailAndIsEmailVerifiedTrueAndIsPhoneNumberVerifiedTrueAndIsProfileUpdatedTrueAndIsIdentityVerifiedTrue(
             userAuthDto.getEmail());
@@ -153,8 +146,7 @@ public class ClientServiceImpl implements ClientService {
 
   @Override
   public void updateClientAsHost() throws TemplateException, MessagingException, IOException {
-    UserAuthDto userAuthDto = (UserAuthDto) SecurityContextHolder.getContext()
-        .getAuthentication().getPrincipal();
+    UserAuthDto userAuthDto = userUtil.getUserAuthDto();
     User user =
         userRepository.findByEmailAndIsEmailVerifiedTrueAndIsPhoneNumberVerifiedTrueAndIsProfileUpdatedTrueAndIsIdentityVerifiedTrue(
             userAuthDto.getEmail());
