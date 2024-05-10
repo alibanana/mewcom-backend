@@ -23,7 +23,6 @@ import com.mewcom.backend.rest.web.service.ImageService;
 import com.mewcom.backend.rest.web.service.InterestService;
 import com.mewcom.backend.rest.web.service.RoleService;
 import com.mewcom.backend.rest.web.service.UserService;
-import com.mewcom.backend.rest.web.util.StringUtil;
 import com.mewcom.backend.rest.web.util.UserUtil;
 import freemarker.template.TemplateException;
 import org.apache.commons.collections4.CollectionUtils;
@@ -78,11 +77,12 @@ public class ClientServiceImpl implements ClientService {
   @Override
   public Pair<User, Boolean> updateClient(ClientUpdateRequest request) throws TemplateException,
       MessagingException, IOException, FirebaseAuthException {
-    validateClientUpdateRequest(request);
+    userUtil.validateEmail(request.getEmail());
     User user = userRepository.findByEmailAndIsEmailVerifiedTrue(
         userUtil.getUserAuthDto().getEmail());
     boolean isEmailUpdated = !request.getEmail().equals(user.getEmail());
-    User updatedUser = updateClientFromRequest(request, user, isEmailUpdated);
+    User updatedUser = userService.updateUser(this.toUpdateUserRequest(request), user,
+        isEmailUpdated, false);
     if (isEmailUpdated) {
       emailTemplateService.sendEmailUpdateNotification(updatedUser.getEmail(),
           updatedUser.getName(), updatedUser.getVerificationCode());
@@ -94,7 +94,7 @@ public class ClientServiceImpl implements ClientService {
   public void updateClientPassword(ClientUpdatePasswordRequest request)
       throws FirebaseAuthException {
     UserAuthDto userAuthDto = userUtil.getUserAuthDto();
-    validateClientUpdatePasswordRequest(request, userAuthDto.getEmail());
+    this.validateClientUpdatePasswordRequest(request, userAuthDto.getEmail());
     userRepository.updatePasswordFirebase(userAuthDto.getUid(), request.getNewPassword());
   }
 
@@ -102,9 +102,9 @@ public class ClientServiceImpl implements ClientService {
   public String updateClientImage(MultipartFile image) throws IOException {
     User user = userRepository.findByEmailAndIsEmailVerifiedTrue(
         userUtil.getUserAuthDto().getEmail());
-    deleteExistingClientImage(user);
+    this.deleteExistingClientImage(user);
     File file = imageService.uploadImage(image);
-    saveNewClientImage(user, file);
+    this.saveNewClientImage(user, file);
     return user.getImages().get(0).getUrl();
   }
 
@@ -128,7 +128,7 @@ public class ClientServiceImpl implements ClientService {
 
   @Override
   public List<String> addClientInterests(ClientAddInterestsRequest request) {
-    validateClientAddInterestRequest(request);
+    this.validateClientAddInterestRequest(request);
     List<String> interests = interestService.findInterests(request.getInterests()).stream()
         .map(Interest::getInterest)
         .collect(Collectors.toList());
@@ -153,30 +153,16 @@ public class ClientServiceImpl implements ClientService {
     if (Objects.isNull(user) || CollectionUtils.isEmpty(user.getInterests())) {
       throw new BaseException(ErrorCode.USER_NOT_ELIGIBLE);
     }
-    updateClientAsHostAndSendEmailNotification(user);
+    this.updateClientAsHostAndSendEmailNotification(user);
   }
 
-  private void validateClientUpdateRequest(ClientUpdateRequest request) {
-    userUtil.validateEmail(request.getEmail());
-  }
-
-  private User updateClientFromRequest(ClientUpdateRequest request, User user,
-      boolean isEmailUpdated) throws FirebaseAuthException {
-    if (isEmailUpdated) {
-      userUtil.validateEmailDoesNotExists(request.getEmail());
-      user.setEmailVerified(false);
-      user.setNewEmail(request.getEmail());
-      user.setVerificationCode(StringUtil.generateVerificationCode());
-    }
-    userRepository.updateUserFirebase(user.getFirebaseUid(), request.getName(), user.getEmail(),
-        user.isEmailVerified());
-    user.setName(request.getName());
-    user.setGender(request.getGender());
-    user.setBiodata(request.getBiodata());
-    if (!user.isProfileUpdated()) {
-      user.setProfileUpdated(true);
-    }
-    return userRepository.save(user);
+  private User toUpdateUserRequest(ClientUpdateRequest request) {
+    return User.builder()
+        .email(request.getEmail())
+        .name(request.getName())
+        .gender(request.getGender())
+        .biodata(request.getBiodata())
+        .build();
   }
 
   private void validateClientUpdatePasswordRequest(ClientUpdatePasswordRequest request,

@@ -11,4 +11,7 @@ public interface UserService {
       throws FirebaseAuthException;
 
   User getCurrentLoggedInUser();
+
+  User updateUser(User request, User user, boolean isEmailUpdated, boolean isHost)
+      throws FirebaseAuthException;
 }
