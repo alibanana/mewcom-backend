@@ -14,17 +14,18 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class HostDetailsResponse implements Serializable {
+public class HostUpdateResponse implements Serializable {
 
   private static final long serialVersionUID = 1823847647955359941L;
 
   private String name;
   private String username;
+  private String oldEmail;
   private String email;
-  private String phoneNumber;
   private String gender;
   private String biodata;
   private String birthdate;
   private List<String> interests;
   private List<String> hostImageUrls;
+  private boolean isEmailUpdated;
 }

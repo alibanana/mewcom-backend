@@ -9,6 +9,7 @@ import com.mewcom.backend.rest.web.service.ImageService;
 import com.mewcom.backend.rest.web.service.OtpService;
 import com.mewcom.backend.rest.web.service.UserIdentityService;
 import com.mewcom.backend.rest.web.service.UserService;
+import com.mewcom.backend.rest.web.util.StringUtil;
 import com.mewcom.backend.rest.web.util.UserUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -46,6 +47,7 @@ public class UserServiceImpl implements UserService {
     otpService.deleteOtpMessagesByUserId(user.getUserId());
     userIdentityService.deleteUserIdentityByUserId(user.getUserId());
     deleteUserImages(user);
+    deleteUserHostImages(user);
     userRepository.deleteByUidFirebase(user.getFirebaseUid());
     userRepository.delete(user);
   }
@@ -64,8 +66,39 @@ public class UserServiceImpl implements UserService {
     return userRepository.findByEmailAndIsEmailVerifiedTrue(userUtil.getUserAuthDto().getEmail());
   }
 
+  @Override
+  public User updateUser(User request, User user, boolean isEmailUpdated, boolean isHost)
+      throws FirebaseAuthException {
+    if (isEmailUpdated) {
+      userUtil.validateEmailDoesNotExists(request.getEmail());
+      user.setEmailVerified(false);
+      user.setNewEmail(request.getEmail());
+      user.setVerificationCode(StringUtil.generateVerificationCode());
+    }
+    userRepository.updateUserFirebase(user.getFirebaseUid(), request.getName(), user.getEmail(),
+        user.isEmailVerified());
+    user.setName(request.getName());
+    user.setGender(request.getGender());
+    user.setBiodata(request.getBiodata());
+    if (isHost) {
+      user.setInterests(request.getInterests());
+    }
+    if (!user.isProfileUpdated()) {
+      user.setProfileUpdated(true);
+    }
+    return userRepository.save(user);
+  }
+
   private void deleteUserImages(User user) {
     Optional.ofNullable(user.getImages()).orElse(Collections.emptyList()).forEach(userImage -> {
+      if (!userImage.isDefault()) {
+        imageService.deleteImageById(userImage.getImageId());
+      }
+    });
+  }
+
+  private void deleteUserHostImages(User user) {
+    Optional.ofNullable(user.getHostImages()).orElse(Collections.emptyList()).forEach(userImage -> {
       if (!userImage.isDefault()) {
         imageService.deleteImageById(userImage.getImageId());
       }
