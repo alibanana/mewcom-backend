@@ -3,7 +3,9 @@ package com.mewcom.backend.outbound.impl;
 import com.mewcom.backend.config.properties.GoogleIdentityToolkitFeignProperties;
 import com.mewcom.backend.outbound.GoogleIdentityToolkitOutbound;
 import com.mewcom.backend.outbound.feign.GoogleIdentityToolkitFeign;
+import com.mewcom.backend.outbound.model.request.GoogleIdentityToolkitRefreshTokenRequest;
 import com.mewcom.backend.outbound.model.request.GoogleIdentityToolkitSignInRequest;
+import com.mewcom.backend.outbound.model.response.GoogleIdentityToolkitRefreshTokenResponse;
 import com.mewcom.backend.outbound.model.response.GoogleIdentityToolkitSignInResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,17 @@ public class GoogleIdentityToolkitFeignImpl implements GoogleIdentityToolkitOutb
         .returnSecureToken(true)
         .build();
     return googleIdentityToolkitFeign.signInWithPassword(
+        googleIdentityToolkitFeignProperties.getKey(), request);
+  }
+
+  @Override
+  public GoogleIdentityToolkitRefreshTokenResponse exchangeRefreshToken(String refreshToken) {
+    GoogleIdentityToolkitRefreshTokenRequest request =
+        GoogleIdentityToolkitRefreshTokenRequest.builder()
+            .grant_type("refresh_token")
+            .refresh_token(refreshToken)
+            .build();
+    return googleIdentityToolkitFeign.exchangeRefreshToken(
         googleIdentityToolkitFeignProperties.getKey(), request);
   }
 }

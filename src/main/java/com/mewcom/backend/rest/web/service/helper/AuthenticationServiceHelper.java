@@ -12,13 +12,16 @@ import com.mewcom.backend.model.entity.User;
 import com.mewcom.backend.model.entity.UserImage;
 import com.mewcom.backend.model.exception.BaseException;
 import com.mewcom.backend.outbound.GoogleIdentityToolkitOutbound;
+import com.mewcom.backend.outbound.model.response.GoogleIdentityToolkitRefreshTokenResponse;
+import com.mewcom.backend.outbound.model.response.GoogleIdentityToolkitSignInResponse;
 import com.mewcom.backend.repository.RoleRepository;
 import com.mewcom.backend.repository.UserRepository;
-import com.mewcom.backend.rest.web.model.request.LoginRequest;
-import com.mewcom.backend.rest.web.model.request.RegisterRequest;
+import com.mewcom.backend.rest.web.model.request.auth.LoginRequest;
+import com.mewcom.backend.rest.web.model.request.auth.RegisterRequest;
 import com.mewcom.backend.rest.web.util.RoleUtil;
 import com.mewcom.backend.rest.web.util.StringUtil;
 import com.mewcom.backend.rest.web.util.UserUtil;
+import org.javatuples.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -51,23 +54,30 @@ public class AuthenticationServiceHelper {
   @Autowired
   private SysparamProperties sysparamProperties;
 
-  public String validateLoginRequestAndRetrieveToken(LoginRequest request) {
-    return googleIdentityToolkitOutbound.signInWithPassword(request.getEmail(),
-        request.getPassword()).getIdToken();
+  public Pair<String, String> validateLoginRequestAndRetrieveTokens(LoginRequest request) {
+    GoogleIdentityToolkitSignInResponse response =
+        googleIdentityToolkitOutbound.signInWithPassword(request.getEmail(), request.getPassword());
+    return Pair.with(response.getIdToken(), response.getRefreshToken());
   }
 
   public UserAuthDto verifyIdTokenAndSetAuthentication(String idToken)
       throws FirebaseAuthException {
     FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
-    UserAuthDto userAuthDto = toUserAuthDto(decodedToken);
+    UserAuthDto userAuthDto = this.toUserAuthDto(decodedToken);
     User user = userRepository.findByEmail(userAuthDto.getEmail());
     userAuthDto.setUid(user.getUserId());
-    validateUserAuthDto(userAuthDto, user);
+    this.validateUserAuthDto(userAuthDto, user);
     UsernamePasswordAuthenticationToken authentication =
         new UsernamePasswordAuthenticationToken(userAuthDto, new Credentials(decodedToken, idToken),
             getUserAuthorities(user));
     SecurityContextHolder.getContext().setAuthentication(authentication);
     return userAuthDto;
+  }
+
+  public Pair<String, String> exchangeRefreshToken(String refreshToken) {
+    GoogleIdentityToolkitRefreshTokenResponse response =
+        googleIdentityToolkitOutbound.exchangeRefreshToken(refreshToken);
+    return Pair.with(response.getId_token(), response.getRefresh_token());
   }
 
   private UserAuthDto toUserAuthDto(FirebaseToken decodedToken) {
@@ -83,7 +93,7 @@ public class AuthenticationServiceHelper {
 
   private void validateUserAuthDto(UserAuthDto userAuthDto, User user) {
     if (!userAuthDto.isEmailVerified()) {
-      if (isInUpdateEmailProccess(user)) {
+      if (this.isInUpdateEmailProccess(user)) {
         throw new BaseException(ErrorCode.USER_EMAIL_UPDATE_UNVERIFIED);
       }
       throw new BaseException(ErrorCode.USER_EMAIL_UNVERIFIED);
