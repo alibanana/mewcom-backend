@@ -1,4 +1,4 @@
-package com.mewcom.backend.rest.web.model.request;
+package com.mewcom.backend.rest.web.model.request.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -14,13 +14,10 @@ import java.io.Serializable;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class LoginRequest implements Serializable {
+public class RefreshTokenRequest implements Serializable {
 
-  private static final long serialVersionUID = 1473471277448428468L;
-
-  @NotBlank
-  private String email;
+  private static final long serialVersionUID = -2313882502137377142L;
 
   @NotBlank
-  private String password;
+  private String refreshToken;
 }

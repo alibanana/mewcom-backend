@@ -30,4 +30,5 @@ public class LoginResponse implements Serializable {
   private List<String> imageUrls;
   private boolean isIdentityVerified;
   private String token;
+  private String refreshToken;
 }
