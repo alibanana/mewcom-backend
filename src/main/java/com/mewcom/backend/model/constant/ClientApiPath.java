@@ -33,6 +33,7 @@ public class ClientApiPath {
   public static final String HOST_DASHBOARD_DETAILS = "/dashboard-details";
   public static final String HOST_DETAILS = "/details";
   public static final String HOST_UPDATE = "/update";
+  public static final String HOST_UPDATE_IMAGE = "/update-image";
 
   public static final String BASE_PATH_HOST_FEE = BASE_PATH_API + "/host-fees";
   public static final String HOST_FEE_DETAILS = "/details";

@@ -8,6 +8,7 @@ import com.mewcom.backend.rest.web.controller.BaseController;
 import com.mewcom.backend.rest.web.model.request.HostUpdateRequest;
 import com.mewcom.backend.rest.web.model.response.host.HostDashboardDetailsResponse;
 import com.mewcom.backend.rest.web.model.response.host.HostDetailsResponse;
+import com.mewcom.backend.rest.web.model.response.host.HostUpdateImageResponse;
 import com.mewcom.backend.rest.web.model.response.host.HostUpdateResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestBaseResponse;
 import com.mewcom.backend.rest.web.model.response.rest.RestSingleResponse;
@@ -23,12 +24,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -60,6 +64,15 @@ public class HostController extends BaseController {
       throws TemplateException, MessagingException, IOException, FirebaseAuthException {
     Pair<User, Boolean> pair = hostService.updateHost(request);
     return toSingleResponse(this.toHostUpdateResponse(pair));
+  }
+
+  @PreAuthorize("hasAnyAuthority('admin', 'host')")
+  @PutMapping(value = ClientApiPath.HOST_UPDATE_IMAGE)
+  public RestSingleResponse<HostUpdateImageResponse> updateHostImage(
+      @RequestParam("image") MultipartFile image, @RequestParam("position") int position)
+      throws IOException {
+    List<String> urls = hostService.updateHostImage(image, position);
+    return toSingleResponse(toHostUpdateImageResponse(urls));
   }
 
   private HostDashboardDetailsResponse toHostDashboardDetailsResponse(User user) {
@@ -99,5 +112,11 @@ public class HostController extends BaseController {
       return response;
     }
     return HostUpdateResponse.builder().isEmailUpdated(true).build();
+  }
+
+  private HostUpdateImageResponse toHostUpdateImageResponse(List<String> urls) {
+    return HostUpdateImageResponse.builder()
+        .imageUrls(urls)
+        .build();
   }
 }
