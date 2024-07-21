@@ -23,7 +23,7 @@ public interface UserRepository extends MongoRepository<User, String>, UserFireb
 
   User findByEmailAndIsEmailVerifiedTrue(String email);
 
-  User findByEmailAndIsEmailVerifiedTrueAndIsPhoneNumberVerifiedTrueAndIsProfileUpdatedTrueAndIsIdentityVerifiedTrue(
+  User findByEmailAndIsEmailVerifiedTrueAndIsProfileUpdatedTrueAndIsIdentityVerifiedTrue(
       String email);
 
   @Query(value = "{ 'email': ?0, 'isEmailVerified': ?1 }",
@@ -39,8 +39,8 @@ public interface UserRepository extends MongoRepository<User, String>, UserFireb
   List<User> findAllByUserIdsAndIsEmailVerifiedTrueIncludeNameAndBirthdate(List<String> userIds);
 
   @Query(value = "{ 'email': ?0, 'isEmailVerified': ?1 }", fields = "{ '_id': 0," +
-      "'isPhoneNumberVerified': 1, 'isProfileUpdated': 1, 'isIdentityVerified': 1 }")
-  User findByEmailAndIsEmailVerifiedIncludeIsPhoneNumberVerifiedAndIsProfileUpdatedAndIsIdentityVerifiedTrue(
+      "'isProfileUpdated': 1, 'isIdentityVerified': 1 }")
+  User findByEmailAndIsEmailVerifiedIncludeAndIsProfileUpdatedAndIsIdentityVerifiedTrue(
       String email, boolean isEmailVerified);
 
   @Query(value = "{ 'email': ?0, 'isEmailVerified': ?1 }", fields = "{ '_id': 0, 'name': 1," +
