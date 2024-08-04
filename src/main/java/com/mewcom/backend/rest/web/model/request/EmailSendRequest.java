@@ -16,7 +16,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class EmailTemplateSendRequest implements Serializable {
+public class EmailSendRequest implements Serializable {
 
   private static final long serialVersionUID = 6252889195367639947L;
 

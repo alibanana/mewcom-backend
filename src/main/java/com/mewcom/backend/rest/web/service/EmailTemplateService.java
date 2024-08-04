@@ -2,7 +2,7 @@ package com.mewcom.backend.rest.web.service;
 
 import com.mewcom.backend.model.entity.EmailTemplate;
 import com.mewcom.backend.rest.web.model.request.EmailTemplateRequest;
-import com.mewcom.backend.rest.web.model.request.EmailTemplateSendRequest;
+import com.mewcom.backend.rest.web.model.request.EmailSendRequest;
 import freemarker.template.TemplateException;
 
 import javax.mail.MessagingException;
@@ -14,7 +14,7 @@ public interface EmailTemplateService {
 
   EmailTemplate findByTemplateName(String templateName);
 
-  void sendTemplate(EmailTemplateSendRequest request) throws IOException, TemplateException,
+  void sendTemplate(EmailSendRequest request) throws IOException, TemplateException,
       MessagingException;
 
   void sendEmailVerification(String email, String name, String verificationCode)
