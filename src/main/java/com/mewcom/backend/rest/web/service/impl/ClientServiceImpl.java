@@ -122,7 +122,7 @@ public class ClientServiceImpl implements ClientService {
 
   @Override
   public User getClientAllStatus() {
-    return userRepository.findByEmailAndIsEmailVerifiedIncludeIsPhoneNumberVerifiedAndIsProfileUpdatedAndIsIdentityVerifiedTrue(
+    return userRepository.findByEmailAndIsEmailVerifiedIncludeAndIsProfileUpdatedAndIsIdentityVerifiedTrue(
         userUtil.getUserAuthDto().getEmail(), true);
   }
 
@@ -134,7 +134,7 @@ public class ClientServiceImpl implements ClientService {
         .collect(Collectors.toList());
     UserAuthDto userAuthDto = userUtil.getUserAuthDto();
     User user =
-        userRepository.findByEmailAndIsEmailVerifiedTrueAndIsPhoneNumberVerifiedTrueAndIsProfileUpdatedTrueAndIsIdentityVerifiedTrue(
+        userRepository.findByEmailAndIsEmailVerifiedTrueAndIsProfileUpdatedTrueAndIsIdentityVerifiedTrue(
             userAuthDto.getEmail());
     if (Objects.isNull(user)) {
       throw new BaseException(ErrorCode.USER_NOT_ELIGIBLE);
@@ -148,7 +148,7 @@ public class ClientServiceImpl implements ClientService {
   public void updateClientAsHost() throws TemplateException, MessagingException, IOException {
     UserAuthDto userAuthDto = userUtil.getUserAuthDto();
     User user =
-        userRepository.findByEmailAndIsEmailVerifiedTrueAndIsPhoneNumberVerifiedTrueAndIsProfileUpdatedTrueAndIsIdentityVerifiedTrue(
+        userRepository.findByEmailAndIsEmailVerifiedTrueAndIsProfileUpdatedTrueAndIsIdentityVerifiedTrue(
             userAuthDto.getEmail());
     if (Objects.isNull(user) || CollectionUtils.isEmpty(user.getInterests())) {
       throw new BaseException(ErrorCode.USER_NOT_ELIGIBLE);

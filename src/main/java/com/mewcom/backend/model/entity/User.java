@@ -31,7 +31,7 @@ public class User extends BaseMongoEntity {
   private boolean isEmailVerified;
   private String verificationCode;
   private String phoneNumber;
-  private boolean isPhoneNumberVerified;
+  private boolean isPhoneNumberVerified; // Not used
   private String gender;
   private String biodata;
   private Date birthdate;
