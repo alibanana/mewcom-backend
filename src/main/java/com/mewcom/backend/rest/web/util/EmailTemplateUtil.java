@@ -6,7 +6,7 @@ import com.mewcom.backend.model.entity.EmailTemplate;
 import com.mewcom.backend.model.exception.BaseException;
 import com.mewcom.backend.repository.EmailTemplateRepository;
 import com.mewcom.backend.rest.web.model.request.EmailTemplateRequest;
-import com.mewcom.backend.rest.web.model.request.EmailTemplateSendRequest;
+import com.mewcom.backend.rest.web.model.request.EmailSendRequest;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -66,12 +66,12 @@ public class EmailTemplateUtil {
     javaMailSender.send(message);
   }
 
-  public EmailTemplateSendRequest buildEmailVerificationRequest(String email, String name,
+  public EmailSendRequest buildEmailVerificationRequest(String email, String name,
       String verificationCode) {
     Map<String, Object> content = new HashMap<>();
     content.put("name", name);
     content.put("verification_link", buildEmailVerificationLink(email, verificationCode));
-    return EmailTemplateSendRequest.builder()
+    return EmailSendRequest.builder()
         .receiverAddress(email)
         .templateName("EmailVerification")
         .templateKeyAndValues(content)
@@ -83,7 +83,7 @@ public class EmailTemplateUtil {
     return String.format(link, email, verificationCode);
   }
 
-  public EmailTemplateSendRequest buildEmailUpdateNotificationRequest(String email, String name,
+  public EmailSendRequest buildEmailUpdateNotificationRequest(String email, String name,
       String verificationCode) {
     Map<String, Object> content = new HashMap<>();
     content.put("name", name);
@@ -91,7 +91,7 @@ public class EmailTemplateUtil {
         buildEmailUpdateVerificationLink(email, verificationCode));
     content.put("email_update_cancellation_link",
         buildEmailUpdateCancellationLink(email, verificationCode));
-    return EmailTemplateSendRequest.builder()
+    return EmailSendRequest.builder()
         .receiverAddress(email)
         .templateName("EmailUpdateNotification")
         .templateKeyAndValues(content)
@@ -108,45 +108,45 @@ public class EmailTemplateUtil {
     return String.format(link, email, verificationCode);
   }
 
-  public EmailTemplateSendRequest buildEmailResetPasswordRequest(String email, String name,
+  public EmailSendRequest buildEmailResetPasswordRequest(String email, String name,
       String newPassword) {
     Map<String, Object> content = new HashMap<>();
     content.put("name", name);
     content.put("new_password", newPassword);
-    return EmailTemplateSendRequest.builder()
+    return EmailSendRequest.builder()
         .receiverAddress(email)
         .templateName("EmailResetPassword")
         .templateKeyAndValues(content)
         .build();
   }
 
-  public EmailTemplateSendRequest buildEmailIdentityVerificationRequestVerified(String email,
+  public EmailSendRequest buildEmailIdentityVerificationRequestVerified(String email,
       String name) {
     Map<String, Object> content = new HashMap<>();
     content.put("name", name);
-    return EmailTemplateSendRequest.builder()
+    return EmailSendRequest.builder()
         .receiverAddress(email)
         .templateName("EmailIdentityVerificationRequestVerified")
         .templateKeyAndValues(content)
         .build();
   }
 
-  public EmailTemplateSendRequest buildEmailIdentityVerificationRequestRejected(String email,
+  public EmailSendRequest buildEmailIdentityVerificationRequestRejected(String email,
       String name, String description) {
     Map<String, Object> content = new HashMap<>();
     content.put("name", name);
     content.put("description", description);
-    return EmailTemplateSendRequest.builder()
+    return EmailSendRequest.builder()
         .receiverAddress(email)
         .templateName("EmailIdentityVerificationRequestRejected")
         .templateKeyAndValues(content)
         .build();
   }
 
-  public EmailTemplateSendRequest buildEmailClientUpdatedAsHost(String email, String name) {
+  public EmailSendRequest buildEmailClientUpdatedAsHost(String email, String name) {
     Map<String, Object> content = new HashMap<>();
     content.put("name", name);
-    return EmailTemplateSendRequest.builder()
+    return EmailSendRequest.builder()
         .receiverAddress(email)
         .templateName("EmailClientUpdatedAsHost")
         .templateKeyAndValues(content)

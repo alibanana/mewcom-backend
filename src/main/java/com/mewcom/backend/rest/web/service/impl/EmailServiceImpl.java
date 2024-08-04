@@ -4,6 +4,7 @@ import com.mewcom.backend.model.constant.ErrorCode;
 import com.mewcom.backend.model.entity.User;
 import com.mewcom.backend.model.exception.BaseException;
 import com.mewcom.backend.repository.UserRepository;
+import com.mewcom.backend.rest.web.model.request.EmailSendRequest;
 import com.mewcom.backend.rest.web.service.EmailService;
 import com.mewcom.backend.rest.web.service.EmailTemplateService;
 import freemarker.template.TemplateException;
@@ -22,6 +23,12 @@ public class EmailServiceImpl implements EmailService {
 
   @Autowired
   private EmailTemplateService emailTemplateService;
+
+  @Override
+  public void sendEmail(EmailSendRequest request) throws TemplateException, MessagingException,
+      IOException {
+    emailTemplateService.sendTemplate(request);
+  }
 
   @Override
   public void resendEmailVerification(String email) throws TemplateException, MessagingException,

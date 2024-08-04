@@ -5,7 +5,7 @@ import com.mewcom.backend.model.entity.EmailTemplate;
 import com.mewcom.backend.model.exception.BaseException;
 import com.mewcom.backend.repository.EmailTemplateRepository;
 import com.mewcom.backend.rest.web.model.request.EmailTemplateRequest;
-import com.mewcom.backend.rest.web.model.request.EmailTemplateSendRequest;
+import com.mewcom.backend.rest.web.model.request.EmailSendRequest;
 import com.mewcom.backend.rest.web.service.EmailTemplateService;
 import com.mewcom.backend.rest.web.util.EmailTemplateUtil;
 import freemarker.core.InvalidReferenceException;
@@ -43,7 +43,7 @@ public class EmailTemplateServiceImpl implements EmailTemplateService {
   }
 
   @Override
-  public void sendTemplate(EmailTemplateSendRequest request) throws IOException, TemplateException,
+  public void sendTemplate(EmailSendRequest request) throws IOException, TemplateException,
       MessagingException {
     EmailTemplate emailTemplate = emailTemplateUtil.findByTemplateName(request.getTemplateName());
     Template template = new Template(emailTemplate.getTemplateName(), emailTemplate.getContent(),
