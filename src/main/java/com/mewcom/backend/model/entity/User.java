@@ -40,6 +40,11 @@ public class User extends BaseMongoEntity {
   private boolean isIdentityVerified;
   private List<String> interests;
   private List<UserHostImage> hostImages;
+  private Integer mewcoinAmount;
+  private boolean isHomeTutorialShown;
+  private Integer hostMewcoinAmount;
+  private Integer hostMewcoinAmountInRupiah;
+  private boolean isHostTutorialShown;
 
   private String roleId;
   private String firebaseUid;
