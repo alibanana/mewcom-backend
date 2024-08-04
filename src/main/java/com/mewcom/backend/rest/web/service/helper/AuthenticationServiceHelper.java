@@ -143,6 +143,11 @@ public class AuthenticationServiceHelper {
         .isProfileUpdated(false)
         .images(buildDefaultUserImages())
         .isIdentityVerified(false)
+        .mewcoinAmount(0)
+        .isHomeTutorialShown(false)
+        .hostMewcoinAmount(0)
+        .hostMewcoinAmountInRupiah(0)
+        .isHostTutorialShown(false)
         .roleId(roleId)
         .firebaseUid(firebaseUid)
         .build();
