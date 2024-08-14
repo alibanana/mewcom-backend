@@ -35,7 +35,7 @@ public interface UserRepository extends MongoRepository<User, String>, UserFireb
   User findByEmailAndIsEmailVerifiedIncludeUserIdOnly(String email, boolean isEmailVerified);
 
   @Query(value = "{ 'userId': { '$in': ?0 }, 'isEmailVerified': true }",
-      fields = "{ 'name': 1, 'birthdate': 1 }")
+      fields = "{ 'userId': 1, 'name': 1, 'birthdate': 1 }")
   List<User> findAllByUserIdsAndIsEmailVerifiedTrueIncludeNameAndBirthdate(List<String> userIds);
 
   @Query(value = "{ 'email': ?0, 'isEmailVerified': ?1 }", fields = "{ '_id': 0," +
