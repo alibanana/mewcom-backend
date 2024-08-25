@@ -8,5 +8,7 @@ public class OutboundErrorMessage {
 
   public static final String INVALID_PASSWORD = "INVALID_PASSWORD";
 
+  public static final String INVALID_LOGIN_CREDENTIALS = "INVALID_LOGIN_CREDENTIALS";
+
   public static final String TAP_TALK_INVALID_KEY = "49103";
 }
