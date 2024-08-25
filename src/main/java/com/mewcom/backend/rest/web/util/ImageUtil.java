@@ -22,9 +22,11 @@ public class ImageUtil {
   private SysparamProperties sysparamProperties;
 
   public MultipartFile compressImage(MultipartFile file) throws IOException {
-    if (sysparamProperties.getMaxImageCompressionSizeInKbValue() < file.getSize() * BYTE_SIZE_MULTIPLIER) {
+    float maxImageCompressisonSize = sysparamProperties.getMaxImageCompressionSizeInKbValue();
+    if (maxImageCompressisonSize < file.getSize() * BYTE_SIZE_MULTIPLIER) {
       BufferedImage originalBufferedImage = ImageIO.read(file.getInputStream());
-      BufferedImage resultBufferedImage = Scalr.resize(originalBufferedImage, 1000);
+      BufferedImage resultBufferedImage = Scalr.resize(originalBufferedImage,
+          Math.round(maxImageCompressisonSize));
 
       ByteArrayOutputStream baos = new ByteArrayOutputStream();
       ImageIO.write(resultBufferedImage,
