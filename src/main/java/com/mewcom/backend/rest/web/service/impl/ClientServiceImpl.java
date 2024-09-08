@@ -95,7 +95,7 @@ public class ClientServiceImpl implements ClientService {
       throws FirebaseAuthException {
     UserAuthDto userAuthDto = userUtil.getUserAuthDto();
     this.validateClientUpdatePasswordRequest(request, userAuthDto.getEmail());
-    userRepository.updatePasswordFirebase(userAuthDto.getUid(), request.getNewPassword());
+    userRepository.updatePasswordFirebase(userAuthDto.getFirebaseUid(), request.getNewPassword());
   }
 
   @Override
