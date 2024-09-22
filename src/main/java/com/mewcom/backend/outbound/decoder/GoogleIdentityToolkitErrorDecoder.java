@@ -29,7 +29,7 @@ public class GoogleIdentityToolkitErrorDecoder implements ErrorDecoder {
       GoogleIdentityToolkitErrorResponse.Error responseBodyError = responseBody.getError();
       if (responseBodyError.getCode() == HttpStatus.BAD_REQUEST.value()) {
         if (responseBodyError.getMessage().equals(OutboundErrorMessage.INVALID_LOGIN_CREDENTIALS)) {
-          return new BaseException(ErrorCode.USER_EMAIL_NOT_FOUND);
+          return new BaseException(ErrorCode.USER_LOGIN_INVALID_CREDENTIALS);
         } else if (responseBodyError.getMessage().equals(OutboundErrorMessage.INVALID_EMAIL)) {
           return new BaseException(ErrorCode.USER_EMAIL_INVALID);
         } else if (responseBodyError.getMessage().equals(OutboundErrorMessage.EMAIL_NOT_FOUND)) {
