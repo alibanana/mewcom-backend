@@ -10,4 +10,6 @@ public interface UserIdentityRepositoryCustom {
 
   Page<UserIdentity> findAllByFilter(String idCardNumber, String status, List<String> userIds,
       PageRequest pageRequest);
+
+  List<UserIdentity> findAllImageIDs();
 }

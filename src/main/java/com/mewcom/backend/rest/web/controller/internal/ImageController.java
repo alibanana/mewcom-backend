@@ -1,5 +1,6 @@
 package com.mewcom.backend.rest.web.controller.internal;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mewcom.backend.model.constant.ApiPath;
 import com.mewcom.backend.model.entity.File;
 import com.mewcom.backend.rest.web.controller.BaseController;
@@ -55,6 +56,13 @@ public class ImageController extends BaseController {
   @DeleteMapping(value = ApiPath.IMAGE_DELETE_BY_ID)
   public RestBaseResponse deleteImageById(@PathVariable("id") String id) {
     imageService.deleteImageById(id);
+    return toBaseResponse();
+  }
+
+  @PreAuthorize("hasAuthority('admin')")
+  @PostMapping(value = ApiPath.IMAGE_DELETE_ALL_UNUSED)
+  public RestBaseResponse deleteAllUnusedImages() throws JsonProcessingException {
+    imageService.deleteAllUnusedImages();
     return toBaseResponse();
   }
 

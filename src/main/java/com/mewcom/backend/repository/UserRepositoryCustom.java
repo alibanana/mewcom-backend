@@ -9,4 +9,6 @@ public interface UserRepositoryCustom {
   List<User> findAllByNameAndIsEmailVerifiedTrueIncludeIdAndUserIdAndNameAndBirthdate(String name);
 
   User findHostOrAdminByEmailIncludeUserIdOnly(String email);
+
+  List<User> findAllImageIDs();
 }

@@ -48,4 +48,12 @@ public class UserIdentityRepositoryImpl implements UserIdentityRepositoryCustom 
   private LongSupplier buildLongSupplierForCount(Query query) {
     return () -> mongoTemplate.count(Query.of(query).limit(-1).skip(-1), UserIdentity.class);
   }
+
+  @Override
+  public List<UserIdentity> findAllImageIDs() {
+    Query query = new Query();
+    query.fields().include(MongoFieldNames.USER_IDENTITY_ID_CARD_IMAGE_ID,
+            MongoFieldNames.USER_IDENTITY_SELFIE_IMAGE_ID);
+    return mongoTemplate.find(query, UserIdentity.class);
+  }
 }

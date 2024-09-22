@@ -3,6 +3,8 @@ package com.mewcom.backend.rest.web.service.impl;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.mewcom.backend.model.constant.ErrorCode;
 import com.mewcom.backend.model.entity.User;
+import com.mewcom.backend.model.entity.UserHostImage;
+import com.mewcom.backend.model.entity.UserImage;
 import com.mewcom.backend.model.exception.BaseException;
 import com.mewcom.backend.repository.UserRepository;
 import com.mewcom.backend.rest.web.service.ImageService;
@@ -16,8 +18,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -26,6 +30,7 @@ public class UserServiceImpl implements UserService {
   private UserRepository userRepository;
 
   @Autowired
+  @Lazy
   private ImageService imageService;
 
   @Autowired
@@ -87,6 +92,29 @@ public class UserServiceImpl implements UserService {
       user.setProfileUpdated(true);
     }
     return userRepository.save(user);
+  }
+
+  @Override
+  public List<String> getAllImageIDsExcept(List<String> exclusions) {
+    List<User> users = userRepository.findAllImageIDs();
+    List<String> imageIds = users.stream()
+            .map(User::getImages)
+            .filter(Objects::nonNull)
+            .flatMap(List::stream)
+            .filter(userImage -> Objects.nonNull(userImage.getImageId()) &&
+                    !exclusions.contains(userImage.getImageId()))
+            .map(UserImage::getImageId)
+            .collect(Collectors.toList());
+    List<String> hostImageIds = users.stream()
+            .map(User::getHostImages)
+            .filter(Objects::nonNull)
+            .flatMap(List::stream)
+            .filter(hostImage -> Objects.nonNull(hostImage.getImageId()) &&
+                    !exclusions.contains(hostImage.getImageId()))
+            .map(UserHostImage::getImageId)
+            .collect(Collectors.toList());
+    imageIds.addAll(hostImageIds);
+    return imageIds;
   }
 
   private void deleteUserImages(User user) {
