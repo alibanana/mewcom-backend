@@ -51,4 +51,11 @@ public class UserRepositoryImpl implements UserRepositoryCustom {
     query.addCriteria(where(MongoFieldNames.ROLE_ID).in(roleIdsForHostAndAdmin));
     return mongoTemplate.findOne(query, User.class);
   }
+
+  @Override
+  public List<User> findAllImageIDs() {
+    Query query = new Query();
+    query.fields().include(MongoFieldNames.USER_IMAGES_IMAGE_ID, MongoFieldNames.USER_HOST_IMAGES_IMAGE_ID);
+    return mongoTemplate.find(query, User.class);
+  }
 }

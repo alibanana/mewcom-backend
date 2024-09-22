@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public interface UserIdentityService {
@@ -36,4 +37,6 @@ public interface UserIdentityService {
       MessagingException, IOException;
 
   void deleteUserIdentityByUserId(String userId);
+
+  List<String> getAllImageIDsExcept(List<String> exclusions);
 }

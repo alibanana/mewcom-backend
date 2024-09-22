@@ -1,7 +1,6 @@
 package com.mewcom.backend.rest.web.service.impl;
 
 import com.mewcom.backend.config.properties.SysparamProperties;
-import com.mewcom.backend.model.auth.UserAuthDto;
 import com.mewcom.backend.model.constant.ErrorCode;
 import com.mewcom.backend.model.constant.MongoFieldNames;
 import com.mewcom.backend.model.constant.UserIdentityStatus;
@@ -26,22 +25,16 @@ import com.mewcom.backend.rest.web.util.UserUtil;
 import freemarker.template.TemplateException;
 import org.javatuples.Triplet;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.support.PageableExecutionUtils;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -55,6 +48,7 @@ public class UserIdentityServiceImpl implements UserIdentityService {
   private UserIdentityRepository userIdentityRepository;
 
   @Autowired
+  @Lazy
   private ImageService imageService;
 
   @Autowired
@@ -167,6 +161,27 @@ public class UserIdentityServiceImpl implements UserIdentityService {
       deleteUserIdentityImage(userIdentity.getSelfieImage());
       userIdentityRepository.delete(userIdentity);
     }
+  }
+
+  @Override
+  public List<String> getAllImageIDsExcept(List<String> exclusions) {
+    List<UserIdentity> userIdentities = userIdentityRepository.findAllImageIDs();
+    List<String> idCardImageIds = userIdentities.stream()
+            .map(UserIdentity::getIdCardImage)
+            .filter(Objects::nonNull)
+            .filter(userIdentityImage -> Objects.nonNull(userIdentityImage.getImageId()) &&
+                    !exclusions.contains(userIdentityImage.getImageId()))
+            .map(UserIdentityImage::getImageId)
+            .collect(Collectors.toList());
+    List<String> selfieImageIds = userIdentities.stream()
+            .map(UserIdentity::getSelfieImage)
+            .filter(Objects::nonNull)
+            .filter(selfieImage -> Objects.nonNull(selfieImage.getImageId()) &&
+                    !exclusions.contains(selfieImage.getImageId()))
+            .map(UserIdentityImage::getImageId)
+            .collect(Collectors.toList());
+    idCardImageIds.addAll(selfieImageIds);
+    return idCardImageIds;
   }
 
   private UserIdentity getUserIdentityOrDefault() {

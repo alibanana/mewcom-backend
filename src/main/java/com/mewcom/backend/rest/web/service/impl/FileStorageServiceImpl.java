@@ -2,6 +2,7 @@ package com.mewcom.backend.rest.web.service.impl;
 
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 
 @Service
@@ -51,6 +53,13 @@ public class FileStorageServiceImpl implements FileStorageService {
   @Override
   public void deleteFile(String path, String filename) {
     amazonS3.deleteObject(path, filename);
+  }
+
+  @Override
+  public void deleteMultipleFiles(List<String> filenames) {
+    DeleteObjectsRequest request = new DeleteObjectsRequest(amazonProperties.getBucketName())
+            .withKeys(filenames.toArray(String[]::new));
+    amazonS3.deleteObjects(request);
   }
 
   public String generateUniqueFilename(String originalFilename) {

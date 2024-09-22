@@ -1,5 +1,6 @@
 package com.mewcom.backend.rest.web.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.mewcom.backend.model.entity.File;
 import org.javatuples.Pair;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,4 +14,6 @@ public interface ImageService {
   Pair<String, byte[]> retrieveImageById(String id) throws IOException;
 
   void deleteImageById(String id);
+
+  void deleteAllUnusedImages() throws JsonProcessingException;
 }
