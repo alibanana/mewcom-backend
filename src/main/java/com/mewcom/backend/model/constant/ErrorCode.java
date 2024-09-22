@@ -102,6 +102,8 @@ public enum ErrorCode {
       "The requested user has already been verified"),
   USER_EMAIL_UPDATE_UNVERIFIED("ERR-PA40105", 401,
       "Please check your email to verify the email update request"),
+  USER_LOGIN_INVALID_CREDENTIALS("ERR-PA40106", 401,
+          "Invalid login credentials, please check your email & password"),
 
   ACCESS_DENIED("ERR-PA40301", 403,
       "User is not permitted for this request"),
